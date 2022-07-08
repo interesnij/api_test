@@ -134,7 +134,7 @@ CREATE TABLE posts_perms (
   can_see_post         "char",
   can_see_post_comment "char",
   can_copy_post        "char",
-  can_work_post        "char",
+  can_work_post        "char"
 );
 CREATE UNIQUE INDEX posts_perms_unq ON posts_perms (user_id, id);
 
