@@ -824,7 +824,7 @@ impl User {
 
         let _connection = establish_connection();
         return user_blocks
-            .filter(schema::user_blocks::user_block_i.eq(self.id))
+            .filter(schema::user_blocks::user_id.eq(self.id))
             .load::<UserBlock>(&_connection)
             .expect("E.")
             .len() > 0;
@@ -904,7 +904,7 @@ impl User {
 
         let _connection = establish_connection();
         return user_blocks
-            .filter(schema::user_blocks::user_block_i.eq(self.id))
+            .filter(schema::user_blocks::user_id.eq(self.id))
             .load::<UserBlock>(&_connection)
             .expect("E.")
             .len();
@@ -1108,7 +1108,7 @@ impl User {
 
         let _connection = establish_connection();
         let all_user_blocks = user_blocks
-            .filter(schema::user_blocks::user_block_i.eq(self.id))
+            .filter(schema::user_blocks::user_id.eq(self.id))
             .order(schema::user_blocks::id.desc())
             .limit(limit)
             .offset(offset)
@@ -3200,7 +3200,7 @@ impl User {
             }
         return false;
     }
-    pub fn get_or_create_featured_objects(&self, user: User) -> bool {
+    pub fn get_or_create_featured_objects(&self, user: User) -> () {
         use crate::models::{NewFeaturedUserCommunitie, FeaturedUserCommunitie};
         use crate::schema::featured_user_communities::dsl::featured_user_communities;
 
@@ -3226,6 +3226,7 @@ impl User {
                             .expect("Error.");
                 }
             }
+            return;
             for community_id in user.get_6_communities_ids().iter() {
                 if !self.is_member_of_community(*community_id) && featured_user_communities
                     .filter(schema::featured_user_communities::owner.eq(self.id))
@@ -3246,7 +3247,6 @@ impl User {
                                 .expect("Error.");
                 }
             }
-            return true;
     }
 
     pub fn follow_user(&self, user: User) -> bool {
