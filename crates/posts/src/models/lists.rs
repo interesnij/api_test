@@ -701,49 +701,48 @@ impl PostList {
     pub fn is_anon_user_can_copy_el(&self) -> bool {
         return self.copy_el == "a";
     }
-    pub fn get_selected_post_list_pk(&self) -> i32 {
-        let _connection = establish_connection();
-        if community_id.is_some() {
-            use crate::schema::community_post_list_positions::dsl::community_post_list_positions;
-            use crate::schema::CommunityPostListPosition;
 
-            let _post_list_positions = community_post_list_positions
-                .filter(schema::community_post_list_positions::community_id.eq(community_id.unwrap()))
-                .filter(schema::community_post_list_positions::types.eq("a"))
-                .limit(1)
-                .load::<CommunityPostListPosition>(&_connection)
-                .expect("E.");
-            if _post_list_positions.len() > 0 {
-                return _post_list_positions
-                .into_iter()
-                .nth(0)
-                .unwrap()
-                .list_id;
-            }
-            else {
-                return self.get_community_post_list(community_id).id;
-            }
+    pub fn get_community_selected_post_list_pk(community_id: i32) -> i32 {
+        use crate::schema::community_post_list_positions::dsl::community_post_list_positions;
+
+        let _connection = establish_connection();
+        let _post_list_positions = community_post_list_positions
+            .filter(schema::community_post_list_positions::community_id.eq(community_id.unwrap()))
+            .filter(schema::community_post_list_positions::types.eq("a"))
+            .limit(1)
+            .load::<CommunityPostListPosition>(&_connection)
+            .expect("E.");
+        if _post_list_positions.len() > 0 {
+            return _post_list_positions
+            .into_iter()
+            .nth(0)
+            .unwrap()
+            .list_id;
         }
         else {
-            use crate::schema::user_post_list_positions::dsl::user_post_list_positions;
-            use crate::schema::UserPostListPosition;
+            return self.get_community_post_list(community_id).id;
+        }
+    }
+    pub fn get_user_selected_post_list_pk(user_id: i32) -> i32 {
+        let _connection = establish_connection();
 
-            let _post_list_positions = user_post_list_positions
-                .filter(schema::user_post_list_positions::user_id.eq(self.user_id))
-                .filter(schema::user_post_list_positions::types.eq("a"))
-                .limit(1)
-                .load::<UserPostListPosition>(&_connection)
-                .expect("E.");
-            if _post_list_positions.len() > 0 {
-                return _post_list_positions
-                .into_iter()
-                .nth(0)
-                .unwrap()
-                .list_id;
-            }
-            else {
-                return self.get_user_post_list(self.user_id).id;
-            }
+        use crate::schema::user_post_list_positions::dsl::user_post_list_positions;
+
+        let _post_list_positions = user_post_list_positions
+            .filter(schema::user_post_list_positions::user_id.eq(user_id))
+            .filter(schema::user_post_list_positions::types.eq("a"))
+            .limit(1)
+            .load::<UserPostListPosition>(&_connection)
+            .expect("E.");
+        if _post_list_positions.len() > 0 {
+            return _post_list_positions
+            .into_iter()
+            .nth(0)
+            .unwrap()
+            .list_id;
+        }
+        else {
+            return self.get_user_post_list(user_id).id;
         }
     }
     pub fn get_user_post_list(&self, user_id: i32) -> PostList {
@@ -764,7 +763,7 @@ impl PostList {
 
         let _connection = establish_connection();
         let lists = post_lists
-            .filter(schema::post_lists::community_id.eq(community))
+            .filter(schema::post_lists::community_id.eq(community_id))
             .filter(schema::post_lists::types.eq(1))
             .load::<PostList>(&_connection)
             .expect("E.");
@@ -1371,7 +1370,7 @@ impl PostList {
         let new_pos = NewCommunityPostListPosition {
             community_id: community_id,
             list_id:      self.id,
-            position:     self.get_post_lists_new_position(),
+            position:     PostList::get_community_post_lists_new_position(community_id),
             types:        "a".to_string(),
         };
         diesel::insert_into(schema::community_post_list_positions::table)
@@ -1422,7 +1421,7 @@ impl PostList {
         let new_pos = NewUserPostListPosition {
             user_id:  user_id,
             list_id:  self.id,
-            position: self.get_post_lists_new_position(),
+            position: PostList::get_user_post_lists_new_position(user_id),
             types:    "a".to_string(),
         };
         diesel::insert_into(schema::user_post_list_positions::table)
