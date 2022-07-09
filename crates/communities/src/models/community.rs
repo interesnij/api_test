@@ -197,25 +197,6 @@ impl Community {
             return "/static/images/no_img/list.jpg".to_string();
         }
     }
-    pub fn get_users_ids_for_main_news(&self) -> Vec<i32> {
-        use crate::schema::news_user_communities::dsl::news_user_communities;
-        use crate::models::NewsUserCommunitie;
-
-        let _connection = establish_connection();
-
-        let news_users = news_user_communities
-            .filter(schema::news_user_communities::community_id.eq(self.id))
-            .filter(schema::news_user_communities::user_id.is_null())
-            .filter(schema::news_user_communities::mute.eq(false))
-            .filter(schema::news_user_communities::sleep.lt(chrono::Local::now().naive_utc()))
-            .load::<NewsUserCommunitie>(&_connection)
-            .expect("E.");
-        let mut stack = Vec::new();
-        for member in news_users.iter() {
-            stack.push(member.user_id.unwrap());
-        }
-        return stack;
-    }
     pub fn count_communities() -> usize {
         use crate::schema::communitys::dsl::communitys;
 
@@ -3024,4 +3005,22 @@ pub struct CommunityBannerUser {
 pub struct NewCommunityBannerUser {
     pub community_id: i32,
     pub user_id:      i32,
+}
+
+/////// CommunityFollow //////
+#[derive(Debug, Queryable, Serialize, Identifiable)]
+pub struct CommunityFollow {
+    pub id:           i32,
+    pub user_id:      i32,
+    pub community_id: i32,
+    pub view:         bool,
+    pub visited:      i32,
+}
+#[derive(Deserialize, Insertable)]
+#[table_name="community_follows"]
+pub struct NewCommunityFollow {
+    pub user_id:      i32,
+    pub community_id: i32,
+    pub view:         bool,
+    pub visited:      i32,
 }

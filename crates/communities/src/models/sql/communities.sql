@@ -113,7 +113,7 @@ CREATE TABLE community_follows (
     view         BOOLEAN NOT NULL DEFAULT false,
     visited      INT NOT NULL
 );
-CREATE UNIQUE INDEX follows_community_user_unq ON follows (user_id, community_id);
+CREATE UNIQUE INDEX follows_community_user_unq ON community_follows (user_id, community_id);
 
 -- Приглашения в сообщества -------
 CREATE TABLE community_invites (
