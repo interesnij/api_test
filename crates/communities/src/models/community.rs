@@ -2530,7 +2530,6 @@ pub struct NewCommunityInfo {
     // 'i' Некоторые подписчики
 
 #[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
-#[belongs_to(Community)]
 pub struct CommunityPrivate {
     pub id:               i32,
     pub community_id:     i32,
