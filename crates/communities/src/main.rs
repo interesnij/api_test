@@ -4,6 +4,7 @@ extern crate diesel;
 extern crate concat_string;
 
 pub mod schema;
+pub mod models;
 
 #[macro_use]
 mod utils;
