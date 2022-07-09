@@ -12,7 +12,7 @@ use crate::utils::{
 };
 use diesel::prelude::*;
 use actix_web::web::Json;
-use crate::models::PostComment;
+use crate::models::{PostComment, NewPostListPerm};
 
 
 /////// UserPostListCollection //////

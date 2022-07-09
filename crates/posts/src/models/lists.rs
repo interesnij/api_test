@@ -2,7 +2,6 @@ use crate::schema;
 use diesel::prelude::*;
 use crate::schema::{
     post_lists,
-    posts,
 };
 use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
@@ -14,7 +13,7 @@ use crate::models::{
     UserPostListPosition,
     CommunityPostListCollection, NewCommunityPostListCollection,
     CommunityPostListPosition,
-    PostListPerm
+    PostListPerm, NewPostListPerm,
 };
 
 /////// PostList //////
@@ -772,29 +771,34 @@ impl PostList {
         return lists.into_iter().nth(0).unwrap();
     }
 
-    pub fn get_post_lists(&self) -> Vec<PostList> {
+    pub fn get_user_post_lists(user_id: i32) -> Vec<PostList> {
         use crate::schema::post_lists::dsl::post_lists;
 
         let _connection = establish_connection();
-        if community_id.is_some() {
-            return post_lists
-                .filter(schema::post_lists::community_id.eq(community_id))
-                .filter(schema::post_lists::types.lt(10))
-                .order(schema::post_lists::created.desc())
-                .load::<PostList>(&_connection)
-                .expect("E.");
-        }
-        else {
-            return post_lists
-                .filter(schema::post_lists::user_id.eq(self.user_id))
-                .filter(schema::post_lists::types.lt(10))
-                .order(schema::post_lists::created.desc())
-                .load::<PostList>(&_connection)
-                .expect("E.");
-        }
+        return post_lists
+            .filter(schema::post_lists::user_id.eq(user_id))
+            .filter(schema::post_lists::community_id.is_null())
+            .filter(schema::post_lists::types.lt(10))
+            .order(schema::post_lists::created.desc())
+            .load::<PostList>(&_connection)
+            .expect("E.");
     }
-    pub fn get_post_lists_new_position(&self) -> i16 {
-        return (self.get_post_lists().iter().count() + 1).try_into().unwrap();
+    pub fn get_community_post_lists(community_id: i32) -> Vec<PostList> {
+        use crate::schema::post_lists::dsl::post_lists;
+
+        let _connection = establish_connection();
+        return post_lists
+            .filter(schema::post_lists::community_id.eq(community_id))
+            .filter(schema::post_lists::types.lt(10))
+            .order(schema::post_lists::created.desc())
+            .load::<PostList>(&_connection)
+            .expect("E.");
+    }
+    pub fn get_user_post_lists_new_position(user_id: i32) -> i16 {
+        return (PostList::get_user_post_lists(user_id).iter().count() + 1).try_into().unwrap();
+    }
+    pub fn get_community_post_lists_new_position(community_id: i32) -> i16 {
+        return (PostList::get_community_post_lists(community_id).iter().count() + 1).try_into().unwrap();
     }
 
     pub fn create_list (
@@ -863,7 +867,7 @@ impl PostList {
             let _new_posts_list_position = NewCommunityPostListPosition {
                 community_id: community_pk,
                 list_id:      new_list.id,
-                position:     self.get_post_lists_new_position(),
+                position:     PostList::get_community_post_lists_new_position(community_pk),
                 types:        "a".to_string(),
             };
             let _posts_list_position = diesel::insert_into(schema::community_post_list_positions::table)
@@ -875,7 +879,7 @@ impl PostList {
             let _new_posts_list_position = NewUserPostListPosition {
                 user_id:  creator_id,
                 list_id:  new_list.id,
-                position: self.get_post_lists_new_position(),
+                position: PostList::get_user_post_lists_new_position(creator_id),
                 types:    "a".to_string(),
             };
             let _posts_list_position = diesel::insert_into(schema::user_post_list_positions::table)
@@ -1780,7 +1784,7 @@ impl PostList {
         is_signature: bool,
         parent_id: Option<i32>
     ) -> Post {
-        use crate::models::{Post, NewPost};
+        use crate::models::NewPost;
 
         let _connection = establish_connection();
         diesel::update(self)
