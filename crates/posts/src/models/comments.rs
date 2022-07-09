@@ -11,7 +11,7 @@ use serde::{Serialize, Deserialize};
 use crate::utils::{
     establish_connection,
     JsonItemReactions,
-}
+};
 use actix_web::web::Json;
 use crate::models::PostCommentReaction;
 

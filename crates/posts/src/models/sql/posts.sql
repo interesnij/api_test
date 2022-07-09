@@ -229,3 +229,41 @@ CREATE TABLE community_post_list_positions (
     types        "char" NOT NULL       -- 1 - открыт, 0 - недоступен (например, удален)
 );
 CREATE UNIQUE INDEX community_post_list_positions_unq ON community_post_list_positions (id, community_id);
+
+
+CREATE TABLE post_votes (
+  id          SERIAL PRIMARY KEY,
+  vote        SMALLINT NOT NULL,
+  user_id     INT NOT NULL,
+  post_id     INT NOT NULL,
+  reaction    SMALLINT NOT NULL -- тип реакции для скорости работы
+);
+CREATE UNIQUE INDEX post_votes_unq ON post_votes (user_id, post_id);
+
+CREATE TABLE post_comment_votes (
+  id              SERIAL PRIMARY KEY,
+  vote            SMALLINT NOT NULL,
+  user_id         INT NOT NULL,
+  post_comment_id INT NOT NULL,
+  reaction        SMALLINT NOT NULL
+);
+CREATE UNIQUE INDEX post_comment_votes_unq ON post_comment_votes (user_id, post_comment_id);
+
+
+CREATE TABLE post_list_reposts (
+  id           SERIAL PRIMARY KEY,
+  post_list_id INT NOT NULL,
+  post_id      INT,
+  message_id   INT,
+
+  CONSTRAINT fk_post_list_reposts_list
+      FOREIGN KEY(post_list_id)
+          REFERENCES post_lists(id),
+
+  CONSTRAINT fk_post_list_reposts_post
+      FOREIGN KEY(post_id)
+          REFERENCES posts(id)
+);
+CREATE INDEX post_list_reposts_post_list_id_idx ON post_list_reposts (post_list_id);
+CREATE INDEX post_list_reposts_post_id_idx ON post_list_reposts (post_id);
+CREATE INDEX post_list_reposts_message_id_idx ON post_list_reposts (message_id);

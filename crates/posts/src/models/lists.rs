@@ -14,6 +14,7 @@ use crate::models::{
     CommunityPostListCollection, NewCommunityPostListCollection,
     CommunityPostListPosition,
     PostListPerm, NewPostListPerm,
+    PostListRepost,
 };
 
 /////// PostList //////
@@ -242,8 +243,8 @@ impl PostList {
     pub fn get_description(&self) -> String {
         return "<a data-postlist='".to_string() + &self.get_str_id() + &"' class='ajax'>".to_string() + &self.name + &"</a>".to_string();
     }
-    pub fn is_user_list(&self, user: User) -> bool {
-        return self.user_id == user.id;
+    pub fn is_user_list(&self, user_id: i32) -> bool {
+        return self.user_id == user_id;
     }
     pub fn is_community_list(&self, community_id: i32) -> bool {
         return self.community_id.unwrap() == community_id;
@@ -720,7 +721,7 @@ impl PostList {
             .list_id;
         }
         else {
-            return self.get_community_post_list(community_id).id;
+            return PostList::get_community_post_list(community_id).id;
         }
     }
     pub fn get_user_selected_post_list_pk(user_id: i32) -> i32 {
@@ -742,7 +743,7 @@ impl PostList {
             .list_id;
         }
         else {
-            return self.get_user_post_list(user_id).id;
+            return PostList::get_user_post_list(user_id).id;
         }
     }
     pub fn get_user_post_list(&self, user_id: i32) -> PostList {
@@ -1777,7 +1778,7 @@ impl PostList {
         owner_name: String,
         owner_link: String,
         owner_image: Option<String>,
-        types: Option<String>
+        types: Option<String>,
         attach: Option<String>,
         comment_enabled: bool,
         is_signature: bool,
