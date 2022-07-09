@@ -105,6 +105,14 @@ table! {
 }
 
 table! {
+    phone_codes (id) {
+        id -> Int4,
+        phone -> Varchar,
+        code -> Int4,
+    }
+}
+
+table! {
     user_anketas (id) {
         id -> Int4,
         user_id -> Int4,
@@ -320,6 +328,7 @@ allow_tables_to_appear_in_same_query!(
     list_user_communities_keys,
     news_user_communities,
     notify_user_communities,
+    phone_codes,
     user_anketas,
     user_blocks,
     user_brother_sisters,
