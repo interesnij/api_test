@@ -63,42 +63,13 @@ pub struct EditPostComment {
 }
 
 impl PostComment {
-    pub fn get_attach(&self, user_id: i32) -> String {
-        return "".to_string();
-        if self.attach.is_some() {
-            use crate::utils::comment_elements;
-            return comment_elements(self.attach.as_ref().unwrap().to_string(), user_id);
-        }
-        else {
-            return "".to_string();
-        }
-    }
     pub fn is_deleted(&self) -> bool {
         return self.types == "c" && self.types == "d";
     }
     pub fn is_closed(&self) -> bool {
         return self.types == "e" && self.types == "f";
     }
-    pub fn get_anon_attach(&self) -> String {
-        return "".to_string();
-        if self.attach.is_some() {
-            use crate::utils::anon_comment_elements;
-            return anon_comment_elements(self.attach.as_ref().unwrap().to_string());
-        }
-        else {
-            return "".to_string();
-        }
-    }
-    pub fn get_edit_attach(&self) -> String {
-        return "".to_string();
-        if self.attach.is_some() {
-            use crate::utils::edit_comment_elements;
-            return edit_comment_elements(self.attach.as_ref().unwrap().to_string());
-        }
-        else {
-            return "".to_string();
-        }
-    }
+
     pub fn get_str_id(&self) -> String {
         return self.id.to_string();
     }
@@ -301,6 +272,7 @@ impl PostComment {
 
     pub fn get_or_create_react_model(&self) -> PostCommentReaction {
         use crate::schema::post_comment_reactions::dsl::post_comment_reactions;
+        use crate::models::{PostCommentReaction, NewPostCommentReaction};
 
         let _connection = establish_connection();
         let _react_model = post_comment_reactions
@@ -341,6 +313,7 @@ impl PostComment {
 
     pub fn send_reaction(&self, user_id: i32, types: i16) -> Json<JsonItemReactions> {
         use crate::schema::post_comment_votes::dsl::post_comment_votes;
+        use crate::models::{NewPostCommentVote, PostCommentVote};
 
         let _connection = establish_connection();
         let list = self.get_list();

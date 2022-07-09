@@ -369,7 +369,6 @@ impl Post {
 
         let edit_post = EditPost {
             content: content,
-            post_categorie_id: post_categorie_id,
             attach: attach,
             comment_enabled: comment_enabled,
             is_signature: is_signature,
@@ -644,37 +643,6 @@ impl Post {
                 return string;
             }
         } else { return "".to_string(); }
-    }
-
-    pub fn get_attach(&self, user_id: i32) -> String {
-        return "".to_string();
-        if self.attach.is_some() {
-            use crate::utils::post_elements;
-            return post_elements(self.attach.as_ref().unwrap().to_string(), user_id);
-        }
-        else {
-            return "".to_string();
-        }
-    }
-    pub fn get_anon_attach(&self) -> String {
-        return "".to_string();
-        if self.attach.is_some() {
-            use crate::utils::anon_post_elements;
-            return anon_post_elements(self.attach.as_ref().unwrap().to_string());
-        }
-        else {
-            return "".to_string();
-        }
-    }
-    pub fn get_edit_attach(&self) -> String {
-        return "".to_string();
-        if self.attach.is_some() {
-            use crate::utils::edit_post_elements;
-            return edit_post_elements(self.attach.as_ref().unwrap().to_string());
-        }
-        else {
-            return "".to_string();
-        }
     }
 
     pub fn count_comments(&self) -> String {
