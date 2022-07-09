@@ -11,6 +11,7 @@ use crate::schema::{
     community_visible_perms,
     community_work_perms,
     community_banner_users,
+    community_follows,
 };
 use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
