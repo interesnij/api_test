@@ -37,6 +37,18 @@ table! {
 }
 
 table! {
+    reactions (id) {
+        id -> Int4,
+        types -> Int2,
+        image -> Varchar,
+        gif -> Varchar,
+        name -> Varchar,
+        is_active -> Bool,
+        position -> Int2,
+    }
+}
+
+table! {
     smile_categories (id) {
         id -> Int4,
         name -> Varchar,
@@ -87,6 +99,7 @@ allow_tables_to_appear_in_same_query!(
     custom_links,
     folder_items,
     folders,
+    reactions,
     smile_categories,
     smiles,
     sticker_categories,
