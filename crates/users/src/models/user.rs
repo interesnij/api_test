@@ -11,6 +11,7 @@ use crate::schema::{
     users,
     follows,
     friends,
+    friends_visible_perms,
 };
 use actix_web::web::Json;
 
@@ -428,7 +429,7 @@ impl User {
             return str.to_string();
         }
     }
-    pub fn get_populate_smiles(&self) -> Vec<Smile> {
+    pub fn get_populate_smiles_ids(&self) -> Vec<i32> {
         use crate::schema::smiles::dsl::smiles;
         use crate::schema::user_populate_smiles::dsl::user_populate_smiles;
         use crate::models::UserPopulateSmile;
@@ -443,13 +444,10 @@ impl User {
         for _item in all_populate_smiles.iter() {
             stack.push(_item.smile_id);
         };
-        return smiles
-            .filter(schema::smiles::id.eq_any(stack))
-            .load::<Smile>(&_connection)
-            .expect("E.");
+        return stack;
     }
 
-    pub fn get_populate_stickers(&self) -> Vec<Sticker> {
+    pub fn get_populate_stickers_ids(&self) -> Vec<i32> {
         use crate::schema::stickers::dsl::stickers;
         use crate::schema::user_populate_stickers::dsl::user_populate_stickers;
         use crate::models::UserPopulateSticker;
@@ -464,10 +462,7 @@ impl User {
         for _item in all_populate_stickers.iter() {
             stack.push(_item.sticker_id);
         };
-        return stickers
-            .filter(schema::stickers::id.eq_any(stack))
-            .load::<Sticker>(&_connection)
-            .expect("E.");
+        return stack;
     }
 
     pub fn get_color_background(&self) -> String {
@@ -672,26 +667,6 @@ impl User {
             stack.push(_item.community_id.unwrap());
         };
         return stack;
-    }
-    pub fn get_featured_communities(&self) -> Vec<Community> {
-        use crate::schema::communitys::dsl::communitys;
-        use diesel::dsl::any;
-
-        let _connection = establish_connection();
-        return communitys
-            .filter(schema::communitys::id.eq(any(self.get_featured_communities_ids())))
-            .load::<Community>(&_connection)
-            .expect("E.");
-    }
-    pub fn get_6_featured_communities(&self) -> Vec<Community> {
-        use crate::schema::communitys::dsl::communitys;
-        use diesel::dsl::any;
-
-        let _connection = establish_connection();
-        return communitys
-            .filter(schema::communitys::id.eq(any(self.get_6_featured_communities_ids())))
-            .load::<Community>(&_connection)
-            .expect("E.");
     }
     pub fn get_featured_communities_count(&self) -> usize {
         return self.get_featured_communities_ids().len();
