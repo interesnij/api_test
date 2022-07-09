@@ -865,8 +865,6 @@ impl Post {
         content:    Option<String>,
         sticker_id: Option<i32>
     ) -> PostComment {
-        use crate::models::{PostComment, NewPostComment};
-
         let _connection = establish_connection();
         diesel::update(self)
             .set(schema::posts::comment.eq(self.comment + 1))

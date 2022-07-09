@@ -1,7 +1,9 @@
 use crate::schema;
 use crate::schema::{
     user_post_list_collections,
+    user_post_list_positions,
     community_post_list_collections,
+    community_post_list_positions,
     post_list_perms,
     post_list_reposts,
 };
@@ -13,6 +15,42 @@ use crate::utils::{
 use diesel::prelude::*;
 use actix_web::web::Json;
 use crate::models::PostComment;
+
+
+/////// UserPostListPosition //////
+#[derive(Queryable, Serialize, Identifiable)]
+pub struct UserPostListPosition {
+    pub id:       i32,
+    pub user_id:  i32,
+    pub list_id:  i32,
+    pub position: i16,
+    pub types:    String, // a - open, b - close
+}
+#[derive(Deserialize, Insertable)]
+#[table_name="user_post_list_positions"]
+pub struct NewUserPostListPosition {
+    pub user_id:  i32,
+    pub list_id:  i32,
+    pub position: i16,
+    pub types:    String,
+}
+/////// CommunityPostListPosition //////
+#[derive(Debug, Queryable, Serialize, Identifiable)]
+pub struct CommunityPostListPosition {
+    pub id:       i32,
+    pub community_id:  i32,
+    pub list_id:  i32,
+    pub position: i16,
+    pub types:    String, // 1 - open, 2 - close
+}
+#[derive(Deserialize, Insertable)]
+#[table_name="community_post_list_positions"]
+pub struct NewCommunityPostListPosition {
+    pub community_id:  i32,
+    pub list_id:  i32,
+    pub position: i16,
+    pub types:    String,
+}
 
 
 /////// UserPostListCollection //////
