@@ -179,7 +179,7 @@ impl SmileCategorie {
         let _connection = establish_connection();
 
         return smiles
-            .filter(schema::smiles::smile_categorie_id.eq(self.id))
+            .filter(schema::smiles::category_id.eq(self.id))
             .order(schema::smiles::position.asc())
             .load::<Smile>(&_connection)
             .expect("E.");

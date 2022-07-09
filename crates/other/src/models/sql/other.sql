@@ -89,3 +89,13 @@ CREATE TABLE folder_items (
     position  SMALLINT NOT NULL
 );
 CREATE UNIQUE INDEX folder_items_unq ON folder_items (folder_id, id);
+
+CREATE TABLE reactions (
+  id        SERIAL PRIMARY KEY,
+  types     SMALLINT NOT NULL,
+  image     VARCHAR(500) NOT NULL,
+  gif       VARCHAR(500) NOT NULL,
+  name      VARCHAR(100) NOT NULL,
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  position  SMALLINT NOT NULL
+);
