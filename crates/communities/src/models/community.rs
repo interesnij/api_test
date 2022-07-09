@@ -2216,7 +2216,6 @@ impl Community {
 
     pub fn get_follows_users(&self, limit: i64, offset: i64) -> Vec<i32> {
         use crate::schema::community_follows::dsl::community_follows;
-        use crate::models::CommunityFollow;
         //use crate::utils::get_users_from_ids;
 
         let _connection = establish_connection();
