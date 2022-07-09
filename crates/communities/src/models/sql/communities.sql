@@ -104,3 +104,22 @@ CREATE TABLE community_banner_users (
     user_id      INT NOT NULL
 );
 CREATE UNIQUE INDEX community_banner_users_unq ON community_banner_users (community_id, user_id);
+
+-- заявки на вступление в закрытое сообщество -------
+CREATE TABLE community_follows (
+    id           SERIAL PRIMARY KEY,
+    user_id      INT NOT NULL,
+    community_id INT NOT NULL,
+    view         BOOLEAN NOT NULL DEFAULT false,
+    visited      INT NOT NULL
+);
+CREATE UNIQUE INDEX follows_community_user_unq ON follows (user_id, community_id);
+
+-- Приглашения в сообщества -------
+CREATE TABLE community_invites (
+    id             SERIAL PRIMARY KEY,
+    user_id        INT NOT NULL,
+    community_id   INT NOT NULL,
+    invite_creator INT NOT NULL
+);
+CREATE UNIQUE INDEX community_invites_unq ON follows (user_id, community_id);

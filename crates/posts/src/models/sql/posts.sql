@@ -128,6 +128,8 @@ CREATE TABLE post_list_perms (
 );
 CREATE UNIQUE INDEX post_list_perms_unq ON post_list_perms (user_id, post_list_id);
 
+
+-- удалить
 CREATE TABLE posts_perms (
   id                   SERIAL PRIMARY KEY,
   user_id              INT NOT NULL,
@@ -137,6 +139,7 @@ CREATE TABLE posts_perms (
   can_work_post        "char"
 );
 CREATE UNIQUE INDEX posts_perms_unq ON posts_perms (user_id, id);
+-------
 
 CREATE TABLE post_reactions (
     id       SERIAL PRIMARY KEY,
