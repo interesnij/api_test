@@ -23,7 +23,7 @@ use crate::schema::{
     featured_user_communities,
     news_user_communities,
     notify_user_communities,
-    user_notifications,
+    user_profile_notifications,
     user_populate_smiles,
     user_populate_stickers,
 };
@@ -514,7 +514,7 @@ pub struct UserNotification {
     pub user_invite:          bool,
 }
 #[derive(Deserialize, Insertable)]
-#[table_name="user_notifications"]
+#[table_name="user_profile_notifications"]
 pub struct NewUserNotification {
     pub user_id:         i32,
     pub connection_request:   bool,

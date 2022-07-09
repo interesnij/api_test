@@ -1,5 +1,5 @@
 use diesel::prelude::*;
-
+use crate::schema;
 
 pub fn establish_connection() -> PgConnection {
     use dotenv::dotenv;
