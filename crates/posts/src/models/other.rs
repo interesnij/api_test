@@ -15,7 +15,7 @@ use actix_web::web::Json;
 
 
 /////// UserPostListCollection //////
-#[derive(Debug ,Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserPostListCollection {
     pub id:           i32,
     pub user_id:      i32,
@@ -29,7 +29,7 @@ pub struct NewUserPostListCollection {
 }
 
 /////// CommunityPostListCollection //////
-#[derive(Debug ,Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct CommunityPostListCollection {
     pub id:           i32,
     pub community_id: i32,
@@ -46,7 +46,7 @@ pub struct NewCommunityPostListCollection {
 // 'a' Активно
 // 'b' Не активно
 // 'c' Нет значения
-#[derive(Debug ,Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct PostListPerm {
     pub id:              i32,
     pub user_id:         i32,
@@ -71,7 +71,7 @@ pub struct NewPostListPerm {
 
 
 /////// PostVote//////
-#[derive(Debug ,Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct PostVote {
     pub id:       i32,
     pub vote:     i16,
@@ -89,7 +89,7 @@ pub struct NewPostVote {
     pub reaction: i16,
 }
 /////// PostCommentVote //////
-#[derive(Debug ,Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct PostCommentVote {
     pub id:              i32,
     pub vote:            i16,
@@ -107,7 +107,7 @@ pub struct NewPostCommentVote {
 }
 
 /////// PostListRepost //////
-#[derive(Debug ,Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct PostListRepost {
     pub id:           i32,
     pub post_list_id: i32,
@@ -123,7 +123,7 @@ pub struct NewPostListRepost {
 }
 
 /////// PostReaction //////
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct PostReaction {
     pub id:       i32,
     pub post_id:  i32,

@@ -48,7 +48,7 @@ use actix_web::web::Json;
     // 'i' Некоторые подписчики
 
 /////// PostList //////
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct PostList {
     pub id:              i32,
     pub name:            String,

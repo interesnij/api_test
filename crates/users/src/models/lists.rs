@@ -33,7 +33,7 @@ use crate::utils::establish_connection;
 use actix_web::web::Json;
 
 /////// Follow //////
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct Follow {
     pub id:            i32,
     pub user_id:       i32,
@@ -66,7 +66,7 @@ pub struct NewFriend {
     pub visited:        i32,
 }
 
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserProfile {
     pub id:             i32,
     pub user_id:        i32,
@@ -107,7 +107,7 @@ pub struct NewUserProfile {
 }
 
 /////// UserLocation //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserLocation {
     pub id:         i32,
     pub user_id:    i32,
@@ -132,7 +132,7 @@ pub struct NewUserLocation {
 }
 
 /////// UserLocation //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct IpUser {
     pub id:      i32,
     pub user_id: i32,
@@ -146,7 +146,7 @@ pub struct NewIpUser {
 }
 
 /////// UserAnketa //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserAnketa {
     pub id:                    i32,
     pub user_id:               i32,
@@ -172,7 +172,7 @@ pub struct NewUserAnketa {
     // 'e' "Соцсеть плохо защищает детей",
     // 'f' "Другая причина",
 
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserDeleteAnketa {
     pub id:      i32,
     pub user_id: i32,
@@ -211,7 +211,7 @@ pub struct NewUserDeleteAnketa {
 // 'h' "Всё сложно",
 // 'i' "В активном поиске",
 
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserLoveStatus {
     pub id:             i32,
     pub user_id:        i32,
@@ -227,7 +227,7 @@ pub struct NewUserLoveStatus {
 }
 
 /////// UserPartnerOne //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserPartnerOne {
     pub id:        i32,
     pub user_id:   i32,
@@ -241,7 +241,7 @@ pub struct NewUserPartnerOne {
 }
 
 /////// UserMomOne //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserMomOne {
     pub id:        i32,
     pub user_id:   i32,
@@ -255,7 +255,7 @@ pub struct NewUserMomOne {
 }
 
 /////// UserDadOne //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserDadOne {
     pub id:        i32,
     pub user_id:   i32,
@@ -269,7 +269,7 @@ pub struct NewUserDadOne {
 }
 
 /////// UserBrothersSisters //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserBrotherSister {
     pub id:        i32,
     pub user_id:   i32,
@@ -283,7 +283,7 @@ pub struct NewUserBrotherSister {
 }
 
 /////// UserChildren //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserChildrenOne {
     pub id:        i32,
     pub user_id:   i32,
@@ -297,7 +297,7 @@ pub struct NewUserChildrenOne {
 }
 
 /////// UserGrandsons //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserGrandsonsOne {
     pub id:        i32,
     pub user_id:   i32,
@@ -311,7 +311,7 @@ pub struct NewUserGrandsonsOne {
 }
 
 /////// UserColleagues //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserColleaguesOne {
     pub id:        i32,
     pub user_id:   i32,
@@ -325,7 +325,7 @@ pub struct NewUserColleaguesOne {
 }
 
 /////// UserBlocks //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserBlock {
     pub id:        i32,
     pub user_id:   i32,
@@ -343,7 +343,7 @@ pub struct NewUserBlock {
     // 'b' Не активный
     // 'a' Активный список
 
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct ListUserCommunitiesKey {
     pub id:     i32,
     pub types:  String,
@@ -359,7 +359,7 @@ pub struct NewListUserCommunitiesKey {
 }
 
 /////// FeaturedUC //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct FeaturedUserCommunitie {
     pub id:           i32,
     pub owner:        i32,
@@ -381,7 +381,7 @@ pub struct NewFeaturedUserCommunitie {
 }
 
 /////// NewsUC //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct NewsUserCommunitie {
     pub id:           i32,
     pub owner:        i32,
@@ -403,7 +403,7 @@ pub struct NewNewsUserCommunitie {
 }
 
 /////// NotifyUC //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct NotifyUserCommunitie {
     pub id:           i32,
     pub owner:        i32,
@@ -433,7 +433,7 @@ pub struct NewNotifyUserCommunitie {
     // 'e' Друзья, кроме
     // 'f' Некоторые друзья
 
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserPrivate {
     pub id:                 i32,
     pub user_id:            i32,
@@ -473,7 +473,7 @@ pub struct NewUserPrivate {
 }
 
 /////// UserPopulateSmiles //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserPopulateSmile {
     pub id:       i32,
     pub user_id:  i32,
@@ -489,7 +489,7 @@ pub struct NewUserPopulateSmile {
 }
 
 /////// UserPopulateStickers //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserPopulateSticker {
     pub id:         i32,
     pub user_id:    i32,
@@ -505,7 +505,7 @@ pub struct NewUserPopulateSticker {
 }
 
 /////// UserNotifications //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct UserNotification {
     pub id:                   i32,
     pub user_id:              i32,
@@ -523,7 +523,7 @@ pub struct NewUserNotification {
 }
 
 /////// design_settings //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct DesignSetting {
     pub id:         i32,
     pub user_id:    i32,

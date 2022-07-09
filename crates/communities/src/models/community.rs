@@ -18,7 +18,7 @@ use crate::utils::establish_connection;
 use actix_web::web::Json;
 
 /////// CommunityCategories //////
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct CommunityCategory {
     pub id:       i32,
     pub name:     String,
@@ -83,7 +83,7 @@ pub struct NewCommunityCategory {
 }
 
 /////// CommunitySubCategories //////
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct CommunitySubcategory {
     pub id:          i32,
     pub name:        String,
@@ -145,7 +145,7 @@ pub struct NewCommunitySubcategory {
     // 'd' идентификацированное сообщество
 
 /////// Community //////
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct Community {
     pub id:          i32,
     pub name:        String,
@@ -2763,7 +2763,7 @@ impl Community {
 
 
 /////// CommunityMembership //////
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct CommunitiesMembership {
     pub id:               i32,
     pub user_id:          i32,
@@ -2819,7 +2819,7 @@ impl CommunitiesMembership {
 }
 
 /////// CommunityInfo //////
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct CommunityInfo {
     pub id:           i32,
     pub community_id: i32,
@@ -2861,7 +2861,7 @@ pub struct NewCommunityInfo {
     // 'h' Подписчики, кроме
     // 'i' Некоторые подписчики
 
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 #[belongs_to(Community)]
 pub struct CommunityPrivate {
     pub id:               i32,
@@ -2904,7 +2904,7 @@ pub struct NewCommunityPrivate {
 }
 
 /////// CommunityNotifications //////
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct CommunityNotification {
     pub id:                   i32,
     pub community_id:         i32,
@@ -2921,7 +2921,7 @@ pub struct NewCommunityNotification {
     pub community_invite:     bool,
 }
 
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct CommunityVisiblePerm {
     pub id:                      i32,
     pub user_id:                 i32,
@@ -3277,7 +3277,7 @@ impl NewCommunityVisiblePerm {
     }
 }
 
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct CommunityWorkPerm {
     pub id:               i32,
     pub user_id:          i32,
@@ -3327,7 +3327,7 @@ pub struct NewCommunityWorkPerm {
 }
 
 /////// CommunityBannerUser //////
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct CommunityBannerUser {
     pub id:           i32,
     pub community_id: i32,

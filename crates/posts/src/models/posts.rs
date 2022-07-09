@@ -29,7 +29,7 @@ use crate::models::{PostComment, NewPostComment};
     // 'c' Удаленый
 
 
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct Post {
     pub id:              i32,
     pub content:         Option<String>,

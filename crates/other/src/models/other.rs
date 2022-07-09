@@ -28,7 +28,7 @@ pub struct NewCustomLink {
 }
 
 /////// StickerCategories //////
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct StickerCategorie {
     pub id:           i32,
     pub name:         String,
@@ -113,7 +113,7 @@ pub struct NewStickerCategorie {
 }
 
 /////// Stickers //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct Sticker {
     pub id:          i32,
     pub name:        String,
@@ -165,7 +165,7 @@ pub struct NewSticker {
 }
 
 /////// SmileCategories //////
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct SmileCategorie {
     pub id:          i32,
     pub name:        String,
@@ -223,7 +223,7 @@ pub struct NewSmileCategorie {
 }
 
 /////// Smiles //////
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Identifiable)]
 pub struct Smile {
     pub id:          i32,
     pub name:        String,
@@ -294,7 +294,7 @@ pub struct NewSmile {
     // 15 vomiting     рвота на лице
     // 16 pile_of_poo  куча какашек
 
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct Reaction {
     pub id:        i32,
     pub types:     i16,

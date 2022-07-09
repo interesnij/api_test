@@ -20,7 +20,7 @@ use actix_web::web::Json;
 // 'e' Закрытый модератором
 // 'f' Закрытый Удаленый
 
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct PostComment {
     pub id:         i32,
     pub post_id:    i32,
