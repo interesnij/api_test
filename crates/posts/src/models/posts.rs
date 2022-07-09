@@ -327,7 +327,7 @@ impl Post {
                 list.user_id,
                 list.owner_name.clone(),
                 list.owner_link.clone(),
-                list.owner_image,
+                list.owner_image.clone(), 
                 None,
                 item.attach.clone(),
                 item.comment_enabled.clone(),
