@@ -708,7 +708,7 @@ impl PostList {
 
         let _connection = establish_connection();
         let _post_list_positions = community_post_list_positions
-            .filter(schema::community_post_list_positions::community_id.eq(community_id.unwrap()))
+            .filter(schema::community_post_list_positions::community_id.eq(community_id))
             .filter(schema::community_post_list_positions::types.eq("a"))
             .limit(1)
             .load::<CommunityPostListPosition>(&_connection)
@@ -746,7 +746,7 @@ impl PostList {
             return PostList::get_user_post_list(user_id).id;
         }
     }
-    pub fn get_user_post_list(&self, user_id: i32) -> PostList {
+    pub fn get_user_post_list(user_id: i32) -> PostList {
         use crate::schema::post_lists::dsl::post_lists;
 
         let _connection = establish_connection();
@@ -759,7 +759,7 @@ impl PostList {
 
         return lists.into_iter().nth(0).unwrap();
     }
-    pub fn get_community_post_list(&self, community_id: i32) -> PostList {
+    pub fn get_community_post_list(community_id: i32) -> PostList {
         use crate::schema::post_lists::dsl::post_lists;
 
         let _connection = establish_connection();

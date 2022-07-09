@@ -10,6 +10,7 @@ use crate::models::{
     PostReaction, NewPostReaction,
     PostList,
 };
+use crate::schema::posts;
 /////// Post //////
 
 //////////// тип

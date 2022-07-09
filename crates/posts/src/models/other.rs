@@ -6,6 +6,8 @@ use crate::schema::{
     community_post_list_positions,
     post_list_perms,
     post_list_reposts,
+    post_comment_reactions,
+    post_reactions,
 };
 use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
