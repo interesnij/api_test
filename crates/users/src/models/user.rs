@@ -173,13 +173,13 @@ impl User {
     }
 
     pub fn get_b_avatar(&self) -> String {
-        let avatar_pk = self.get_avatar_pk();
-        if avatar_pk != 0 {
-            return "<img src='".to_string() + &self.b_avatar.as_ref().unwrap() + &"' class='detail_photo pointer' photo-pk='".to_string() + &avatar_pk.to_string() + &"'>".to_string();
-        }
-        else {
-            return "<img src='/static/images/no_img/b_avatar.png' />".to_string();
-        }
+        //let avatar_pk = self.get_avatar_pk();
+        //if avatar_pk != 0 {
+        //    return "<img src='".to_string() + &self.b_avatar.as_ref().unwrap() + &"' class='detail_photo pointer' photo-pk='".to_string() + &avatar_pk.to_string() + &"'>".to_string();
+        //}
+        //else {
+        return "<img src='/static/images/no_img/b_avatar.png' />".to_string();
+        //}
     }
     pub fn get_ss_avatar(&self) -> String {
         if self.s_avatar.is_some() {
@@ -784,7 +784,6 @@ impl User {
             let _new_profile = NewUserProfile {
                 user_id: self.id,
                 posts: 0,
-                views_post: 0,
                 friends: 0,
                 follows: 0,
                 communities: 0,
@@ -1116,7 +1115,7 @@ impl User {
             .expect("E");
         let mut stack = Vec::new();
         for _item in all_user_blocks.iter() {
-            stack.push(_item.blocked_user_id);
+            stack.push(_item.target_id);
         };
         return users
             .filter(schema::users::id.eq_any(stack))
@@ -3226,27 +3225,27 @@ impl User {
                             .expect("Error.");
                 }
             }
-            return;
-            for community_id in user.get_6_communities_ids().iter() {
-                if !self.is_member_of_community(*community_id) && featured_user_communities
-                    .filter(schema::featured_user_communities::owner.eq(self.id))
-                    .filter(schema::featured_user_communities::community_id.eq(community_id))
-                    .load::<FeaturedUserCommunitie>(&_connection)
-                    .expect("E").len() == 0 {
-                        let new_featured = NewFeaturedUserCommunitie {
-                                owner: self.id,
-                                list_id: None,
-                                user_id: None,
-                                community_id: Some(*community_id),
-                                mute: false,
-                                sleep: None,
-                            };
-                            diesel::insert_into(schema::featured_user_communities::table)
-                                .values(&new_featured)
-                                .get_result::<FeaturedUserCommunitie>(&_connection)
-                                .expect("Error.");
-                }
-            }
+
+            //for community_id in user.get_6_communities_ids().iter() {
+            //    if !self.is_member_of_community(*community_id) && featured_user_communities
+            //        .filter(schema::featured_user_communities::owner.eq(self.id))
+            //        .filter(schema::featured_user_communities::community_id.eq(community_id))
+            //        .load::<FeaturedUserCommunitie>(&_connection)
+            //        .expect("E").len() == 0 {
+            //            let new_featured = NewFeaturedUserCommunitie {
+            //                    owner: self.id,
+            //                    list_id: None,
+            //                    user_id: None,
+            //                    community_id: Some(*community_id),
+            //                    mute: false,
+            //                    sleep: None,
+            //                };
+            //                diesel::insert_into(schema::featured_user_communities::table)
+            //                    .values(&new_featured)
+            //                    .get_result::<FeaturedUserCommunitie>(&_connection)
+            //                    .expect("Error.");
+            //    }
+            //}
     }
 
     pub fn follow_user(&self, user: User) -> bool {

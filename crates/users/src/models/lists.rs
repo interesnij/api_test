@@ -51,7 +51,7 @@ pub struct NewFollow {
 }
 
 /////// Friend //////
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct Friend {
     pub id:             i32,
     pub user_id:        i32,
