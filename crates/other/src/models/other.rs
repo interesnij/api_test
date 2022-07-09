@@ -13,6 +13,7 @@ use serde::{Serialize, Deserialize};
 use crate::utils::establish_connection;
 use actix_web::web::Json;
 
+
 /////// CustomLink //////
 #[derive(Debug, Queryable, Serialize)]
 pub struct CustomLink {
