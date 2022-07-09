@@ -8,4 +8,4 @@ pub use self::{
     posts::*,
     comments::*,
     other::*,
-}
+};
