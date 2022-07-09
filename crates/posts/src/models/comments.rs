@@ -8,8 +8,12 @@ use crate::schema::{
 };
 use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
-use crate::utils::establish_connection;
+use crate::utils::{
+    establish_connection,
+    JsonItemReactions,
+}
 use actix_web::web::Json;
+use crate::models::PostCommentReaction;
 
 /////// PostComment //////
 
@@ -145,6 +149,7 @@ impl PostComment {
     }
     pub fn close_item(&self) -> () {
         //use crate::models::hide_wall_notify_items;
+        use crate::models::Post;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -168,6 +173,7 @@ impl PostComment {
     }
     pub fn unclose_item(&self) -> () {
         //use crate::models::show_wall_notify_items;
+        use crate::models::Post;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -192,6 +198,7 @@ impl PostComment {
 
     pub fn delete_item(&self) -> () {
         //use crate::models::hide_wall_notify_items;
+        use crate::models::Post;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -215,6 +222,7 @@ impl PostComment {
     }
     pub fn restore_item(&self) -> () {
         //use crate::models::show_wall_notify_items;
+        use crate::models::Post;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -465,6 +473,7 @@ impl PostComment {
 
     pub fn reactions_ids(&self) -> Vec<i32> {
         use crate::schema::post_comment_votes::dsl::post_comment_votes;
+        use crate::models::PostCommentVote;
 
         let _connection = establish_connection();
         let votes = post_comment_votes
@@ -484,6 +493,7 @@ impl PostComment {
 
     pub fn get_user_reaction(&self, user_id: i32) -> i16 {
         use crate::schema::post_comment_votes::dsl::post_comment_votes;
+        use crate::models::PostCommentVote;
         // "/static/images/reactions/" + get_user_reaction + ".jpg"
         let _connection = establish_connection();
         let vote = post_comment_votes

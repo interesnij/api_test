@@ -11,8 +11,8 @@ use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
 use crate::utils::{establish_connection, JsonPosition};
 use actix_web::web::Json;
-use crate::models::{PostComment, NewPostComment};
-
+use crate::models::{PostComment, NewPostComment, PostReaction};
+use crate::models::PostCommentReaction;
 /////// Post //////
 
 //////////// тип
