@@ -714,7 +714,7 @@ impl PostList {
                 .list_id;
             }
             else {
-                return self.get_post_list().id;
+                return self.get_community_post_list(community_id).id;
             }
         }
         else {
@@ -735,10 +735,35 @@ impl PostList {
                 .list_id;
             }
             else {
-                return self.get_post_list().id;
+                return self.get_user_post_list(self.user_id).id;
             }
         }
     }
+    pub fn get_user_post_list(&self, user_id: i32) -> PostList {
+        use crate::schema::post_lists::dsl::post_lists;
+
+        let _connection = establish_connection();
+        let lists = post_lists
+            .filter(schema::post_lists::user_id.eq(user_id))
+            .filter(schema::post_lists::community_id.is_null())
+            .filter(schema::post_lists::types.eq(1))
+            .load::<PostList>(&_connection)
+            .expect("E.");
+
+        return lists.into_iter().nth(0).unwrap();
+    }
+    pub fn get_community_post_list(&self, community_id: i32) -> PostList {
+        use crate::schema::post_lists::dsl::post_lists;
+
+        let _connection = establish_connection();
+        let lists = post_lists
+            .filter(schema::post_lists::community_id.eq(community))
+            .filter(schema::post_lists::types.eq(1))
+            .load::<PostList>(&_connection)
+            .expect("E.");
+        return lists.into_iter().nth(0).unwrap();
+    }
+
     pub fn get_post_lists(&self) -> Vec<PostList> {
         use crate::schema::post_lists::dsl::post_lists;
 
