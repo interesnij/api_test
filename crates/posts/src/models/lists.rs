@@ -8,7 +8,14 @@ use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
 use crate::utils::establish_connection;
 use actix_web::web::Json;
-use crate::models::{Post, UserPostListPosition, CommunityPostListPosition};
+use crate::models::{
+    Post,
+    UserPostListCollection, NewUserPostListCollection,
+    UserPostListPosition,
+    CommunityPostListCollection, NewCommunityPostListCollection,
+    CommunityPostListPosition,
+    PostListPerm
+};
 
 /////// PostList //////
 ////////// Тип списка
@@ -1762,7 +1769,7 @@ impl PostList {
     pub fn create_post (
         &self,
         content: Option<String>,
-        community_id: i32,
+        community_id: Option<i32>,
         user_id: i32,
         owner_name: String,
         owner_link: String,

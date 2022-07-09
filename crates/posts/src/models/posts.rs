@@ -242,7 +242,6 @@ impl Post {
 
     pub fn get_list(&self) -> PostList {
         use crate::schema::post_lists::dsl::post_lists;
-        use crate::models::PostList;
 
         let _connection = establish_connection();
         return post_lists
@@ -496,7 +495,6 @@ impl Post {
 
     pub fn delete_item(&self) -> () {
         //use crate::models::hide_wall_notify_items;
-        use crate::models::PostList;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -530,7 +528,6 @@ impl Post {
     }
     pub fn restore_item(&self) -> () {
         //use crate::models::show_wall_notify_items;
-        use crate::models::PostList;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -565,7 +562,6 @@ impl Post {
 
     pub fn close_item(&self) -> () {
         //use crate::models::hide_wall_notify_items;
-        use crate::models::PostList;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -597,7 +593,6 @@ impl Post {
     }
     pub fn unclose_item(&self) -> () {
         //use crate::models::show_wall_notify_items;
-        use crate::models::PostList;
 
         let _connection = establish_connection();
         let user_types = &self.types;
