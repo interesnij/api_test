@@ -320,3 +320,10 @@ CREATE TABLE friends_visible_perms (
     can_see_all              "char"
 );
 CREATE UNIQUE INDEX friends_visible_perms_unq ON friends_visible_perms (user_id, id);
+
+
+CREATE TABLE phone_codes (
+    id    SERIAL PRIMARY KEY,
+    phone VARCHAR(14) NOT NULL,
+    code  INT NOT NULL
+);
