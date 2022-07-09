@@ -8,6 +8,7 @@ use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
 use crate::utils::establish_connection;
 use actix_web::web::Json;
+use crate::models::{Post, UserPostListPosition, CommunityPostListPosition};
 
 /////// PostList //////
 ////////// Тип списка
@@ -1782,7 +1783,7 @@ impl PostList {
 
         let mut _types = "".to_string();
         //let mut _content: Option<String> = None;
-        let creator = get_user(user_id);
+        //let creator = get_user(user_id);
 
         if types.is_some() {
             _types = types.unwrap();

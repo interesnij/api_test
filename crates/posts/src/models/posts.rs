@@ -1,20 +1,14 @@
 use crate::schema;
 use diesel::prelude::*;
-use crate::schema::{
-    post_lists,
-    post_comments,
-    post_list_perms,
-    post_votes,
-    post_reactions,
-};
+
 use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
-use crate::utils::{establish_connection, JsonPosition};
+use crate::utils::{establish_connection, JsonPosition, JsonItemReactions};
 use actix_web::web::Json;
 use crate::models::{
     PostComment, NewPostComment,
     PostReaction, NewPostReaction,
-    PostList, Post
+    PostList,
 };
 /////// Post //////
 
@@ -108,7 +102,6 @@ impl Post {
 
     pub fn get_or_create_react_model(&self) -> PostReaction {
         use crate::schema::post_reactions::dsl::post_reactions;
-        use crate::models::PostReaction;
 
         let _connection = establish_connection();
         let _react_model = post_reactions

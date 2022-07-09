@@ -149,7 +149,6 @@ impl PostComment {
     }
     pub fn close_item(&self) -> () {
         //use crate::models::hide_wall_notify_items;
-        use crate::models::Post;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -173,7 +172,6 @@ impl PostComment {
     }
     pub fn unclose_item(&self) -> () {
         //use crate::models::show_wall_notify_items;
-        use crate::models::Post;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -198,7 +196,6 @@ impl PostComment {
 
     pub fn delete_item(&self) -> () {
         //use crate::models::hide_wall_notify_items;
-        use crate::models::Post;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -222,7 +219,6 @@ impl PostComment {
     }
     pub fn restore_item(&self) -> () {
         //use crate::models::show_wall_notify_items;
-        use crate::models::Post;
 
         let _connection = establish_connection();
         let user_types = &self.types;
