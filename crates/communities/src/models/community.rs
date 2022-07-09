@@ -226,13 +226,13 @@ impl Community {
             .len();
     }
     pub fn get_b_avatar(&self) -> String {
-        let avatar_pk = self.get_avatar_pk();
-        if avatar_pk != 0 {
-            return "<img src='".to_string() + &self.b_avatar.as_ref().unwrap() + &"' class='detail_photo pointer' photo-pk='".to_string() + &avatar_pk.to_string() + &"'>".to_string();
-        }
-        else {
-            return "<img src='/static/images/no_img/b_avatar.png' />".to_string();
-        }
+        //let avatar_pk = self.get_avatar_pk();
+        //if avatar_pk != 0 {
+        //    return "<img src='".to_string() + &self.b_avatar.as_ref().unwrap() + &"' class='detail_photo pointer' photo-pk='".to_string() + &avatar_pk.to_string() + &"'>".to_string();
+        //}
+        //else {
+        return "<img src='/static/images/no_img/b_avatar.png' />".to_string();
+        //}
     }
     pub fn get_ss_avatar(&self) -> String {
         if self.s_avatar.is_some() {
@@ -715,7 +715,7 @@ impl Community {
     }
 
 
-    pub fn add_notification_subscriber(&self, user_id: i32) -> bool {
+    pub fn add_notification_subscriber(&self, user_id: i32) -> () {
         use crate::models::{NotifyUserCommunitie, NewNotifyUserCommunitie};
         use crate::schema::notify_user_communities::dsl::notify_user_communities;
 
@@ -738,9 +738,8 @@ impl Community {
                     .get_result::<NotifyUserCommunitie>(&_connection)
                     .expect("Error.");
         }
-        return true;
     }
-    pub fn add_notification_subscriber_in_list(&self, notify_id: i32, list_id: i32, user_id: i32) -> bool {
+    pub fn add_notification_subscriber_in_list(&self, notify_id: i32, list_id: i32, user_id: i32) -> () {
         use crate::models::{NotifyUserCommunitie, ListUserCommunitiesKey};
         use crate::schema::notify_user_communities::dsl::notify_user_communities;
         use crate::schema::list_user_communities_keys::dsl::list_user_communities_keys;
@@ -754,11 +753,9 @@ impl Community {
                 .set(schema::notify_user_communities::list_id.eq(_list[0].id))
                 .get_result::<NotifyUserCommunitie>(&_connection)
                 .expect("Error.");
-            return true;
         }
-        return false;
     }
-    pub fn delete_notification_subscriber(&self, user_id: i32) -> bool {
+    pub fn delete_notification_subscriber(&self, user_id: i32) -> () {
         use crate::models::NotifyUserCommunitie;
         use crate::schema::notify_user_communities::dsl::notify_user_communities;
 
@@ -776,11 +773,9 @@ impl Community {
                 )
                 .execute(&_connection)
                 .expect("E");
-            return true;
         }
-        return false;
     }
-    pub fn delete_notification_subscriber_from_list(&self, notify_id: i32, user_id: i32) -> bool {
+    pub fn delete_notification_subscriber_from_list(&self, notify_id: i32, user_id: i32) -> () {
         use crate::models::{NotifyUserCommunitie, NewNotifyUserCommunitie};
         use crate::schema::notify_user_communities::dsl::notify_user_communities;
 
@@ -801,7 +796,6 @@ impl Community {
                 .expect("Error.");
                 return true;
             }
-        return false;
     }
     pub fn create_community(name: String, category_id: i32, user_id: i32, types: i16) -> String {
         let user_id = user_id;
@@ -810,15 +804,15 @@ impl Community {
         let count = Community::count_communities() + 1;
         let link = "/public".to_string() + &count.to_string() + &"/".to_string();
         let new_community_form = NewCommunity {
-                name:                     name,
-                status:                   None,
-                types:                    types,
-                link:                     link,
-                perm:                     "a".to_string(),
-                level:                    100,
-                community_subcategory_id: category_id,
-                user_id:                  user_id,
-                created:                  chrono::Local::now().naive_utc(),
+                name:        name,
+                status:      None,
+                types:       types,
+                link:        link,
+                perm:        "a".to_string(),
+                level:       100,
+                category_id: category_id,
+                user_id:     user_id,
+                created:     chrono::Local::now().naive_utc(),
             };
         let new_community = diesel::insert_into(schema::communitys::table)
             .values(&new_community_form)
@@ -2565,27 +2559,6 @@ impl Community {
             stack.push(_item.owner);
         };
         return stack;
-    }
-    pub fn get_community_notifications(&self) -> Vec<Notification> {
-        use crate::schema::notifications::dsl::notifications;
-
-        let _connection = establish_connection();
-        return notifications
-            .or_filter(schema::notifications::community_id.eq(self.id))
-            .filter(schema::notifications::user_set_id.is_null())
-            .filter(schema::notifications::object_set_id.is_null())
-            .load::<Notification>(&_connection)
-            .expect("E");
-    }
-    pub fn count_user_notifications(&self) -> usize {
-        use crate::schema::notifications::dsl::notifications;
-
-        let _connection = establish_connection();
-        return notifications
-            .filter(schema::notifications::community_id.eq(self.id))
-            .filter(schema::notifications::status.lt(10))
-            .load::<Notification>(&_connection)
-            .expect("E").len();
     }
 
     pub fn set_friends_visible_perms(&self, action: String, users: String, types: String) -> bool {
