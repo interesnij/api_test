@@ -1,4 +1,5 @@
 use diesel::prelude::*;
+use serde::{Serialize, Deserialize};
 
 
 #[derive(Deserialize)]

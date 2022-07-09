@@ -9,7 +9,7 @@ use crate::utils::{
 };
 use actix_web::web::Json;
 use crate::models::{Post, PostCommentReaction, PostList};
-
+use crate::schema::post_comments;
 /////// PostComment //////
 
 // 'a' Опубликованный

@@ -8,6 +8,7 @@ use crate::schema::{
     post_list_reposts,
     post_comment_reactions,
     post_reactions,
+    post_votes,
 };
 use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
