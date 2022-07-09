@@ -506,7 +506,7 @@ pub struct NewUserPopulateSticker {
 
 /////// UserNotifications //////
 #[derive(Queryable, Serialize, Deserialize, Identifiable)]
-pub struct UserNotification {
+pub struct UserProfileNotification {
     pub id:                   i32,
     pub user_id:              i32,
     pub connection_request:   bool,
@@ -515,11 +515,11 @@ pub struct UserNotification {
 }
 #[derive(Deserialize, Insertable)]
 #[table_name="user_profile_notifications"]
-pub struct NewUserNotification {
-    pub user_id:         i32,
+pub struct NewUserProfileNotification {
+    pub user_id:              i32,
     pub connection_request:   bool,
     pub connection_confirmed: bool,
-    pub user_invite:     bool,
+    pub community_invite:     bool,
 }
 
 /////// design_settings //////

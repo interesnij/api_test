@@ -430,7 +430,6 @@ impl User {
         }
     }
     pub fn get_populate_smiles_ids(&self) -> Vec<i32> {
-        use crate::schema::smiles::dsl::smiles;
         use crate::schema::user_populate_smiles::dsl::user_populate_smiles;
         use crate::models::UserPopulateSmile;
 
@@ -448,7 +447,6 @@ impl User {
     }
 
     pub fn get_populate_stickers_ids(&self) -> Vec<i32> {
-        use crate::schema::stickers::dsl::stickers;
         use crate::schema::user_populate_stickers::dsl::user_populate_stickers;
         use crate::models::UserPopulateSticker;
 
