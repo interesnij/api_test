@@ -38,6 +38,32 @@ table! {
 }
 
 table! {
+    friends_visible_perms (id) {
+        id -> Int4,
+        user_id -> Int4,
+        can_see_info -> Nullable<Char>,
+        can_see_community -> Nullable<Char>,
+        can_see_friend -> Nullable<Char>,
+        can_send_message -> Nullable<Char>,
+        can_add_in_chat -> Nullable<Char>,
+        can_see_doc -> Nullable<Char>,
+        can_see_music -> Nullable<Char>,
+        can_see_survey -> Nullable<Char>,
+        can_see_post -> Nullable<Char>,
+        can_see_post_comment -> Nullable<Char>,
+        can_see_photo -> Nullable<Char>,
+        can_see_photo_comment -> Nullable<Char>,
+        can_see_good -> Nullable<Char>,
+        can_see_good_comment -> Nullable<Char>,
+        can_see_video -> Nullable<Char>,
+        can_see_video_comment -> Nullable<Char>,
+        can_see_planner -> Nullable<Char>,
+        can_see_planner_comment -> Nullable<Char>,
+        can_see_all -> Nullable<Char>,
+    }
+}
+
+table! {
     ip_users (id) {
         id -> Int4,
         user_id -> Int4,
@@ -289,6 +315,7 @@ allow_tables_to_appear_in_same_query!(
     featured_user_communities,
     follows,
     friends,
+    friends_visible_perms,
     ip_users,
     list_user_communities_keys,
     news_user_communities,
