@@ -105,6 +105,7 @@ impl Post {
 
     pub fn get_or_create_react_model(&self) -> PostReaction {
         use crate::schema::post_reactions::dsl::post_reactions;
+        use crate::models::PostReaction;
 
         let _connection = establish_connection();
         let _react_model = post_reactions
@@ -145,6 +146,7 @@ impl Post {
 
     pub fn send_reaction(&self, user_id: i32, types: i16) -> Json<JsonItemReactions> {
         use crate::schema::post_votes::dsl::post_votes;
+        use crate::models::{PostVote, NewPostVote};
 
         let _connection = establish_connection();
         let list = self.get_list();
@@ -244,6 +246,7 @@ impl Post {
 
     pub fn get_list(&self) -> PostList {
         use crate::schema::post_lists::dsl::post_lists;
+        use crate::models::PostList;
 
         let _connection = establish_connection();
         return post_lists
@@ -497,6 +500,7 @@ impl Post {
 
     pub fn delete_item(&self) -> () {
         //use crate::models::hide_wall_notify_items;
+        use crate::models::PostList;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -530,6 +534,7 @@ impl Post {
     }
     pub fn restore_item(&self) -> () {
         //use crate::models::show_wall_notify_items;
+        use crate::models::PostList;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -564,6 +569,7 @@ impl Post {
 
     pub fn close_item(&self) -> () {
         //use crate::models::hide_wall_notify_items;
+        use crate::models::PostList;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -595,6 +601,7 @@ impl Post {
     }
     pub fn unclose_item(&self) -> () {
         //use crate::models::show_wall_notify_items;
+        use crate::models::PostList;
 
         let _connection = establish_connection();
         let user_types = &self.types;
@@ -686,17 +693,17 @@ impl Post {
         return self.repost > 0;
     }
 
-    pub fn fixed_post(&self, user: User) -> bool {
-        if user.is_can_fixed_post() {
-            let _connection = establish_connection();
-            diesel::update(self)
-                .set(schema::posts::types.eq("b"))
-                .get_result::<Post>(&_connection)
-                .expect("E");
-            return true;
-        }
-        return false;
-    }
+    //pub fn fixed_post(&self, user: User) -> bool {
+    //    if user.is_can_fixed_post() {
+    //        let _connection = establish_connection();
+    //        diesel::update(self)
+    //            .set(schema::posts::types.eq("b"))
+    //            .get_result::<Post>(&_connection)
+    //            .expect("E");
+    //        return true;
+    //    }
+    //    return false;
+    //}
     pub fn unfixed_post(&self) -> bool {
         let _connection = establish_connection();
         diesel::update(self)
@@ -798,6 +805,7 @@ impl Post {
 
     pub fn reactions_ids(&self) -> Vec<i32> {
         use crate::schema::post_votes::dsl::post_votes;
+        use crate::models::PostVote;
 
         let _connection = establish_connection();
         let votes = post_votes
@@ -817,6 +825,7 @@ impl Post {
 
     pub fn get_user_reaction(&self, user_id: i32) -> i16 {
         use crate::schema::post_votes::dsl::post_votes;
+        use crate::models::PostVote;
         // "/static/images/reactions/" + get_user_reaction + ".jpg"
 
         let _connection = establish_connection();
