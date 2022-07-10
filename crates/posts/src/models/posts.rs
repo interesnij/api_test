@@ -8,7 +8,7 @@ use actix_web::web::Json;
 use crate::models::{
     PostComment, NewPostComment,
     PostReaction, NewPostReaction,
-    PostList,
+    PostList, PostRepost,
 };
 use crate::schema::posts;
 /////// Post //////
@@ -107,7 +107,7 @@ impl Post {
         let _connection = establish_connection();
 
         let count = post_reposts
-            .filter(schema::post_reposts::post_list_id.eq(self.id))
+            .filter(schema::post_reposts::post_id.eq(self.id))
             .filter(schema::post_reposts::message_id.is_not_null())
             .load::<PostRepost>(&_connection)
             .expect("E.")
