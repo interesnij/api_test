@@ -137,7 +137,7 @@ impl PostList {
     pub fn is_open(&self) -> bool {
         return self.types < 10;
     }
-    pub fn get_reactions_list(&self) -> Vec<i16> {
+    pub fn get_reactions_list(&self) -> web::Json<Vec<i16>> {
         let mut stack = Vec::new();
         if self.reactions.is_some() {
             let react_scring = self.reactions.as_ref().unwrap().to_string();
@@ -156,10 +156,10 @@ impl PostList {
     pub fn count_reactions_list(&self) -> usize {
         return self.get_reactions_list().len();
     }
-    pub fn count_reactions_list_ru_alt(&self) -> String {
+    pub fn count_reactions_list_ru_alt(&self) -> web::Json<String> {
         use crate::utils::get_count_for_ru_alt;
 
-        return get_count_for_ru_alt(
+        return get_count_for_ru_alt (
             self.count_reactions_list().try_into().unwrap(),
             " реакция".to_string(),
             " реакции".to_string(),
@@ -194,7 +194,19 @@ impl PostList {
             return ", из них в сообщениях - ".to_string() + &count.to_string();
         }
     }
-    pub fn reposts(&self, limit: i64, offset: i64) -> Vec<Post> {
+
+    #[derive(Serialize)]
+    pub struct RepostsJson {
+        pub reposts_count:   i32,
+        pub message_reposts: String,
+        pub copy_count:      i32,
+        pub community_id:    Option<i32>,
+        pub user_id:         i32,
+        pub owner_name:      String,
+        pub owner_link:      String,
+        pub owner_image:     Option<String>,
+    }
+    pub fn reposts(&self, limit: i64, offset: i64) -> web::Json<Vec<RepostsJson>> {
         use crate::schema::post_list_reposts::dsl::post_list_reposts;
         use crate::schema::posts::dsl::posts;
 
@@ -202,20 +214,56 @@ impl PostList {
         let item_reposts = post_list_reposts
             .filter(schema::post_list_reposts::post_list_id.eq(self.id))
             .filter(schema::post_list_reposts::post_id.is_not_null())
+            .order(schema::post_list_reposts::id.desc())
             .limit(limit)
             .offset(offset)
             .load::<PostListRepost>(&_connection)
+            .select(post_id)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in item_reposts.iter() {
-            stack.push(_item.post_id.unwrap());
-        };
-        return posts
-            .filter(schema::posts::id.eq_any(stack))
-            .limit(6)
-            .load::<Post>(&_connection)
-            .expect("E");
+        //let mut stack = Vec::new();
+        //for _item in item_reposts.iter() {
+        //    stack.push(_item.post_id.unwrap());
+        //}
+
+        if stack.len() == 0 {
+            return Json(RepostsJson {
+                reposts_count:   0,
+                message_reposts: "".to_string(),
+                copy_count:      0,
+                community_id:    None,
+                user_id:         0,
+                owner_name:      "".to_string(),
+                owner_link:      "".to_string(),
+                owner_image:     None,
+            });
+        }
+        else {
+            let mut stack: RepostsJson = Vec::new();
+            for _item in item_reposts.iter() {
+                stack.push (
+                    RepostsJson {
+                        reposts_count:   _item.repost,
+                        message_reposts: _item.message_reposts_count(),
+                        copy_count:      _item.copy,
+                        community_id:    _item.community_id,
+                        user_id:         _item.user_id,
+                        owner_name:      _item.owner_name.clone(),
+                        owner_link:      _item.owner_link.clone(),
+                        owner_image:     _item.owner_image.clone(),
+                    }
+                )
+            }
+            return stack;
+        }
+        //let post_list = posts
+        //    .filter(schema::posts::id.eq_any(stack))
+        //    .load::<Post>(&_connection)
+        //    .expect("E");
+
+        //for _item in item_reposts.iter() {
+        //    stack.push(_item.post_id.unwrap());
+        //}
     }
     pub fn window_reposts(&self) -> Vec<Post> {
         use crate::schema::post_list_reposts::dsl::post_list_reposts;
