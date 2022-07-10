@@ -243,7 +243,11 @@ impl PostList {
             return Json(stack);
         }
         else {
-            for _item in item_reposts.iter() {
+            let post_list = posts
+                .filter(schema::posts::id.eq_any(item_reposts))
+                .load::<Post>(&_connection)
+                .expect("E");
+            for _item in post_list.iter() {
                 stack.push (
                     RepostsJson {
                         reposts_count:   _item.repost,
