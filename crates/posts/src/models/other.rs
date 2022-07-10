@@ -151,7 +151,7 @@ pub struct NewPostCommentVote {
 }
 
 /////// PostListRepost //////
-#[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
+#[derive(Debug, Serialize, Deserialize, Identifiable)]
 pub struct PostListRepost {
     pub id:           i32,
     pub post_list_id: i32,
