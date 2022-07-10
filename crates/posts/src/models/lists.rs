@@ -219,14 +219,14 @@ impl PostList {
             .order(schema::post_list_reposts::id.desc())
             .limit(limit)
             .offset(offset)
-            .select(schema::post_list_reposts::post_id)
+            //.select(schema::post_list_reposts::post_id)
             .load::<PostListRepost>(&_connection)
             .expect("E");
 
-        //let mut stack = Vec::new();
-        //for _item in item_reposts.iter() {
-        //    stack.push(_item.post_id.unwrap());
-        //}
+        let mut id_stack = Vec::new();
+        for _item in item_reposts.iter() {
+            id_stack.push(_item.post_id.unwrap());
+        }
 
         let mut stack = Vec::new();
         if item_reposts.len() == 0 {
@@ -244,7 +244,7 @@ impl PostList {
         }
         else {
             let post_list = posts
-                .filter(schema::posts::id.eq_any(item_reposts))
+                .filter(schema::posts::id.eq_any(id_stack))
                 .load::<Post>(&_connection)
                 .expect("E");
             for _item in post_list.iter() {
