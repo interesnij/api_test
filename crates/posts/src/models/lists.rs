@@ -208,7 +208,7 @@ impl PostList {
     }
 
 
-    pub fn reposts(&self, limit: i64, offset: i64) -> web::Json<Vec<RepostsJson>> {
+    pub fn reposts(&self, limit: i64, offset: i64) -> Json<Vec<RepostsJson>> {
         use crate::schema::post_list_reposts::dsl::post_list_reposts;
         use crate::schema::posts::dsl::posts;
 
@@ -220,7 +220,7 @@ impl PostList {
             .limit(limit)
             .offset(offset)
             .load::<PostListRepost>(&_connection)
-            .select(post_id)
+            .select(schema::post_list_reposts::post_id)
             .expect("E");
 
         //let mut stack = Vec::new();
@@ -241,7 +241,7 @@ impl PostList {
             });
         }
         else {
-            let mut stack: RepostsJson = Vec::new();
+            let mut stack = Vec::new();
             for _item in item_reposts.iter() {
                 stack.push (
                     RepostsJson {
