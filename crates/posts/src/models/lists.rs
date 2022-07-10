@@ -218,8 +218,9 @@ impl PostList {
             .order(schema::post_list_reposts::id.desc())
             .limit(limit)
             .offset(offset)
-            .select((schema::post_list_reposts::id))
-            .load::<PostListRepost>(&_connection)
+            .select((schema::post_list_reposts::post_id))
+            //.load::<PostListRepost>(&_connection)
+            .load(&_connection)
             .expect("E");
 
         let mut id_stack = Vec::new();
