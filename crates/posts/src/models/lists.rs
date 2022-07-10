@@ -216,9 +216,10 @@ impl PostList {
             .filter(schema::post_list_reposts::post_list_id.eq(self.id))
             .filter(schema::post_list_reposts::post_id.is_not_null())
             .order(schema::post_list_reposts::id.desc())
+
+            .select(schema::post_list_reposts::post_id)
             .limit(limit)
             .offset(offset)
-            .select(schema::post_list_reposts::post_id)
             .load::<PostListRepost>(&_connection)
             .expect("E");
 
