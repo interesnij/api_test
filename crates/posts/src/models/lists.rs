@@ -17,6 +17,18 @@ use crate::models::{
     PostListRepost,
 };
 
+#[derive(Serialize)]
+pub struct RepostsJson {
+    pub reposts_count:   i32,
+    pub message_reposts: String,
+    pub copy_count:      i32,
+    pub community_id:    Option<i32>,
+    pub user_id:         i32,
+    pub owner_name:      String,
+    pub owner_link:      String,
+    pub owner_image:     Option<String>,
+}
+
 /////// PostList //////
 ////////// Тип списка
     // 1 основной список
@@ -195,17 +207,7 @@ impl PostList {
         }
     }
 
-    #[derive(Serialize)]
-    pub struct RepostsJson {
-        pub reposts_count:   i32,
-        pub message_reposts: String,
-        pub copy_count:      i32,
-        pub community_id:    Option<i32>,
-        pub user_id:         i32,
-        pub owner_name:      String,
-        pub owner_link:      String,
-        pub owner_image:     Option<String>,
-    }
+
     pub fn reposts(&self, limit: i64, offset: i64) -> web::Json<Vec<RepostsJson>> {
         use crate::schema::post_list_reposts::dsl::post_list_reposts;
         use crate::schema::posts::dsl::posts;
@@ -226,7 +228,7 @@ impl PostList {
         //    stack.push(_item.post_id.unwrap());
         //}
 
-        if stack.len() == 0 {
+        if item_reposts.len() == 0 {
             return Json(RepostsJson {
                 reposts_count:   0,
                 message_reposts: "".to_string(),
