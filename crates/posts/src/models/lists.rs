@@ -212,13 +212,13 @@ impl PostList {
         use crate::schema::posts::dsl::posts;
 
         let _connection = establish_connection();
-        let item_reposts = post_list_reposts
+        let item_reposts: PostListRepost = post_list_reposts
             .filter(schema::post_list_reposts::post_list_id.eq(self.id))
             .filter(schema::post_list_reposts::post_id.is_not_null())
             .order(schema::post_list_reposts::id.desc())
             .limit(limit)
             .offset(offset)
-            .select((schema::post_list_reposts::post_id))
+            .select(schema::post_list_reposts::post_id)
             //.load::<PostListRepost>(&_connection)
             .load(&_connection)
             .expect("E");
