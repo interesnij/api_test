@@ -7,12 +7,12 @@ use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
 use crate::utils::{
     establish_connection,
+    get_post_list,
     PostListsJson,
     PostListJson,
     PostListDetailJson,
     PostListPageJson,
     ListRepostsJson,
-    
 };
 use actix_web::web::Json;
 use crate::models::{
@@ -133,6 +133,23 @@ pub struct EditPostList {
 }
 
 impl PostList {
+    pub fn get_user_post_page(user_id: i32) -> web::Json<PostListPageJson> {
+        use crate::schema::user_post_list_positions::dsl::user_post_list_positions;
+
+        let selected_post_list_pk = PostList::get_user_selected_post_list_pk(user_id);
+        let list = get_post_list(selected_post_list_pk);
+        let lists = get_user_post_lists(user_id);
+        let data = PostListPageJson {
+            selected_list_id: selected_list_id,
+            owner_name:       list.owner_name,
+            owner_link:       list.owner_link,
+            owner_image:      list.owner_image,
+            image:            list.image,
+            lists:            lists,
+            next_page:        0,
+        };
+        return Json(data);
+    }
     pub fn get_str_id(&self) -> String {
         return self.id.to_string();
     }

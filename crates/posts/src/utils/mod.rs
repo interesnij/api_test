@@ -1,6 +1,10 @@
 use diesel::prelude::*;
 use serde::{Serialize, Deserialize};
-
+use crate::models::{
+    PostList,
+    Post,
+    PostComment,
+};
 
 #[derive(Deserialize)]
 pub struct JsonPosition {
@@ -27,8 +31,7 @@ pub struct SParams {
 #[derive(Serialize)]
 // это для пагинации
 pub struct PostListsJson {
-    pub lists:     Vec<PostListJson>,
-    pub next_page: bool,
+    pub lists: Vec<PostListJson>,
 }
 #[derive(Serialize)]
 // это объект списка записей
@@ -54,7 +57,7 @@ pub struct PostListDetailJson {
     pub count:          i32,
     pub reactions_list: Vec<i16>,
     pub posts:          Vec<PostJson>,
-    pub next_page:      bool,
+    pub next_page:      i32,
 }
 
 // это объект страницы записей (подгружается по нажатию на список)
@@ -65,7 +68,7 @@ pub struct PostListPageJson {
     pub owner_image:      Option<String>,    // фото владельца
     pub image:            Option<String>,    // аватар списка
     pub lists:            Vec<PostListJson>, // списки записей для карточек
-    pub next_page:        bool,              // а есть ли следующая порция списков?
+    pub next_page:        i32,               // а есть ли следующая порция списков?
 }
 
 #[derive(Serialize)]
@@ -83,8 +86,7 @@ pub struct ListRepostsJson {
 #[derive(Serialize)]
 // это объект записи
 pub struct PostsJson {
-    pub posts:     Vec<PostJson>,
-    pub next_page: bool,
+    pub posts: Vec<PostJson>,
 }
 
 #[derive(Serialize)]
@@ -128,14 +130,25 @@ pub struct RepostsPostJson {
     pub reposts_count:   i32,
     pub message_reposts: String,
     pub copy_count:      i32,
+    pub posts:           Vec<RepostPostJson>,
+}
+#[derive(Serialize)]
+// это карточка того, кто репостнул
+pub struct RepostPostJson {
     pub owner_name:      String,
     pub owner_link:      String,
     pub owner_image:     Option<String>,
 }
+
 #[derive(Serialize)]
 // это инфо о тех, кто реагировал и общее количество у реакции
 pub struct ReactionsPostJson {
-    pub count:       String,
+    pub count: String,
+    pub users: Vec<ReactionPostJson>,
+}
+#[derive(Serialize)]
+// // это карточка того, кто поставил реакцию
+pub struct ReactionPostJson {
     pub owner_name:  String,
     pub owner_link:  String,
     pub owner_image: Option<String>,
@@ -156,7 +169,7 @@ pub struct RepliesJson {
     pub parent_types:   String,
     pub reactions_list: Vec<ReactionsPostJson>,
     pub replies:        Vec<ReplyJson>,
-    pub next_page:      bool,
+    pub next_page:      i32,
 }
 
 #[derive(Serialize)]
@@ -233,4 +246,40 @@ pub fn get_count_for_ru_alt(count: i32, word1: String, word2: String, word3: Str
     else {
         return word3;
     }
+}
+
+pub fn get_post_list(pk: i32) -> PostList {
+    use crate::schema::post_lists::dsl::post_lists;
+    let _connection = establish_connection();
+    return post_lists
+        .filter(schema::post_lists::id.eq(pk))
+        .load::<PostList>(&_connection)
+        .expect("E.")
+        .into_iter()
+        .nth(0)
+        .unwrap();
+}
+
+pub fn get_post(pk: i32) -> Post {
+    use crate::schema::posts::dsl::posts;
+    let _connection = establish_connection();
+    return posts
+        .filter(schema::posts::id.eq(pk))
+        .load::<Post>(&_connection)
+        .expect("E.")
+        .into_iter()
+        .nth(0)
+        .unwrap();
+}
+
+pub fn get_post_comment(pk: i32) -> PostComment {
+    use crate::schema::post_comments::dsl::post_comments;
+    let _connection = establish_connection();
+    return posts
+        .filter(schema::post_comments::id.eq(pk))
+        .load::<PostComment>(&_connection)
+        .expect("E.")
+        .into_iter()
+        .nth(0)
+        .unwrap();
 }
