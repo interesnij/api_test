@@ -163,7 +163,7 @@ impl PostList {
                 }
             }
         }
-        return stack;
+        return Json(stack);
     }
     pub fn count_reactions_list(&self) -> usize {
         return self.get_reactions_list().len();
@@ -240,6 +240,7 @@ impl PostList {
                 owner_link:      "".to_string(),
                 owner_image:     None,
             });
+            return Json(stack);
         }
         else {
             for _item in item_reposts.iter() {
