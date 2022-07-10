@@ -217,7 +217,7 @@ impl PostList {
             .filter(schema::post_list_reposts::post_id.is_not_null())
             .order(schema::post_list_reposts::id.desc())
 
-            .select(schema::post_list_reposts::post_id)
+            .select(schema::post_list_reposts::id)
             .limit(limit)
             .offset(offset)
             .load::<PostListRepost>(&_connection)
