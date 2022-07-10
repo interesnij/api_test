@@ -212,7 +212,7 @@ impl PostList {
         use crate::schema::posts::dsl::posts;
 
         let _connection = establish_connection();
-        let item_reposts = post_list_reposts
+        let item_reposts: Vec<i32> = post_list_reposts
             .filter(schema::post_list_reposts::post_list_id.eq(self.id))
             .filter(schema::post_list_reposts::post_id.is_not_null())
             .order(schema::post_list_reposts::id.desc())
@@ -222,11 +222,6 @@ impl PostList {
             //.load::<PostListRepost>(&_connection)
             .load(&_connection)
             .expect("E");
-
-        let mut id_stack = Vec::new();
-        for _item in item_reposts.iter() {
-            id_stack.push(_item.unwrap());
-        }
 
         let mut stack = Vec::new();
         if item_reposts.len() == 0 {
@@ -243,6 +238,10 @@ impl PostList {
             return Json(stack);
         }
         else {
+            let mut id_stack = Vec::new();
+            for _item in item_reposts.iter() {
+                id_stack.push(_item.unwrap());
+            }
             let post_list = posts
                 .filter(schema::posts::id.eq_any(id_stack))
                 .load::<Post>(&_connection)
