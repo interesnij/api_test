@@ -267,3 +267,16 @@ CREATE TABLE post_list_reposts (
 CREATE INDEX post_list_reposts_post_list_id_idx ON post_list_reposts (post_list_id);
 CREATE INDEX post_list_reposts_post_id_idx ON post_list_reposts (post_id);
 CREATE INDEX post_list_reposts_message_id_idx ON post_list_reposts (message_id);
+
+
+CREATE TABLE post_reposts (
+  id           SERIAL PRIMARY KEY,
+  post_id      INT,
+  message_id   INT,
+
+  CONSTRAINT fk_post_list_reposts_post
+      FOREIGN KEY(post_id)
+          REFERENCES posts(id)
+);
+CREATE INDEX post_list_reposts_post_id_idx ON post_list_reposts (post_id);
+CREATE INDEX post_list_reposts_message_id_idx ON post_list_reposts (message_id);

@@ -101,6 +101,26 @@ impl Post {
         return "posts".to_string();
     }
 
+    pub fn message_reposts_count(&self) -> String {
+        use crate::schema::post_reposts::dsl::post_reposts;
+
+        let _connection = establish_connection();
+
+        let count = post_reposts
+            .filter(schema::post_reposts::post_list_id.eq(self.id))
+            .filter(schema::post_reposts::message_id.is_not_null())
+            .load::<PostRepost>(&_connection)
+            .expect("E.")
+            .len();
+
+        if count == 0 {
+            return "".to_string();
+        }
+        else {
+            return ", из них в сообщениях - ".to_string() + &count.to_string();
+        }
+    }
+
     pub fn get_or_create_react_model(&self) -> PostReaction {
         use crate::schema::post_reactions::dsl::post_reactions;
 
@@ -327,7 +347,7 @@ impl Post {
                 list.user_id,
                 list.owner_name.clone(),
                 list.owner_link.clone(),
-                list.owner_image.clone(), 
+                list.owner_image.clone(),
                 None,
                 item.attach.clone(),
                 item.comment_enabled.clone(),
