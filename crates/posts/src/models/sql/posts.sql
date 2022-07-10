@@ -271,8 +271,8 @@ CREATE INDEX post_list_reposts_message_id_idx ON post_list_reposts (message_id);
 
 CREATE TABLE post_reposts (
   id           SERIAL PRIMARY KEY,
-  post_id      INT,
-  message_id   INT,
+  post_id      INT NOT NULL,
+  message_id   INT NOT NULL,
 
   CONSTRAINT fk_post_list_reposts_post
       FOREIGN KEY(post_id)

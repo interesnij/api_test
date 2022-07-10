@@ -207,7 +207,6 @@ impl PostList {
         }
     }
 
-
     pub fn reposts(&self, limit: i64, offset: i64) -> Json<Vec<RepostsJson>> {
         use crate::schema::post_list_reposts::dsl::post_list_reposts;
         use crate::schema::posts::dsl::posts;
@@ -219,7 +218,7 @@ impl PostList {
             .order(schema::post_list_reposts::id.desc())
             .limit(limit)
             .offset(offset)
-            //.select(schema::post_list_reposts::post_id)
+            .select(schema::post_list_reposts::post_id)
             .load::<PostListRepost>(&_connection)
             .expect("E");
 
@@ -263,14 +262,6 @@ impl PostList {
             }
             return Json(stack);
         }
-        //let post_list = posts
-        //    .filter(schema::posts::id.eq_any(stack))
-        //    .load::<Post>(&_connection)
-        //    .expect("E");
-
-        //for _item in item_reposts.iter() {
-        //    stack.push(_item.post_id.unwrap());
-        //}
     }
     pub fn window_reposts(&self) -> Vec<Post> {
         use crate::schema::post_list_reposts::dsl::post_list_reposts;
