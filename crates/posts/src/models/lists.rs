@@ -212,7 +212,7 @@ impl PostList {
         use crate::schema::posts::dsl::posts;
 
         let _connection = establish_connection();
-        let item_reposts: Vec<i32> = post_list_reposts
+        let item_reposts: Vec<Option<i32>> = post_list_reposts
             .filter(schema::post_list_reposts::post_list_id.eq(self.id))
             .filter(schema::post_list_reposts::post_id.is_not_null())
             .order(schema::post_list_reposts::id.desc())
