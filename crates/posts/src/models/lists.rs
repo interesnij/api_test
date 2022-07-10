@@ -225,7 +225,7 @@ impl PostList {
 
         let mut id_stack = Vec::new();
         for _item in item_reposts.iter() {
-            id_stack.push(post_id.unwrap());
+            id_stack.push(_item.unwrap());
         }
 
         let mut stack = Vec::new();
