@@ -149,7 +149,7 @@ impl PostList {
     pub fn is_open(&self) -> bool {
         return self.types < 10;
     }
-    pub fn get_reactions_list(&self) -> web::Json<Vec<i16>> {
+    pub fn get_reactions_list(&self) -> Json<Vec<i16>> {
         let mut stack = Vec::new();
         if self.reactions.is_some() {
             let react_scring = self.reactions.as_ref().unwrap().to_string();
@@ -228,8 +228,9 @@ impl PostList {
         //    stack.push(_item.post_id.unwrap());
         //}
 
+        let mut stack = Vec::new();
         if item_reposts.len() == 0 {
-            return Json(RepostsJson {
+            stack.push (RepostsJson {
                 reposts_count:   0,
                 message_reposts: "".to_string(),
                 copy_count:      0,
@@ -241,7 +242,6 @@ impl PostList {
             });
         }
         else {
-            let mut stack = Vec::new();
             for _item in item_reposts.iter() {
                 stack.push (
                     RepostsJson {
@@ -256,7 +256,7 @@ impl PostList {
                     }
                 )
             }
-            return stack;
+            return Json(stack);
         }
         //let post_list = posts
         //    .filter(schema::posts::id.eq_any(stack))
