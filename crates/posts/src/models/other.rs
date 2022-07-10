@@ -176,7 +176,6 @@ pub struct PostRepost {
 #[derive(Deserialize, Insertable)]
 #[table_name="post_reposts"]
 pub struct NewPostRepost {
-    pub post_list_id: i32,
     pub post_id:    i32,
     pub message_id: i32,
 }
