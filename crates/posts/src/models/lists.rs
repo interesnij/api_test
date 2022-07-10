@@ -212,7 +212,7 @@ impl PostList {
         use crate::schema::posts::dsl::posts;
 
         let _connection = establish_connection();
-        let item_reposts: PostListRepost = post_list_reposts
+        let item_reposts = post_list_reposts
             .filter(schema::post_list_reposts::post_list_id.eq(self.id))
             .filter(schema::post_list_reposts::post_id.is_not_null())
             .order(schema::post_list_reposts::id.desc())
@@ -225,7 +225,7 @@ impl PostList {
 
         let mut id_stack = Vec::new();
         for _item in item_reposts.iter() {
-            id_stack.push(_item.post_id.unwrap());
+            id_stack.push(post_id.unwrap());
         }
 
         let mut stack = Vec::new();
