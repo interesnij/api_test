@@ -108,7 +108,6 @@ impl Post {
 
         let count = post_reposts
             .filter(schema::post_reposts::post_id.eq(self.id))
-            .filter(schema::post_reposts::message_id.is_not_null())
             .load::<PostRepost>(&_connection)
             .expect("E.")
             .len();
