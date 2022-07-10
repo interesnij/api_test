@@ -141,7 +141,7 @@ pub struct NewPostVote {
 /////// PostCommentVote //////
 #[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct PostCommentVote {
-    pub id:              i32,
+    pub id:              i32, 
     pub vote:            i16,
     pub user_id:         i32,
     pub post_comment_id: i32,

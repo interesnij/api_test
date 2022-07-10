@@ -3,7 +3,16 @@ use diesel::prelude::*;
 
 use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
-use crate::utils::{establish_connection, JsonPosition, JsonItemReactions};
+use crate::utils::{
+    establish_connection,
+    JsonPosition,
+    JsonItemReactions,
+    PostsJson,
+    PostJson,
+    ParentPostJson,
+    RepostsPostJson,
+    ReactionsPostJson,
+};
 use actix_web::web::Json;
 use crate::models::{
     PostComment, NewPostComment,
@@ -27,53 +36,6 @@ use crate::schema::posts;
     // 'y' Удаленый предложенный у пользователя
     // 'c' Удаленый
 
-#[derive(Serialize)]
-pub struct PostJson {
-    pub id:              i32,
-    pub content:         Option<String>,
-    pub owner_name:      String,
-    pub owner_link:      String,
-    pub owner_image:     Option<String>,
-    pub attach:          Option<String>,
-    pub comment_enabled: bool,
-    pub created:         String,
-    pub comment:         i32,
-    pub view:            i32,
-    pub repost:          i32,
-    pub copy:            i32,
-    pub is_signature:    bool,
-    pub reactions:       i32,
-
-    pub types:           String,                 // например pos1
-    pub parent:          Option<ParentPostJson>, // пост родитель
-    pub reposts:         Vec<RepostsPostJson>,        // кто репостил пост (6 объектов)
-    pub reactions_list:  Vec<ReactionsPostJson>,        // кто репостил пост (6 объектов)
-}
-#[derive(Serialize)]
-pub struct ParentPostJson {
-    pub id:              i32,
-    pub content:         Option<String>,
-    pub owner_name:      String,
-    pub owner_link:      String,
-    pub owner_image:     Option<String>,
-    pub attach:          Option<String>,
-    pub created:         String,
-}
-#[derive(Serialize)]
-pub struct RepostsPostJson {
-    pub reposts_count:   i32,
-    pub message_reposts: String,
-    pub copy_count:      i32,
-    pub owner_name:      String,
-    pub owner_link:      String,
-    pub owner_image:     Option<String>,
-}
-#[derive(Serialize)]
-pub struct ReactionsPostJson {
-    pub owner_name:      String,
-    pub owner_link:      String,
-    pub owner_image:     Option<String>,
-}
 
 #[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct Post {

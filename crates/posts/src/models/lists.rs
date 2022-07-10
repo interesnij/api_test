@@ -5,7 +5,15 @@ use crate::schema::{
 };
 use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
-use crate::utils::establish_connection;
+use crate::utils::{
+    establish_connection,
+    PostListsJson,
+    PostListJson,
+    PostListDetailJson,
+    PostListPageJson,
+    ListRepostsJson,
+    
+};
 use actix_web::web::Json;
 use crate::models::{
     Post,
@@ -16,16 +24,6 @@ use crate::models::{
     PostListPerm, NewPostListPerm,
     PostListRepost,
 };
-
-#[derive(Serialize)]
-pub struct RepostsJson {
-    pub reposts_count:   i32,
-    pub message_reposts: String,
-    pub copy_count:      i32,
-    pub owner_name:      String,
-    pub owner_link:      String,
-    pub owner_image:     Option<String>,
-}
 
 /////// PostList //////
 ////////// Тип списка
@@ -206,7 +204,7 @@ impl PostList {
         }
     }
 
-    pub fn reposts(&self, limit: i64, offset: i64) -> Json<Vec<RepostsJson>> {
+    pub fn reposts(&self, limit: i64, offset: i64) -> Json<Vec<ListRepostsJson>> {
         use crate::schema::post_list_reposts::dsl::post_list_reposts;
         use crate::schema::posts::dsl::posts;
 
@@ -223,7 +221,7 @@ impl PostList {
 
         let mut stack = Vec::new();
         if item_reposts.len() == 0 {
-            stack.push (RepostsJson {
+            stack.push (ListRepostsJson {
                 reposts_count:   0,
                 message_reposts: "".to_string(),
                 copy_count:      0,
@@ -244,7 +242,7 @@ impl PostList {
                 .expect("E");
             for _item in post_list.iter() {
                 stack.push (
-                    RepostsJson {
+                    ListRepostsJson {
                         reposts_count:   _item.repost,
                         message_reposts: _item.message_reposts_count(),
                         copy_count:      _item.copy,
