@@ -117,20 +117,26 @@ pub struct NewPostListPerm {
 /////// PostVote//////
 #[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct PostVote {
-    pub id:       i32,
-    pub vote:     i16,
-    pub user_id:  i32,
-    pub post_id:  i32,
-    pub reaction: i16,
+    pub id:          i32,
+    pub vote:        i16,
+    pub user_id:     i32,
+    pub post_id:     i32,
+    pub reaction:    i16,
+    pub owner_name:  String,
+    pub owner_link:  String,
+    pub owner_image: Option<String>,
 }
 
 #[derive(Deserialize, Insertable)]
 #[table_name="post_votes"]
 pub struct NewPostVote {
-    pub vote:     i16,
-    pub user_id:  i32,
-    pub post_id:  i32,
-    pub reaction: i16,
+    pub vote:        i16,
+    pub user_id:     i32,
+    pub post_id:     i32,
+    pub reaction:    i16,
+    pub owner_name:  String,
+    pub owner_link:  String,
+    pub owner_image: Option<String>,
 }
 /////// PostCommentVote //////
 #[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
@@ -140,6 +146,9 @@ pub struct PostCommentVote {
     pub user_id:         i32,
     pub post_comment_id: i32,
     pub reaction:        i16,
+    pub owner_name:      String,
+    pub owner_link:      String,
+    pub owner_image:     Option<String>,
 }
 #[derive(Deserialize, Insertable)]
 #[table_name="post_comment_votes"]
@@ -148,6 +157,9 @@ pub struct NewPostCommentVote {
     pub user_id:         i32,
     pub post_comment_id: i32,
     pub reaction:        i16,
+    pub owner_name:      String,
+    pub owner_link:      String,
+    pub owner_image:     Option<String>,
 }
 
 /////// PostListRepost //////

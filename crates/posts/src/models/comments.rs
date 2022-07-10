@@ -310,7 +310,14 @@ impl PostComment {
         }
     }
 
-    pub fn send_reaction(&self, user_id: i32, types: i16) -> Json<JsonItemReactions> {
+    pub fn send_reaction (
+        &self,
+        user_id: i32,
+        types: i16,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>
+    ) -> Json<JsonItemReactions> {
         use crate::schema::post_comment_votes::dsl::post_comment_votes;
         use crate::models::{NewPostCommentVote, PostCommentVote};
 
@@ -363,6 +370,9 @@ impl PostComment {
                     user_id:         user_id,
                     post_comment_id: self.id,
                     reaction:        types,
+                    owner_name:      owner_name,
+                    owner_link:      owner_link,
+                    owner_image:     owner_image,
                 };
                 diesel::insert_into(schema::post_comment_votes::table)
                     .values(&new_vote)

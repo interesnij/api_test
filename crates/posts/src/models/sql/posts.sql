@@ -236,7 +236,10 @@ CREATE TABLE post_votes (
   vote        SMALLINT NOT NULL,
   user_id     INT NOT NULL,
   post_id     INT NOT NULL,
-  reaction    SMALLINT NOT NULL -- тип реакции для скорости работы
+  reaction    SMALLINT NOT NULL, -- тип реакции для скорости работы
+  owner_name  VARCHAR(200) NOT NULL,
+  owner_link  VARCHAR(200) NOT NULL,
+  owner_image VARCHAR(500)
 );
 CREATE UNIQUE INDEX post_votes_unq ON post_votes (user_id, post_id);
 
@@ -245,7 +248,10 @@ CREATE TABLE post_comment_votes (
   vote            SMALLINT NOT NULL,
   user_id         INT NOT NULL,
   post_comment_id INT NOT NULL,
-  reaction        SMALLINT NOT NULL
+  reaction        SMALLINT NOT NULL,
+  owner_name      VARCHAR(200) NOT NULL,
+  owner_link      VARCHAR(200) NOT NULL,
+  owner_image     VARCHAR(500)
 );
 CREATE UNIQUE INDEX post_comment_votes_unq ON post_comment_votes (user_id, post_comment_id);
 

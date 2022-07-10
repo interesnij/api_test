@@ -22,8 +22,6 @@ pub struct RepostsJson {
     pub reposts_count:   i32,
     pub message_reposts: String,
     pub copy_count:      i32,
-    pub community_id:    Option<i32>,
-    pub user_id:         i32,
     pub owner_name:      String,
     pub owner_link:      String,
     pub owner_image:     Option<String>,
@@ -135,6 +133,7 @@ pub struct EditPostList {
     pub copy_el:         String,
     pub reactions:       Option<String>,
 }
+
 impl PostList {
     pub fn get_str_id(&self) -> String {
         return self.id.to_string();
@@ -219,7 +218,6 @@ impl PostList {
             .limit(limit)
             .offset(offset)
             .select(schema::post_list_reposts::post_id)
-            //.load::<PostListRepost>(&_connection)
             .load(&_connection)
             .expect("E");
 
@@ -229,8 +227,6 @@ impl PostList {
                 reposts_count:   0,
                 message_reposts: "".to_string(),
                 copy_count:      0,
-                community_id:    None,
-                user_id:         0,
                 owner_name:      "".to_string(),
                 owner_link:      "".to_string(),
                 owner_image:     None,
@@ -252,8 +248,6 @@ impl PostList {
                         reposts_count:   _item.repost,
                         message_reposts: _item.message_reposts_count(),
                         copy_count:      _item.copy,
-                        community_id:    _item.community_id,
-                        user_id:         _item.user_id,
                         owner_name:      _item.owner_name.clone(),
                         owner_link:      _item.owner_link.clone(),
                         owner_image:     _item.owner_image.clone(),
@@ -263,6 +257,7 @@ impl PostList {
             return Json(stack);
         }
     }
+
     pub fn window_reposts(&self) -> Vec<Post> {
         use crate::schema::post_list_reposts::dsl::post_list_reposts;
         use crate::schema::posts::dsl::posts;
