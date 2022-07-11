@@ -277,7 +277,7 @@ pub fn get_post(pk: i32) -> Post {
 pub fn get_post_comment(pk: i32) -> PostComment {
     use crate::schema::post_comments::dsl::post_comments;
     let _connection = establish_connection();
-    return posts
+    return post_comments
         .filter(schema::post_comments::id.eq(pk))
         .load::<PostComment>(&_connection)
         .expect("E.")

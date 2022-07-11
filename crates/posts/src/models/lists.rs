@@ -138,7 +138,7 @@ impl PostList {
 
         let selected_post_list_pk = PostList::get_user_selected_post_list_pk(user_id);
         let list = get_post_list(selected_post_list_pk);
-        let lists = get_user_post_lists(user_id);
+        let lists = PostList::get_user_post_lists(user_id);
         let data = PostListPageJson {
             selected_list_id: selected_post_list_pk,
             owner_name:       list.owner_name,
