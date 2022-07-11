@@ -11,8 +11,6 @@ use crate::utils::{
     PostListDetailJson,
     PostListPageJson,
     RepostsPostListJson,
-    PostDetailJson,
-    ReactionBlockJson,
 };
 use actix_web::web::Json;
 use crate::models::{
