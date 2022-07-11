@@ -909,7 +909,7 @@ impl PostList {
             .filter(schema::post_lists::community_id.eq(community_id))
             .filter(schema::post_lists::types.lt(10))
             .select(schema::post_lists::id)
-            .load(&_connection)
+            .load::<Vec<i32>>(&_connection) 
             .expect("E.")
             .len();
     }
