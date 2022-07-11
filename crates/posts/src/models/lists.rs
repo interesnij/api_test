@@ -142,7 +142,7 @@ impl PostList {
         let lists = PostList::get_user_post_lists(user_id);
         let mut lists_json = Vec::new();
         for i in lists.iter() {
-            lists_json.push {
+            lists_json.push (
                 PostListJson {
                     name:        i.name.clone(),
                     owner_name:  i.owner_name.clone(),
@@ -152,7 +152,7 @@ impl PostList {
                     types:       i.types.clone(),
                     count:       i.count,
                 }
-            };
+            );
         }
 
         let data = PostListPageJson {
