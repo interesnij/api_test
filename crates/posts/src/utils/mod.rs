@@ -68,6 +68,7 @@ pub struct PostListDetailJson {
     pub count:          i32,
     pub reactions_list: Vec<i16>,
     pub posts:          Vec<CardPostJson>,
+    pub lists:          Vec<CardPostListJson>,
     pub next_page:      i32,
 }
 
@@ -86,7 +87,6 @@ pub struct PostListPageJson {
 // это инфо о тех, кто репостил, и цифры
 pub struct RepostsPostListJson {
     pub status:          i32,
-    pub reposts_count:   i32,
     pub message_reposts: String,
     pub copy_count:      i32,
     pub posts:           Vec<CardRepostPostJson>,
@@ -114,13 +114,12 @@ pub struct CardPostJson {
     pub comment:         i32,
     pub view:            i32,
     pub repost:          i32,
-    pub copy:            i32,
     pub is_signature:    bool,
     pub reactions:       i32,
-    pub types:           String,                 // например pos1
-    pub parent:          Option<CardParentPostJson>, // пост родитель
-    pub reposts:         Vec<CardRepostPostJson>,        // кто репостил пост (6 объектов)
-    pub reactions_list:  Vec<CardReactionPostJson>,        // кто репостил пост (6 объектов)
+    pub types:           String,                         // например pos1
+    pub parent:          Option<CardParentPostJson>,     // пост родитель
+    pub reposts:         Option<RepostsPostJson>,        // кто репостил пост (6 объектов)
+    pub reactions_list:  Option<Vec<ReactionsPostJson>>, // кто репостил пост (6 объектов)
 }
 
 #[derive(Serialize)]
@@ -149,14 +148,24 @@ pub struct RepostsPostJson {
 pub struct ReactionsPostJson {
     pub status: i32,
     pub count:  String,
-    pub users:  Vec<CardReactionPostJson>,
+    pub users:  Vec<ReactionPostJson>,
+}
+
+#[derive(Serialize)]
+// это инфо о тех, кто реагировал и общее количество у реакции
+pub struct ReactionPostJson {
+    pub status:   i32,
+    pub count:    String,
+    pub reaction: i16,
+    pub users:    Vec<CardReactionPostJson>,
 }
 #[derive(Serialize)]
 // // это карточка того, кто поставил реакцию
 pub struct CardReactionPostJson {
-    pub owner_name:  String,
-    pub owner_link:  String,
-    pub owner_image: Option<String>,
+    pub owner_name:       String,
+    pub owner_link:       String,
+    pub owner_image:      Option<String>,
+    pub is_user_reaction: bool,
 }
 ////////////////////////
 
