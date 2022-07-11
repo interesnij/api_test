@@ -152,7 +152,7 @@ pub struct ReactionsPostJson {
 // это инфо о тех, кто реагировал и общее количество у реакции
 pub struct ReactionPostJson {
     pub status:   i32,
-    pub count:    String,
+    pub count:    i32,
     pub reaction: i16,
     pub users:    Vec<CardReactionPostJson>,
 }
