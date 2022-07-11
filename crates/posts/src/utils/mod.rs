@@ -119,7 +119,7 @@ pub struct CardPostJson {
     pub types:           String,                         // например pos1
     pub parent:          Option<CardParentPostJson>,     // пост родитель
     pub reposts:         Option<RepostsPostJson>,        // кто репостил пост (6 объектов)
-    pub reactions_list:  Option<Vec<ReactionsPostJson>>, // кто репостил пост (6 объектов)
+    pub reactions_list:  Option<ReactionsPostJson>, // кто репостил пост (6 объектов)
 }
 
 #[derive(Serialize)]

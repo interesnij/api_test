@@ -329,12 +329,12 @@ impl PostList {
             }
 
             /// получаем реакции и отреагировавших
-            let mut reactions_blocks: Option<Vec<ReactionsPostJson>>;
+            let mut reactions_blocks: Option<ReactionsPostJson>;
             if reactions_list.len() == 0 {
                 reactions_blocks = None;
             }
             else {
-                let mut reactions_json = Vec::new();
+                let mut reactions_json: ReactionPostJson = Vec::new();
                 let object_reactions_count = i.get_or_create_react_model();
                 let mut user_reaction = 0;
 
@@ -352,7 +352,7 @@ impl PostList {
                         reactions_json.push(list.get_6_reactions_of_types(Some(user_reaction, count)));
                     }
                 }
-                reactions_blocks.push(ReactionsPostJson {
+                reactions_blocks = ReactionsPostJson {
                     reactions_blocks: reactions_json,
                 });
             }
