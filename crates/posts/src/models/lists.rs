@@ -348,6 +348,7 @@ impl PostList {
                         reactions_json.push(list.get_6_reactions_of_types(reaction, Some(user_reaction), count));
                     }
                 }
+                reactions_blocks = Some(reactions_json);
             }
 
             posts_json.push (
@@ -368,7 +369,7 @@ impl PostList {
                     types:           i.get_code(),
                     parent:          parent,
                     reposts:         reposts_window,
-                    reactions_list:  reactions_json,
+                    reactions_list:  reactions_blocks,
                 }
             );
         }
