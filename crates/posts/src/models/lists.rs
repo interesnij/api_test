@@ -351,7 +351,7 @@ impl PostList {
                         get_6_reactions_of_types
                     }
                 }
-                reactions_blocks = Some(list.get_6_reactions_of_types(Some(user_reaction));
+                reactions_blocks = Some(list.get_6_reactions_of_types(Some(user_reaction)));
             }
 
             posts_json.push (
