@@ -1,4 +1,6 @@
 use diesel::prelude::*;
+use crate::schema;
+
 use serde::{Serialize, Deserialize};
 use crate::models::{
     PostList,
