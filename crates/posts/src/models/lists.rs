@@ -280,95 +280,9 @@ impl PostList {
 
         let mut posts_json = Vec::new();
         for i in posts.iter() {
-
-            // получаем родительский пост
-            let parent: Option<CardParentPostJson>;
-            if i.parent_id.is_some() {
-                let _parent = i.get_parent();
-                parent = Some(CardParentPostJson {
-                    id:              _parent.id,
-                    content:         _parent.content.clone(),
-                    owner_name:      _parent.owner_name.clone(),
-                    owner_link:      _parent.owner_link.clone(),
-                    owner_image:     _parent.owner_image.clone(),
-                    attach:          _parent.attach.clone(),
-                    created:         _parent.created.format("%d-%m-%Y в %H:%M").to_string(),
-                })
-            }
-            else {
-                parent = None;
-            }
-
-            // получаем репосты записи, если есть
-            let reposts_window: Option<RepostsPostJson>;
-            if i.repost > 0 {
-                let mut reposts_json = Vec::new();
-                for r in i.window_reposts().iter() {
-                    reposts_json.push (
-                        CardRepostPostJson {
-                            owner_name:  r.owner_name.clone(),
-                            owner_link:  r.owner_name.clone(),
-                            owner_image: r.owner_image.clone(),
-                        }
-                    );
-                }
-
-                reposts_window = Some(RepostsPostJson {
-                    status:          200,
-                    message_reposts: i.message_reposts_count(),
-                    copy_count:      i.count_copy(),
-                    posts:           reposts_json,
-                });
-            }
-            else {
-                reposts_window = None;
-            }
-
-            // получаем реакции и отреагировавших
-            let reactions_blocks: Option<Vec<ReactionBlockJson>>;
-            if reactions_list.len() == 0 {
-                reactions_blocks = None;
-            }
-            else {
-                let mut reactions_json: Vec<ReactionBlockJson> = Vec::new();
-                let object_reactions_count = i.get_or_create_react_model();
-                let mut user_reaction = 0;
-
-                if i.is_have_user_reaction(user_id) {
-                    user_reaction = i.get_user_reaction(user_id);
-                }
-
-                for reaction in reactions_list.iter() {
-                    let count = object_reactions_count.count_reactions_of_types(*reaction);
-                    if count > 0 {
-                        reactions_json.push(list.get_6_reactions_of_types(reaction, Some(user_reaction), count));
-                    }
-                }
-                reactions_blocks = Some(reactions_json);
-            }
-
-            posts_json.push (
-                CardPostJson {
-                    id:              i.id,
-                    content:         i.content.clone(),
-                    owner_name:      i.owner_name.clone(),
-                    owner_link:      i.owner_link.clone(),
-                    owner_image:     i.owner_image.clone(),
-                    attach:          i.attach.clone(),
-                    comment_enabled: i.comment_enabled,
-                    created:         i.created.format("%d-%m-%Y в %H:%M").to_string(),
-                    comment:         i.comment,
-                    view:            i.view,
-                    repost:          i.repost,
-                    is_signature:    i.is_signature,
-                    reactions:       i.reactions,
-                    types:           i.get_code(),
-                    parent:          parent,
-                    reposts:         reposts_window,
-                    reactions_list:  reactions_blocks,
-                }
-            );
+            posts_json.push ( i.get_card_post() )
         }
+
 
         let data = PostListDetailJson {
             status:           200,

@@ -11,6 +11,7 @@ use crate::utils::{
     CardPostJson,
     CardParentPostJson,
     RepostsPostJson,
+    CardPostJson,
 };
 use actix_web::web::Json;
 use crate::models::{
@@ -97,6 +98,93 @@ pub struct EditPostPosition {
 }
 
 impl Post {
+    pub fn get_card_post(&self) -> CardPostJson {
+        // получаем родительский пост
+        let parent: Option<CardParentPostJson>;
+        if self.parent_id.is_some() {
+            let _parent = self.get_parent();
+            parent = Some(CardParentPostJson {
+                id:              _parent.id,
+                content:         _parent.content.clone(),
+                owner_name:      _parent.owner_name.clone(),
+                owner_link:      _parent.owner_link.clone(),
+                owner_image:     _parent.owner_image.clone(),
+                attach:          _parent.attach.clone(),
+                created:         _parent.created.format("%d-%m-%Y в %H:%M").to_string(),
+            })
+        }
+        else {
+            parent = None;
+        }
+
+        // получаем репосты записи, если есть
+        let reposts_window: Option<RepostsPostJson>;
+        if self.repost > 0 {
+            let mut reposts_json = Vec::new();
+            for r in self.window_reposts().iter() {
+                reposts_json.push (
+                    CardRepostPostJson {
+                        owner_name:  r.owner_name.clone(),
+                        owner_link:  r.owner_name.clone(),
+                        owner_image: r.owner_image.clone(),
+                    }
+                );
+            }
+
+            reposts_window = Some(RepostsPostJson {
+                status:          200,
+                message_reposts: self.message_reposts_count(),
+                copy_count:      self.count_copy(),
+                posts:           reposts_json,
+            });
+        }
+        else {
+            reposts_window = None;
+        }
+
+        // получаем реакции и отреагировавших
+        let reactions_blocks: Option<Vec<ReactionBlockJson>>;
+        if reactions_list.len() == 0 {
+            reactions_blocks = None;
+        }
+        else {
+            let mut reactions_json: Vec<ReactionBlockJson> = Vec::new();
+            let object_reactions_count = self.get_or_create_react_model();
+            let mut user_reaction = 0;
+
+            if self.is_have_user_reaction(user_id) {
+                user_reaction = self.get_user_reaction(user_id);
+            }
+
+            for reaction in reactions_list.iter() {
+                let count = object_reactions_count.count_reactions_of_types(*reaction);
+                if count > 0 {
+                    reactions_json.push(list.get_6_reactions_of_types(reaction, Some(user_reaction), count));
+                }
+            }
+            reactions_blocks = Some(reactions_json);
+        }
+
+        return CardPostJson {
+                id:              self.id,
+                content:         self.content,
+                owner_name:      self.owner_name,
+                owner_link:      self.owner_link,
+                owner_image:     self.owner_image,
+                attach:          self.attach,
+                comment_enabled: self.comment_enabled,
+                created:         self.created.format("%d-%m-%Y в %H:%M").to_string(),
+                comment:         self.comment,
+                view:            self.view,
+                repost:          self.repost,
+                is_signature:    self.is_signature,
+                reactions:       self.reactions,
+                types:           self.get_code(),
+                parent:          parent,
+                reposts:         reposts_window,
+                reactions_list:  reactions_blocks,
+            };
+    }
     pub fn get_str_id(&self) -> String {
         return self.id.to_string();
     }
