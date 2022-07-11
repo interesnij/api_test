@@ -348,9 +348,12 @@ impl PostList {
                         _reaction = None;
                     }
                     else {
-                        reactions_blocks.push(list.get_6_reactions_of_types(Some(user_reaction, count)));
+                        reactions_json.push(list.get_6_reactions_of_types(Some(user_reaction, count)));
                     }
                 }
+                reactions_blocks = Some(ReactionsPostJson {
+                    reactions_blocks: reactions_json,
+                });
             }
 
             posts_json.push (
@@ -394,9 +397,11 @@ impl PostList {
         return Json(data);
     }
 
-    pub fn get_6_reactions_of_types(&self, types: i16, user_reaction: Option<i16>, count: i32) -> Vec<ReactionsPostJson> {
+    pub fn get_6_reactions_of_types(
+        &self, types: i16, user_reaction: Option<i16>, count: i32
+    ) -> Vec<ReactionPostJson> {
         use crate::schema::post_votes::dsl::post_votes;
-        use crate::utils::{ReactionPostJson, CardReactionPostJson};
+        use crate::utils::CardReactionPostJson;
         use crate::models::PostVote;
 
         let _connection = establish_connection();
@@ -419,16 +424,12 @@ impl PostList {
                 }
             );
         }
-        reactions_json.push (
-            ReactionPostJson {
+        return ReactionPostJson {
                 status:   200,
                 count:    count,
                 reaction: types,
                 users:    user_json,
-            }
-        );
-
-        return reactions_json;
+            };
     }
 
     pub fn get_str_id(&self) -> String {

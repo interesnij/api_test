@@ -145,9 +145,7 @@ pub struct RepostsPostJson {
 #[derive(Serialize)]
 // это инфо о тех, кто реагировал и общее количество у реакции
 pub struct ReactionsPostJson {
-    pub status: i32,
-    pub count:  String,
-    pub users:  Vec<ReactionPostJson>,
+    pub reactions_blocks: Vec<ReactionPostJson>,
 }
 
 #[derive(Serialize)]
