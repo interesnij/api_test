@@ -119,28 +119,28 @@ pub struct CardPostJson {
     pub types:           String,                         // например pos1
     pub parent:          Option<CardParentPostJson>,     // пост родитель
     pub reposts:         Option<RepostsPostJson>,        // кто репостил пост (6 объектов)
-    pub reactions_blocks: Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
+    pub reactions_list:  Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
 }
 
 #[derive(Serialize)]
 // это запись
 pub struct PostDetailJson {
-    pub content:          Option<String>,
-    pub owner_name:       String,
-    pub owner_link:       String,
-    pub owner_image:      Option<String>,
-    pub attach:           Option<String>,
-    pub comment_enabled:  bool,
-    pub created:          String,
-    pub comment:          i32,
-    pub view:             i32,
-    pub repost:           i32,
-    pub is_signature:     bool,
-    pub reactions:        i32,
-    pub types:            String,                         // например pos1
-    pub parent:           Option<CardParentPostJson>,     // пост родитель
-    pub reposts:          Option<RepostsPostJson>,        // кто репостил пост (6 объектов)
-    pub reactions_blocks: Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
+    pub content:         Option<String>,
+    pub owner_name:      String,
+    pub owner_link:      String,
+    pub owner_image:     Option<String>,
+    pub attach:          Option<String>,
+    pub comment_enabled: bool,
+    pub created:         String,
+    pub comment:         i32,
+    pub view:            i32,
+    pub repost:          i32,
+    pub is_signature:    bool,
+    pub reactions:       i32,
+    pub types:           String,                         // например pos1
+    pub parent:          Option<CardParentPostJson>,     // пост родитель
+    pub reposts:         Option<RepostsPostJson>,        // кто репостил пост (6 объектов)
+    pub reactions_list:  Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
 }
 
 #[derive(Serialize)]
@@ -203,29 +203,29 @@ pub struct RepliesJson {
 #[derive(Serialize)]
 // это коммент
 pub struct CardCommentJson {
-    pub content:          Option<String>,
-    pub owner_name:       String,
-    pub owner_link:       String,
-    pub owner_image:      Option<String>,
-    pub attach:           Option<String>,
-    pub created:          String,
-    pub reactions:        i32,
-    pub types:            String, // например cpo1
-    pub replies:          i32,    // кол-во ответов
-    pub reactions_blocks: Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
+    pub content:        Option<String>,
+    pub owner_name:     String,
+    pub owner_link:     String,
+    pub owner_image:    Option<String>,
+    pub attach:         Option<String>,
+    pub created:        String,
+    pub reactions:      i32,
+    pub types:          String, // например cpo1
+    pub replies:        i32,    // кол-во ответов
+    pub reactions_list: Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
 }
 #[derive(Serialize)]
 // это ответ на коммент
 pub struct CardReplyJson {
-    pub content:          Option<String>,
-    pub owner_name:       String,
-    pub owner_link:       String,
-    pub owner_image:      Option<String>,
-    pub attach:           Option<String>,
-    pub created:          String,
-    pub reactions:        i32,
-    pub types:            String, // например cpo1 - ответ
-    pub reactions_blocks: Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
+    pub content:        Option<String>,
+    pub owner_name:     String,
+    pub owner_link:     String,
+    pub owner_image:    Option<String>,
+    pub attach:         Option<String>,
+    pub created:        String,
+    pub reactions:      i32,
+    pub types:          String, // например cpo1 - ответ
+    pub reactions_list: Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
 }
 
 #[derive(Serialize)]
