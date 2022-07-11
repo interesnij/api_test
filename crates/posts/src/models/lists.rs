@@ -343,12 +343,8 @@ impl PostList {
                 }
 
                 for reaction in reactions_list.iter() {
-                    let _reaction: Option<ReactionsPostJson>;
                     let count = object_reactions_count.count_reactions_of_types(*reaction);
-                    if count == 0 {
-                        _reaction = None;
-                    }
-                    else {
+                    if count > 0 {
                         reactions_json.push(list.get_6_reactions_of_types(reaction, Some(user_reaction), count));
                     }
                 }
