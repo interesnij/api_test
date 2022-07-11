@@ -287,7 +287,7 @@ impl PostList {
             let parent: Option<CardParentPostJson>;
             if i.parent_id.is_some() {
                 let _parent = i.get_parent();
-                parent = CardParentPostJson {
+                parent = Some(CardParentPostJson {
                     id:              _parent.id,
                     content:         _parent.content.clone(),
                     owner_name:      _parent.owner_name.clone(),
@@ -295,7 +295,7 @@ impl PostList {
                     owner_image:     _parent.owner_image.clone(),
                     attach:          _parent.attach.clone(),
                     created:         _parent.created.format("%d-%m-%Y в %H:%M").to_string(),
-                }
+                })
             }
             else {
                 parent = None;
@@ -315,12 +315,12 @@ impl PostList {
                     );
                 }
 
-                reposts_window = RepostsPostJson {
+                reposts_window = Some(RepostsPostJson {
                     status:          200,
                     message_reposts: i.message_reposts_count(),
                     copy_count:      i.count_copy(),
                     posts:           reposts_json,
-                };
+                });
             }
             else {
                 reposts_window = None;
@@ -355,7 +355,7 @@ impl PostList {
                                     owner_name:  user.owner_name.clone(),
                                     owner_link:  user.owner_name.clone(),
                                     owner_image: user.owner_image.clone(),
-                                    is_user_reaction: user_reaction == reaction,
+                                    is_user_reaction: &user_reaction == reaction,
                                 };
                             );
                         }
@@ -388,7 +388,6 @@ impl PostList {
                     is_signature:    i.is_signature,
                     reactions:       i.reactions,
                     types:           i.get_code(),
-                    is_signature:    i.is_signature,
                     parent:          parent,
                     reposts:         reposts_window,
                     reactions_list:  reactions_blocks,

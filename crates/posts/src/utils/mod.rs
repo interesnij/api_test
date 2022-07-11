@@ -137,9 +137,8 @@ pub struct CardParentPostJson {
 // это инфо о тех, кто репостил, и цифры
 pub struct RepostsPostJson {
     pub status:          i32,
-    pub reposts_count:   i32,
     pub message_reposts: String,
-    pub copy_count:      i32,
+    pub copy_count:      String,
     pub posts:           Vec<CardRepostPostJson>,
 }
 
