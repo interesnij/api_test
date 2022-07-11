@@ -149,7 +149,7 @@ impl PostList {
                     owner_link:  i.owner_name.clone(),
                     owner_image: i.owner_image.clone(),
                     image:       i.image.clone(),
-                    types:       i.types.clone(),
+                    types:       i.get_code(),
                     count:       i.count,
                 }
             );
