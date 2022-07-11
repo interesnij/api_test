@@ -183,6 +183,7 @@ impl PostList {
     }
     pub fn get_community_post_page(community_id: i32, page: i32) -> Json<PostListPageJson> {
         use crate::schema::community_post_list_positions::dsl::community_post_list_positions;
+        use crate::utils::{ PostListsJson, PostListJson };
 
         let mut next_page_number = 0;
         let selected_post_list_pk = PostList::get_community_selected_post_list_pk(community_id);
