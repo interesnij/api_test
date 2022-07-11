@@ -270,13 +270,13 @@ impl PostList {
 
         if page > 1 {
             let step = (page - 1) * 20;
-            posts = PostList::get_paginate_items(user_id, 20, step.into());
+            posts = self.get_paginate_items(20, step.into());
             if count > (page * 20).try_into().unwrap() {
                 next_page_number = page + 1;
             }
         }
         else {
-            posts = PostList::get_paginate_items(user_id, 20, 0);
+            posts = self.get_paginate_items(20, 0);
             if count > 20.try_into().unwrap() {
                 next_page_number = 2;
             }
@@ -399,7 +399,7 @@ impl PostList {
     }
 
     pub fn get_6_reactions_of_types (
-        &self, types: i16, user_reaction: Option<i16>, count: i32
+        &self, types: &i16, user_reaction: Option<i16>, count: i32
     ) -> ReactionPostJson {
         use crate::schema::post_votes::dsl::post_votes;
         use crate::utils::CardReactionPostJson;
