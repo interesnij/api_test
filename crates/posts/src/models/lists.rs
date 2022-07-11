@@ -302,56 +302,26 @@ impl PostList {
         }
     }
 
-    pub fn reposts(&self, limit: i64, offset: i64) -> Json<Vec<ListRepostsJson>> {
+    pub fn reposts(&self) -> Vec<Post> {
         use crate::schema::post_list_reposts::dsl::post_list_reposts;
         use crate::schema::posts::dsl::posts;
 
         let _connection = establish_connection();
-        let item_reposts: Vec<Option<i32>> = post_list_reposts
+        let item_reposts = post_list_reposts
             .filter(schema::post_list_reposts::post_list_id.eq(self.id))
             .filter(schema::post_list_reposts::post_id.is_not_null())
-            .order(schema::post_list_reposts::id.desc())
-            .limit(limit)
-            .offset(offset)
-            .select(schema::post_list_reposts::post_id)
-            .load(&_connection)
+            .load::<PostListRepost>(&_connection)
             .expect("E");
 
         let mut stack = Vec::new();
-        if item_reposts.len() == 0 {
-            stack.push (ListRepostsJson {
-                reposts_count:   0,
-                message_reposts: "".to_string(),
-                copy_count:      0,
-                owner_name:      "".to_string(),
-                owner_link:      "".to_string(),
-                owner_image:     None,
-            });
-            return Json(stack);
-        }
-        else {
-            let mut id_stack = Vec::new();
-            for _item in item_reposts.iter() {
-                id_stack.push(_item.unwrap());
-            }
-            let post_list = posts
-                .filter(schema::posts::id.eq_any(id_stack))
-                .load::<Post>(&_connection)
-                .expect("E");
-            for _item in post_list.iter() {
-                stack.push (
-                    ListRepostsJson {
-                        reposts_count:   _item.repost,
-                        message_reposts: _item.message_reposts_count(),
-                        copy_count:      _item.copy,
-                        owner_name:      _item.owner_name.clone(),
-                        owner_link:      _item.owner_link.clone(),
-                        owner_image:     _item.owner_image.clone(),
-                    }
-                )
-            }
-            return Json(stack);
-        }
+        for _item in item_reposts.iter() {
+            stack.push(_item.post_id.unwrap());
+        };
+        return posts
+            .filter(schema::posts::id.eq_any(stack))
+            .limit(6)
+            .load::<Post>(&_connection)
+            .expect("E");
     }
 
     pub fn window_reposts(&self) -> Vec<Post> {
