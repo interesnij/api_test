@@ -134,8 +134,7 @@ pub struct EditPostList {
 
 impl PostList {
     pub fn get_json_user_post_page(user_id: i32, page: i32) -> Json<PostListPageJson> {
-        use crate::schema::user_post_list_positions::dsl::user_post_list_positions;
-        use crate::utils::{ PostListsJson, CardPostListJson };
+        use crate::utils::CardPostListJson;
 
         let mut next_page_number = 0;
         let selected_post_list_pk = PostList::get_user_selected_post_list_pk(user_id);
@@ -184,8 +183,7 @@ impl PostList {
         return Json(data);
     }
     pub fn get_json_community_post_page(community_id: i32, page: i32) -> Json<PostListPageJson> {
-        use crate::schema::community_post_list_positions::dsl::community_post_list_positions;
-        use crate::utils::{ PostListsJson, CardPostListJson };
+        use crate::utils::CardPostListJson;
 
         let mut next_page_number = 0;
         let selected_post_list_pk = PostList::get_community_selected_post_list_pk(community_id);
@@ -236,12 +234,10 @@ impl PostList {
 
     pub fn get_json_user_post_list(user_id: i32, list_id: i32, page: i32) -> Json<PostListDetailJson> {
         use crate::utils::{
-            PostListsJson,
             CardPostListJson,
             CardParentPostJson,
             CardPostJson,
             CardRepostPostJson,
-            CardReactionPostJson,
             RepostsPostJson,
         };
 
@@ -328,8 +324,8 @@ impl PostList {
                 reposts_window = None;
             }
 
-            /// получаем реакции и отреагировавших
-            let mut reactions_blocks: Option<Vec<ReactionBlockJson>>;
+            // получаем реакции и отреагировавших
+            let reactions_blocks: Option<Vec<ReactionBlockJson>>;
             if reactions_list.len() == 0 {
                 reactions_blocks = None;
             }
