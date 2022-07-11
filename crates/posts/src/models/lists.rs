@@ -354,7 +354,7 @@ impl PostList {
                 }
                 reactions_blocks = ReactionsPostJson {
                     reactions_blocks: reactions_json,
-                });
+                };
             }
 
             posts_json.push (
