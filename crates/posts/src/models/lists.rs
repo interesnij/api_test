@@ -186,7 +186,7 @@ impl PostList {
         use crate::utils::{ PostListsJson, CardPostListJson };
 
         let mut next_page_number = 0;
-        let selected_post_list_pk = PostList::get_community_selected_post_list_pk(user_id);
+        let selected_post_list_pk = PostList::get_community_selected_post_list_pk(community_id);
         let list = get_post_list(selected_post_list_pk);
         let count = PostList::count_community_post_lists(community_id);
         let lists: Vec<PostList>;
