@@ -151,7 +151,7 @@ impl PostList {
                     image:       i.image.clone(),
                     types:       i.types.clone(),
                     count:       i.count,
-                });
+                };
             }
         }
 
