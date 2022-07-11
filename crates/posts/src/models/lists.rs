@@ -347,29 +347,10 @@ impl PostList {
                         _reaction = None;
                     }
                     else {
-                        let mut user_json = Vec::new();
-
-                        for user in i.get_6_reactions_users_of_types(*reaction).iter() {
-                            user_json.push (
-                                CardReactionPostJson {
-                                    owner_name:  user.owner_name.clone(),
-                                    owner_link:  user.owner_name.clone(),
-                                    owner_image: user.owner_image.clone(),
-                                    is_user_reaction: &user_reaction == reaction,
-                                };
-                            );
-                        }
-                        reactions_json.push (
-                            ReactionsPostJson {
-                                status:   200,
-                                count:    count,
-                                reaction: reaction,
-                                users:    user_json,
-                            };
-                        );
+                        get_6_reactions_of_types
                     }
                 }
-                reactions_blocks = Some(reactions_json);
+                reactions_blocks = Some(list.get_6_reactions_of_types(Some(user_reaction));
             }
 
             posts_json.push (
@@ -413,6 +394,42 @@ impl PostList {
         return Json(data);
     }
 
+    pub fn get_6_reactions_of_types(&self, types: i16, user_reaction: Option<i16>) -> Vec<User> {
+        use crate::schema::post_votes::dsl::post_votes;
+        use crate::utils::{CardReactionPostJson, ReactionsPostJson};
+
+        let _connection = establish_connection();
+        let votes = post_votes
+            .filter(schema::post_votes::post_id.eq(self.id))
+            .filter(schema::post_votes::reaction.eq(types))
+            .limit(6)
+            .load::<PostVote>(&_connection)
+            .expect("E");
+
+        let mut reactions_json = Vec::new();
+        let mut user_json = Vec::new();
+        for _item in votes.iter() {
+            user_json.push (
+                CardReactionPostJson {
+                    owner_name:  _item.owner_name.clone(),
+                    owner_link:  _item.owner_name.clone(),
+                    owner_image: _item.owner_image.clone(),
+                    is_user_reaction: &user_reaction.unwrap() == reaction,
+                };
+            );
+        }
+        reactions_json.push (
+            ReactionsPostJson {
+                status:   200,
+                count:    count,
+                reaction: reaction,
+                users:    user_json,
+            };
+        );
+
+        return reactions_json;
+    }
+
     pub fn get_str_id(&self) -> String {
         return self.id.to_string();
     }
@@ -426,7 +443,7 @@ impl PostList {
     pub fn is_open(&self) -> bool {
         return self.types < 10;
     }
-    pub fn get_reactions_list(&self) -> Json<Vec<i16>> {
+    pub fn get_reactions_list(&self) -> Vec<i16> {
         let mut stack = Vec::new();
         if self.reactions.is_some() {
             let react_scring = self.reactions.as_ref().unwrap().to_string();
@@ -440,7 +457,7 @@ impl PostList {
                 }
             }
         }
-        return Json(stack);
+        return stack;
     }
     pub fn count_reactions_list(&self) -> usize {
         return self.get_reactions_list().len();
