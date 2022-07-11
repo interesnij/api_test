@@ -915,10 +915,10 @@ impl PostList {
     }
 
     pub fn get_user_post_lists_new_position(user_id: i32) -> i16 {
-        return (PostList::get_user_post_lists(user_id).iter().count() + 1).try_into().unwrap();
+        return (PostList::count_user_post_lists(user_id).iter().count() + 1).try_into().unwrap();
     }
     pub fn get_community_post_lists_new_position(community_id: i32) -> i16 {
-        return (PostList::get_community_post_lists(community_id).iter().count() + 1).try_into().unwrap();
+        return (PostList::count_community_post_lists(community_id).iter().count() + 1).try_into().unwrap();
     }
 
     pub fn create_list (
