@@ -182,6 +182,56 @@ impl PostList {
         };
         return Json(data);
     }
+    pub fn get_community_post_page(community_id: i32, page: i32) -> Json<PostListPageJson> {
+        use crate::schema::community_post_list_positions::dsl::community_post_list_positions;
+
+        let mut next_page_number = 0;
+        let selected_post_list_pk = PostList::get_community_selected_post_list_pk(community_id);
+        let list = get_post_list(selected_post_list_pk);
+        let count = PostList::count_community_post_lists(community_id);
+        let lists: Vec<PostList>;
+
+        if page > 1 {
+            let step = (page - 1) * 20;
+            lists = PostList::get_community_post_lists(community_id, 20, step.into());
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+        }
+        else {
+            lists = PostList::get_community_post_lists(community_id, 20, 0);
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+        }
+
+        let mut lists_json = Vec::new();
+        for i in lists.iter() {
+            lists_json.push (
+                PostListJson {
+                    name:        i.name.clone(),
+                    owner_name:  i.owner_name.clone(),
+                    owner_link:  i.owner_name.clone(),
+                    owner_image: i.owner_image.clone(),
+                    image:       i.image.clone(),
+                    types:       i.get_code(),
+                    count:       i.count,
+                }
+            );
+        }
+
+        let data = PostListPageJson {
+            selected_list_id: selected_post_list_pk,
+            owner_name:       list.owner_name,
+            owner_link:       list.owner_link,
+            owner_image:      list.owner_image,
+            image:            list.image,
+            lists:            lists_json,
+            next_page:        next_page_number,
+        };
+        return Json(data);
+    }
+
     pub fn get_str_id(&self) -> String {
         return self.id.to_string();
     }
