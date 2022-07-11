@@ -233,7 +233,7 @@ impl PostList {
         return Json(data);
     }
 
-    pub fn get_json_user_post_list(list_id: i32, page: i32) -> Json<PostListDetailJson> {
+    pub fn get_json_user_post_list(user_id: i32, list_id: i32, page: i32) -> Json<PostListDetailJson> {
         use crate::utils::{
             PostListsJson,
             CardPostListJson,
@@ -373,7 +373,7 @@ impl PostList {
                     parent:          parent,
                     reposts:         reposts_window,
                     reactions_list:  reactions_blocks,
-                };
+                }
             );
         }
 
@@ -416,7 +416,7 @@ impl PostList {
                     owner_link:  _item.owner_name.clone(),
                     owner_image: _item.owner_image.clone(),
                     is_user_reaction: &user_reaction.unwrap() == reaction,
-                };
+                }
             );
         }
         reactions_json.push (
@@ -425,7 +425,7 @@ impl PostList {
                 count:    count,
                 reaction: reaction,
                 users:    user_json,
-            };
+            }
         );
 
         return reactions_json;
