@@ -133,7 +133,7 @@ pub struct EditPostList {
 impl PostList {
     pub fn get_json_user_post_page(user_id: i32, page: i32) -> Json<PostListPageJson> {
         use crate::schema::user_post_list_positions::dsl::user_post_list_positions;
-        use crate::utils::{ PostListsJson, PostListJson };
+        use crate::utils::{ PostListsJson, CardPostListJson };
 
         let mut next_page_number = 0;
         let selected_post_list_pk = PostList::get_user_selected_post_list_pk(user_id);
@@ -158,7 +158,7 @@ impl PostList {
         let mut lists_json = Vec::new();
         for i in lists.iter() {
             lists_json.push (
-                PostListJson {
+                CardPostListJson {
                     name:        i.name.clone(),
                     owner_name:  i.owner_name.clone(),
                     owner_link:  i.owner_name.clone(),
