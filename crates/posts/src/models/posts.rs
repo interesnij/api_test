@@ -8,8 +8,8 @@ use crate::utils::{
     JsonPosition,
     JsonItemReactions,
     PostsJson,
-    PostJson,
-    ParentPostJson,
+    CardPostJson,
+    CardParentPostJson,
     RepostsPostJson,
     ReactionsPostJson,
 };

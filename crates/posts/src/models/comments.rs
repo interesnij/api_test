@@ -8,10 +8,9 @@ use crate::utils::{
     JsonItemReactions,
     CommentsJson,
     RepliesJson,
-    CommentJson,
-    ReplyJson,
+    CardCommentJson,
+    CardReplyJson,
     ReactionsCommentJson,
-    
 };
 use actix_web::web::Json;
 use crate::models::{Post, PostCommentReaction, PostList};
