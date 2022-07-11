@@ -11,6 +11,7 @@ use crate::utils::{
     PostListDetailJson,
     PostListPageJson,
     RepostsPostListJson,
+    ReactionsPostJson,
 };
 use actix_web::web::Json;
 use crate::models::{
@@ -394,9 +395,9 @@ impl PostList {
         return Json(data);
     }
 
-    pub fn get_6_reactions_of_types(&self, types: i16, user_reaction: Option<i16>) -> Vec<User> {
+    pub fn get_6_reactions_of_types(&self, types: i16, user_reaction: Option<i16>) -> Vec<ReactionsPostJson> {
         use crate::schema::post_votes::dsl::post_votes;
-        use crate::utils::{CardReactionPostJson, ReactionsPostJson};
+        use crate::utils::CardReactionPostJson;
 
         let _connection = establish_connection();
         let votes = post_votes
