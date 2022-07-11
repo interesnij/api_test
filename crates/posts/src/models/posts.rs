@@ -98,7 +98,9 @@ pub struct EditPostPosition {
 }
 
 impl Post {
-    pub fn get_card_post(&self) -> CardPostJson {
+    pub fn get_card_post(
+        &self, user_id: i32, reactions_list: Vec<i16>,
+    ) -> CardPostJson {
         // получаем родительский пост
         let parent: Option<CardParentPostJson>;
         if self.parent_id.is_some() {
@@ -159,7 +161,7 @@ impl Post {
             for reaction in reactions_list.iter() {
                 let count = object_reactions_count.count_reactions_of_types(*reaction);
                 if count > 0 {
-                    reactions_json.push(list.get_6_reactions_of_types(reaction, Some(user_reaction), count));
+                    reactions_json.push(self.get_6_reactions_of_types(reaction, Some(user_reaction), count));
                 }
             }
             reactions_blocks = Some(reactions_json);
@@ -183,6 +185,39 @@ impl Post {
                 parent:          parent,
                 reposts:         reposts_window,
                 reactions_list:  reactions_blocks,
+            };
+    }
+    pub fn get_6_reactions_of_types (
+        &self, types: &i16, user_reaction: Option<i16>, count: i32
+    ) -> ReactionBlockJson {
+        use crate::schema::post_votes::dsl::post_votes;
+        use crate::utils::CardReactionPostJson;
+        use crate::models::PostVote;
+
+        let _connection = establish_connection();
+        let votes = post_votes
+            .filter(schema::post_votes::post_id.eq(self.id))
+            .filter(schema::post_votes::reaction.eq(types))
+            .limit(6)
+            .load::<PostVote>(&_connection)
+            .expect("E");
+
+        let mut user_json = Vec::new();
+        for _item in votes.iter() {
+            user_json.push (
+                CardReactionPostJson {
+                    owner_name:  _item.owner_name.clone(),
+                    owner_link:  _item.owner_name.clone(),
+                    owner_image: _item.owner_image.clone(),
+                    is_user_reaction: &user_reaction.unwrap() == types,
+                }
+            );
+        }
+        return ReactionBlockJson {
+                status:   200,
+                count:    count,
+                reaction: *types,
+                users:    user_json,
             };
     }
     pub fn get_str_id(&self) -> String {

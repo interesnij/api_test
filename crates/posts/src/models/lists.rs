@@ -280,7 +280,7 @@ impl PostList {
 
         let mut posts_json = Vec::new();
         for i in posts.iter() {
-            posts_json.push ( i.get_card_post() )
+            posts_json.push ( i.get_card_post(user_id, reactions_list) )
         }
 
 
@@ -300,40 +300,6 @@ impl PostList {
             next_page:        next_page_number,
         };
         return Json(data);
-    }
-
-    pub fn get_6_reactions_of_types (
-        &self, types: &i16, user_reaction: Option<i16>, count: i32
-    ) -> ReactionBlockJson {
-        use crate::schema::post_votes::dsl::post_votes;
-        use crate::utils::CardReactionPostJson;
-        use crate::models::PostVote;
-
-        let _connection = establish_connection();
-        let votes = post_votes
-            .filter(schema::post_votes::post_id.eq(self.id))
-            .filter(schema::post_votes::reaction.eq(types))
-            .limit(6)
-            .load::<PostVote>(&_connection)
-            .expect("E");
-
-        let mut user_json = Vec::new();
-        for _item in votes.iter() {
-            user_json.push (
-                CardReactionPostJson {
-                    owner_name:  _item.owner_name.clone(),
-                    owner_link:  _item.owner_name.clone(),
-                    owner_image: _item.owner_image.clone(),
-                    is_user_reaction: &user_reaction.unwrap() == types,
-                }
-            );
-        }
-        return ReactionBlockJson {
-                status:   200,
-                count:    count,
-                reaction: *types,
-                users:    user_json,
-            };
     }
 
     pub fn get_str_id(&self) -> String {
