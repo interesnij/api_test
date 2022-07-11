@@ -131,7 +131,7 @@ pub struct EditPostList {
 }
 
 impl PostList {
-    pub fn get_user_post_page(user_id: i32, page: i32) -> Json<PostListPageJson> {
+    pub fn get_json_user_post_page(user_id: i32, page: i32) -> Json<PostListPageJson> {
         use crate::schema::user_post_list_positions::dsl::user_post_list_positions;
         use crate::utils::{ PostListsJson, PostListJson };
 
@@ -181,25 +181,25 @@ impl PostList {
         };
         return Json(data);
     }
-    pub fn get_community_post_page(community_id: i32, page: i32) -> Json<PostListPageJson> {
-        use crate::schema::community_post_list_positions::dsl::community_post_list_positions;
-        use crate::utils::{ PostListsJson, PostListJson };
+    pub fn get_json_user_post_list(user_id: i32, page: i32) -> Json<PostListDetailJson> {
+        use crate::schema::posts::dsl::posts;
+        use crate::utils::{ PostListsJson, CardPostListJson };
 
         let mut next_page_number = 0;
-        let selected_post_list_pk = PostList::get_community_selected_post_list_pk(community_id);
+        let selected_post_list_pk = PostList::get_user_selected_post_list_pk(user_id);
         let list = get_post_list(selected_post_list_pk);
-        let count = PostList::count_community_post_lists(community_id);
+        let count = PostList::count_user_post_lists(user_id);
         let lists: Vec<PostList>;
 
         if page > 1 {
             let step = (page - 1) * 20;
-            lists = PostList::get_community_post_lists(community_id, 20, step.into());
+            lists = PostList::get_user_post_lists(user_id, 20, step.into());
             if count > (page * 20).try_into().unwrap() {
                 next_page_number = page + 1;
             }
         }
         else {
-            lists = PostList::get_community_post_lists(community_id, 20, 0);
+            lists = PostList::get_user_post_lists(user_id, 20, 0);
             if count > 20.try_into().unwrap() {
                 next_page_number = 2;
             }
@@ -208,7 +208,7 @@ impl PostList {
         let mut lists_json = Vec::new();
         for i in lists.iter() {
             lists_json.push (
-                PostListJson {
+                CardPostListJson {
                     name:        i.name.clone(),
                     owner_name:  i.owner_name.clone(),
                     owner_link:  i.owner_name.clone(),
