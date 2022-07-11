@@ -138,14 +138,30 @@ impl PostList {
 
         let selected_post_list_pk = PostList::get_user_selected_post_list_pk(user_id);
         let list = get_post_list(selected_post_list_pk);
+
         let lists = PostList::get_user_post_lists(user_id);
+        let mut lists_json = Vec::new();
+        for i in lists.iter() {
+            lists_json.push {
+                PostListJson {
+                    name:        i.name.clone(),
+                    owner_name:  i.owner_name.clone(),
+                    owner_link:  i.owner_name.clone(),
+                    owner_image: i.owner_image.clone(),
+                    image:       i.image.clone(),
+                    types:       i.types.clone(),
+                    count:       i.count,
+                });
+            }
+        }
+
         let data = PostListPageJson {
             selected_list_id: selected_post_list_pk,
             owner_name:       list.owner_name,
             owner_link:       list.owner_link,
             owner_image:      list.owner_image,
             image:            list.image,
-            lists:            lists,
+            lists:            lists_json,
             next_page:        0,
         };
         return Json(data);
