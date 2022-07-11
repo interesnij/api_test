@@ -882,7 +882,7 @@ impl PostList {
             .filter(schema::post_lists::community_id.is_null())
             .filter(schema::post_lists::types.lt(10))
             .select(schema::post_lists::id)
-            .load(&_connection)
+            .load::<i32>(&_connection)
             .expect("E.")
             .len();
     }
@@ -909,7 +909,7 @@ impl PostList {
             .filter(schema::post_lists::community_id.eq(community_id))
             .filter(schema::post_lists::types.lt(10))
             .select(schema::post_lists::id)
-            .load::<i32>(&_connection) 
+            .load::<i32>(&_connection)
             .expect("E.")
             .len();
     }
