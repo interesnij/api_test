@@ -882,7 +882,7 @@ impl PostList {
             .filter(schema::post_lists::community_id.is_null())
             .filter(schema::post_lists::types.lt(10))
             .select(schema::post_lists::id)
-            .load(_connection)
+            .load(&_connection)
             .expect("E.")
             .len();
     }
@@ -901,7 +901,7 @@ impl PostList {
             .expect("E.");
     }
 
-    pub fn count_community_post_lists(user_id: i32) -> usize {
+    pub fn count_community_post_lists(community_id: i32) -> usize {
         use crate::schema::post_lists::dsl::post_lists;
 
         let _connection = establish_connection();
@@ -909,7 +909,7 @@ impl PostList {
             .filter(schema::post_lists::community_id.eq(community_id))
             .filter(schema::post_lists::types.lt(10))
             .select(schema::post_lists::id)
-            .load(_connection)
+            .load(&_connection)
             .expect("E.")
             .len();
     }
