@@ -420,7 +420,7 @@ impl PostList {
             );
         }
         reactions_json.push (
-            ReactionsPostJson {
+            ReactionPostJson {
                 status:   200,
                 count:    count,
                 reaction: types,
