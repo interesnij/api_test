@@ -270,13 +270,13 @@ impl PostList {
 
         if page > 1 {
             let step = (page - 1) * 20;
-            posts = self.get_paginate_items(20, step.into());
+            posts = list.get_paginate_items(20, step.into());
             if count > (page * 20).try_into().unwrap() {
                 next_page_number = page + 1;
             }
         }
         else {
-            posts = self.get_paginate_items(20, 0);
+            posts = list.get_paginate_items(20, 0);
             if count > 20.try_into().unwrap() {
                 next_page_number = 2;
             }
@@ -420,14 +420,14 @@ impl PostList {
                     owner_name:  _item.owner_name.clone(),
                     owner_link:  _item.owner_name.clone(),
                     owner_image: _item.owner_image.clone(),
-                    is_user_reaction: user_reaction.unwrap() == types,
+                    is_user_reaction: &user_reaction.unwrap() == types,
                 }
             );
         }
         return ReactionPostJson {
                 status:   200,
                 count:    count,
-                reaction: types,
+                reaction: *types,
                 users:    user_json,
             };
     }
