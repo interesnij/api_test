@@ -89,7 +89,7 @@ pub struct RepostsPostListJson {
     pub reposts_count:   i32,
     pub message_reposts: String,
     pub copy_count:      i32,
-    pub posts:           Vec<RepostPostJson>,
+    pub posts:           Vec<CardRepostPostJson>,
 }
 ////////////////////////
 
@@ -118,9 +118,9 @@ pub struct CardPostJson {
     pub is_signature:    bool,
     pub reactions:       i32,
     pub types:           String,                 // например pos1
-    pub parent:          Option<ParentPostJson>, // пост родитель
-    pub reposts:         Vec<RepostsPostJson>,        // кто репостил пост (6 объектов)
-    pub reactions_list:  Vec<ReactionsPostJson>,        // кто репостил пост (6 объектов)
+    pub parent:          Option<CardParentPostJson>, // пост родитель
+    pub reposts:         Vec<CardRepostPostJson>,        // кто репостил пост (6 объектов)
+    pub reactions_list:  Vec<CardReactionPostJson>,        // кто репостил пост (6 объектов)
 }
 
 #[derive(Serialize)]
@@ -165,7 +165,7 @@ pub struct CardReactionPostJson {
 // это объекты комментов
 pub struct CommentsJson {
     pub status:         i32,
-    pub reactions_list: Vec<CardReactionsPostJson>,
+    pub reactions_list: Vec<CardReactionPostJson>,
     pub comments:       Vec<CardCommentJson>,
     pub next_page:      bool,
 }
@@ -174,7 +174,7 @@ pub struct CommentsJson {
 pub struct RepliesJson {
     pub status:         i32,
     pub parent_types:   String,
-    pub reactions_list: Vec<CardReactionsPostJson>,
+    pub reactions_list: Vec<CardReactionPostJson>,
     pub replies:        Vec<CardReplyJson>,
     pub next_page:      i32,
 }
