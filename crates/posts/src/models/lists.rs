@@ -135,6 +135,7 @@ pub struct EditPostList {
 impl PostList {
     pub fn get_user_post_page(user_id: i32, page: i32) -> Json<PostListPageJson> {
         use crate::schema::user_post_list_positions::dsl::user_post_list_positions;
+        use crate::utils::{ PostListsJson, PostListPageJson };
 
         let mut next_page_number = 0;
         let selected_post_list_pk = PostList::get_user_selected_post_list_pk(user_id);

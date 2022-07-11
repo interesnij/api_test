@@ -31,6 +31,14 @@ pub struct SParams {
 //////////// Сериализаторы списков записей
 
 #[derive(Serialize)]
+// это карточка того, кто репостнул
+pub struct RepostPostJson {
+    pub owner_name:      String,
+    pub owner_link:      String,
+    pub owner_image:     Option<String>,
+}
+
+#[derive(Serialize)]
 // это для пагинации
 pub struct PostListsJson {
     pub lists: Vec<PostListJson>,
@@ -49,6 +57,7 @@ pub struct PostListJson {
 
 // это объект списка записей (подгружается по нажатию на список)
 pub struct PostListDetailJson {
+    pub status:         i32,
     pub id:             i32,
     pub name:           String,
     pub owner_name:     String,
@@ -74,13 +83,13 @@ pub struct PostListPageJson {
 }
 
 #[derive(Serialize)]
-pub struct ListRepostsJson {
+// это инфо о тех, кто репостил, и цифры
+pub struct RepostsPostListJson {
+    pub status:          i32,
     pub reposts_count:   i32,
     pub message_reposts: String,
     pub copy_count:      i32,
-    pub owner_name:      String,
-    pub owner_link:      String,
-    pub owner_image:     Option<String>,
+    pub posts:           Vec<RepostPostJson>,
 }
 ////////////////////////
 
@@ -125,28 +134,22 @@ pub struct ParentPostJson {
     pub attach:          Option<String>,
     pub created:         String,
 }
-
 #[derive(Serialize)]
 // это инфо о тех, кто репостил, и цифры
 pub struct RepostsPostJson {
+    pub status:          i32,
     pub reposts_count:   i32,
     pub message_reposts: String,
     pub copy_count:      i32,
     pub posts:           Vec<RepostPostJson>,
 }
-#[derive(Serialize)]
-// это карточка того, кто репостнул
-pub struct RepostPostJson {
-    pub owner_name:      String,
-    pub owner_link:      String,
-    pub owner_image:     Option<String>,
-}
 
 #[derive(Serialize)]
 // это инфо о тех, кто реагировал и общее количество у реакции
 pub struct ReactionsPostJson {
-    pub count: String,
-    pub users: Vec<ReactionPostJson>,
+    pub status: i32,
+    pub count:  String,
+    pub users:  Vec<ReactionPostJson>,
 }
 #[derive(Serialize)]
 // // это карточка того, кто поставил реакцию
@@ -161,6 +164,7 @@ pub struct ReactionPostJson {
 #[derive(Serialize)]
 // это объекты комментов
 pub struct CommentsJson {
+    pub status:         i32,
     pub reactions_list: Vec<ReactionsPostJson>,
     pub comments:       Vec<CommentJson>,
     pub next_page:      bool,
@@ -168,6 +172,7 @@ pub struct CommentsJson {
 #[derive(Serialize)]
 // это объекты ответов
 pub struct RepliesJson {
+    pub status:         i32,
     pub parent_types:   String,
     pub reactions_list: Vec<ReactionsPostJson>,
     pub replies:        Vec<ReplyJson>,
@@ -201,13 +206,21 @@ pub struct ReplyJson {
 }
 
 #[derive(Serialize)]
-// это инфо о тех, кто реагировал и общее количество у реакции
-pub struct ReactionsCommentJson {
-    pub count:       String,
+// // это карточка того, кто поставил реакцию
+pub struct ReactionPostCommentJson {
     pub owner_name:  String,
     pub owner_link:  String,
     pub owner_image: Option<String>,
 }
+
+#[derive(Serialize)]
+// это инфо о тех, кто реагировал и общее количество у реакции
+pub struct ReactionsCommentJson {
+    pub status: i32,
+    pub count:  String,
+    pub users:  Vec<ReactionPostJson>,
+}
+
 ////////////////////////
 
 
