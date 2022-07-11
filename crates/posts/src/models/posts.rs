@@ -362,7 +362,6 @@ impl Post {
 
             list.create_post (
                 item.content.clone(),
-                list.community_id,
                 list.user_id,
                 list.owner_name.clone(),
                 list.owner_link.clone(),

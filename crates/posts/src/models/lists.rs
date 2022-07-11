@@ -246,7 +246,23 @@ impl PostList {
         let mut next_page_number = 0;
         let list = get_post_list(list_id);
         let count = list.count;
+
         let lists = PostList::get_user_post_lists(user_id, 20, 0);
+        let mut lists_json = Vec::new();
+        for i in lists.iter() {
+            lists_json.push (
+                CardPostListJson {
+                    name:        i.name.clone(),
+                    owner_name:  i.owner_name.clone(),
+                    owner_link:  i.owner_name.clone(),
+                    owner_image: i.owner_image.clone(),
+                    image:       i.image.clone(),
+                    types:       i.get_code(),
+                    count:       i.count,
+                }
+            );
+        }
+
         let posts: Vec<Post>;
         let reactions_list = list.get_reactions_list();
 
@@ -391,9 +407,8 @@ impl PostList {
             types:            list.types,
             count:            list.count,
             reactions_list:   reactions_list,
-            types:            list.types,
             posts:            posts_json,
-            lists:            lists,
+            lists:            lists_json,
             next_page:        next_page_number,
         };
         return Json(data);
