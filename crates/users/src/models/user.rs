@@ -3185,7 +3185,7 @@ impl User {
 
         let _connection = establish_connection();
         let _notify = notify_user_communities.filter(schema::notify_user_communities::id.eq(notify_id)).load::<NotifyUserCommunitie>(&_connection).expect("E");
-        let null_value = None;
+        let null_value: Option<i32> = None;
         if _notify.len() > 0 && _notify[0].owner == self.id {
             diesel::update(notify_user_communities.filter(schema::notify_user_communities::id.eq(notify_id)))
                 .set(schema::notify_user_communities::list_id.eq(null_value))
