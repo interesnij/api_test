@@ -3101,9 +3101,11 @@ impl User {
 
         let _connection = establish_connection();
         let _new = news_user_communities.filter(schema::news_user_communities::id.eq(new_id)).load::<NewsUserCommunitie>(&_connection).expect("E");
+        let null_value: Option<i32> = None;
+
         if _new.len() > 0 && _new[0].owner == self.id {
             diesel::update(news_user_communities.filter(schema::news_user_communities::id.eq(new_id)))
-                .set(schema::news_user_communities::list_id.eq(None))
+                .set(schema::news_user_communities::list_id.eq(null_value))
                 .get_result::<NewsUserCommunitie>(&_connection)
                 .expect("Error.");
                 return true;
