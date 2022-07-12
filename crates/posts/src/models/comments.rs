@@ -162,7 +162,7 @@ impl PostComment {
         return reactions_blocks;
     }
 
-    pub fn get_comment_json (&self, user_id: i32, reactions_list: Vec<i16>) -> CardCommentJson {
+    pub fn get_comment_json (&self, user_id: i32) -> CardCommentJson {
         let card = CardCommentJson {
             content:        self.content.clone(),
             owner_name:     self.owner_name.clone(),
@@ -173,7 +173,7 @@ impl PostComment {
             reactions:      self.reactions,
             types:          self.get_code(),
             replies:        self.count_replies(),
-            reactions_list: self.get_reactions_json(user_id, reactions_list),
+            reactions_list: self.get_reactions_json(user_id, reactions_list.clone()),
         };
         return card;
     }
