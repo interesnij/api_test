@@ -243,7 +243,7 @@ impl Post {
             };
     }
     pub fn get_post_json (
-        &self, user_id: i32, reactions_list: Vec<i16>,
+        &self, user_id: i32, reactions_list: &Vec<i16>,
     ) -> CardPostJson {
 
         return CardPostJson {
