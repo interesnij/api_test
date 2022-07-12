@@ -209,6 +209,50 @@ impl StickerCategorie {
         };
         return Json(data);
     }
+    pub fn get_categorie_detail_json(&self, page: i32) -> Json<StickerCategorieDetailJson> {
+        let mut next_page_number = 0;
+        let count = self.count_stickers();
+        let stickers: Vec<Sticker>;
+
+        if page > 1 {
+            let step = (page - 1) * 20;
+            stickers = self.get_stickers(20, step.into());
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+        }
+        else {
+            stickers = self.get_stickers(20, 0);
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+        }
+
+        let mut stickers_json = Vec::new();
+        for i in stickers.iter() {
+            stickers_json.push (
+                CardStickerJson {
+                    name:  i.name.clone(),
+                    image: i.image.clone(),
+                }
+            );
+        }
+
+        let data = StickerCategorieDetailJson {
+            name:        self.name.clone(),
+            owner_name:  self.owner_name.clone(),
+            owner_link:  self.owner_link.clone(),
+            owner_image: self.owner_image.clone(),
+            description: self.description.clone(),
+            avatar:      self.avatar.clone(),
+            stickers:    stickers_json,
+            next_page:   next_page_number,
+        };
+        return Json(data);
+    }
+
+
+
 
     pub fn get_category_json (&self) -> CardStickerCategoryJson {
         let card = CardStickerCategoryJson {
@@ -228,6 +272,29 @@ impl StickerCategorie {
             .load::<StickerCategorie>(&_connection)
             .expect("E.");
     }
+    pub fn get_stickers(&self, limit: i64, offset: i64) -> Vec<Sticker> {
+        use crate::schema::stickers::dsl::stickers;
+
+        let _connection = establish_connection();
+
+        return stickers
+            .limit(limit)
+            .offset(offset)
+            .load::<Sticker>(&_connection)
+            .expect("E.");
+    }
+    pub fn count_stickers(&self) -> usize {
+        use crate::schema::stickers::dsl::stickers;
+
+        let _connection = establish_connection();
+        return stickers
+            .limit(limit)
+            .offset(offset)
+            .select(schema::stickers::id)
+            .load::<i32>(&_connection)
+            .expect("E.")
+            .len();
+    }
     pub fn count_categories() -> usize {
         use crate::schema::sticker_categories::dsl::sticker_categories;
 
@@ -238,6 +305,8 @@ impl StickerCategorie {
             .expect("E.")
             .len();
     }
+
+
 }
 
 #[derive(Deserialize, Insertable, AsChangeset)]
