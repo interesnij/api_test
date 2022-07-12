@@ -16,5 +16,5 @@ pub fn pages_routes(config: &mut web::ServiceConfig) {
 }
 
 pub async fn index_page(req: HttpRequest) -> impl Responder {
-    HttpResponse::Ok().body("hello, I posts server.")
+    HttpResponse::Ok().body("hello, I other server.")
 }
