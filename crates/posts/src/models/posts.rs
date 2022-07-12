@@ -174,7 +174,7 @@ impl Post {
         }
         return reposts_window;
     }
-    pub fn get_reactions_post_json (&self, user_id: i32, reactions_list: Vec<i16>) -> Option<ReactionBlockJson> {
+    pub fn get_reactions_post_json (&self, user_id: i32, reactions_list: Vec<i16>) -> Option<Vec<ReactionBlockJson>> {
         // получаем реакции и отреагировавших
         let reactions_blocks: Option<Vec<ReactionBlockJson>>;
         if reactions_list.len() == 0 {
@@ -234,7 +234,7 @@ impl Post {
                 reactions:       self.reactions,
                 types:           self.get_code(),
                 parent:          self.get_parent_post_json(),
-                reposts:         self.get_6_reposts_json(),
+                reposts:         self.get_6_reposts_post_json(),
                 reactions_list:  self.get_reactions_post_json(user_id, reactions_list),
                 prev:            prev,
                 next:            next,
@@ -262,7 +262,7 @@ impl Post {
                 reactions:       self.reactions,
                 types:           self.get_code(),
                 parent:          self.get_parent_post_json(),
-                reposts:         self.get_6_reposts_json(),
+                reposts:         self.get_6_reposts_post_json(),
                 reactions_list:  self.get_reactions_post_json(user_id, reactions_list),
             };
     }
