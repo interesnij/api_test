@@ -164,18 +164,18 @@ impl PostComment {
 
     pub fn get_comment_json (&self, user_id: i32, reactions_list: Vec<i16>) -> CardCommentJson {
         let card = CardCommentJson {
-            content:        _parent.content.clone(),
-            owner_name:     _parent.owner_name.clone(),
-            owner_link:     _parent.owner_link.clone(),
-            owner_image:    _parent.owner_image.clone(),
-            attach:         _parent.attach.clone(),
-            created:        _parent.created.format("%d-%m-%Y в %H:%M").to_string(),
+            content:        self.content.clone(),
+            owner_name:     self.owner_name.clone(),
+            owner_link:     self.owner_link.clone(),
+            owner_image:    self.owner_image.clone(),
+            attach:         self.attach.clone(),
+            created:        self.created.format("%d-%m-%Y в %H:%M").to_string(),
             reactions:      self.reactions,
             types:          self.get_code(),
             replies:        self.count_replies(),
             reactions_list: self.get_reactions_json(user_id, reactions_list),
         };
-        return Json(card);
+        return card;
     }
     pub fn is_deleted(&self) -> bool {
         return self.types == "c" && self.types == "d";

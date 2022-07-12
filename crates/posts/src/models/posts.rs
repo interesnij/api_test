@@ -100,6 +100,39 @@ pub struct EditPostPosition {
 }
 
 impl Post {
+    pub fn get_comments_post_json (
+        &self,
+        user_id: i32,
+        reactions_list: Vec<i16>,
+        page: i32
+    ) -> CommentsSmallJson {
+        let mut comments_json = Vec::new();
+        let mut next_page_number = 0;
+        let comments: Vec<PostComment>;
+        if page > 1 {
+            let step = (page - 1) * 20;
+            comments = self.get_comments(20, step.into());
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+        }
+        else {
+            comments = self.get_comments(user_id, 20, 0);
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+        }
+
+        for c in comments.iter() {
+            comments_json.push(c.get_comment_json(user_id, reactions_list));
+        }
+
+        return CommentsSmallJson {
+            comments:  comments_json,
+            next_page: next_page_number,
+        });
+    }
+
     pub fn get_parent_post_json (&self) -> Option<CardParentPostJson> {
         // получаем родительский пост
         let parent: Option<CardParentPostJson>;
@@ -200,9 +233,9 @@ impl Post {
         return reactions_blocks;
     }
 
-    pub fn get_detail_post_json (&self, user_id: i32, reactions_list: Vec<i16>,) -> PostDetailJson {
+    pub fn get_detail_post_json (&self, user_id: i32, page: i32) -> PostDetailJson {
         let list = self.get_list();
-
+        let reactions_list = list.get_reactions_list();
         let mut prev: Option<i32> = None;
         let mut next: Option<i32> = None;
         let _posts = list.get_items();
@@ -238,6 +271,7 @@ impl Post {
                 next:            next,
                 is_user_can_see_comments: list.is_user_can_see_comment(user_id),
                 is_user_can_create_el: list.is_user_can_create_el(user_id),
+                comments: self.get_comments_post_json(user_id, reactions_list, page),
             };
     }
     pub fn get_post_json (&self, user_id: i32, reactions_list: Vec<i16>,) -> CardPostJson {
