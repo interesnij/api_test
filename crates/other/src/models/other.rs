@@ -58,8 +58,8 @@ impl CustomLink {
         }
 
         let data = CustomLinksJson {
-            links: selected_post_list_pk,
-            next_page:        next_page_number,
+            links:     links_json,
+            next_page: next_page_number,
         };
         return Json(data);
     }
@@ -71,7 +71,7 @@ impl CustomLink {
         };
         return card;
     }
-    pub fn get_links(&self, limit: i64, offset: i64) -> Vec<CustomLink> {
+    pub fn get_links(limit: i64, offset: i64) -> Vec<CustomLink> {
         use crate::schema::custom_links::dsl::custom_links;
 
         let _connection = establish_connection();
@@ -82,7 +82,7 @@ impl CustomLink {
             .load::<PostComment>(&_connection)
             .expect("E.");
     }
-    pub fn count_links(&self) -> usize {
+    pub fn count_links() -> usize {
         use crate::schema::custom_links::dsl::custom_links;
 
         let _connection = establish_connection();
@@ -218,7 +218,7 @@ impl StickerCategorie {
         };
         return card;
     }
-    pub fn get_categories(&self, limit: i64, offset: i64) -> Vec<StickerCategorie> {
+    pub fn get_categories(limit: i64, offset: i64) -> Vec<StickerCategorie> {
         use crate::schema::sticker_categories::dsl::sticker_categories;
 
         let _connection = establish_connection();
@@ -229,7 +229,7 @@ impl StickerCategorie {
             .load::<StickerCategorie>(&_connection)
             .expect("E.");
     }
-    pub fn count_categories(&self) -> usize {
+    pub fn count_categories() -> usize {
         use crate::schema::sticker_categories::dsl::sticker_categories;
 
         let _connection = establish_connection();
@@ -392,11 +392,11 @@ impl SmileCategorie {
 
     pub fn get_category_json (&self) -> CardSmileCategoryJson {
         let card = CardSmileCategoryJson {
-            name: self.avatar.clone(),
+            name: self.name.clone(),
         };
         return card;
     }
-    pub fn get_categories(&self, limit: i64, offset: i64) -> Vec<SmileCategorie> {
+    pub fn get_categories(limit: i64, offset: i64) -> Vec<SmileCategorie> {
         use crate::schema::smile_categories::dsl::smile_categories;
 
         let _connection = establish_connection();
@@ -407,7 +407,7 @@ impl SmileCategorie {
             .load::<SmileCategorie>(&_connection)
             .expect("E.");
     }
-    pub fn count_categories(&self) -> usize {
+    pub fn count_categories() -> usize {
         use crate::schema::smile_categories::dsl::smile_categories;
 
         let _connection = establish_connection();
