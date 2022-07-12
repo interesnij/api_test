@@ -81,7 +81,6 @@ pub struct CardSmileCategoryJson {
 pub struct SmileCategorieDetailJson {
     pub name:      String,
     pub smiles:    Vec<CardSmileJson>,
-    pub next_page: i32,
 }
 #[derive(Serialize)]
 // это смайл

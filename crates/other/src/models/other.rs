@@ -251,9 +251,6 @@ impl StickerCategorie {
         return Json(data);
     }
 
-
-
-
     pub fn get_category_json (&self) -> CardStickerCategoryJson {
         let card = CardStickerCategoryJson {
             id:     self.id.clone(),
@@ -303,8 +300,6 @@ impl StickerCategorie {
             .expect("E.")
             .len();
     }
-
-
 }
 
 #[derive(Deserialize, Insertable, AsChangeset)]
@@ -482,6 +477,27 @@ impl SmileCategorie {
             .load::<i32>(&_connection)
             .expect("E.")
             .len();
+    }
+
+    pub fn get_categorie_detail_json(&self) -> Json<SmileCategorieDetailJson> {
+
+        let smiles = self.get_smiles();
+
+        let mut smiles_json = Vec::new();
+        for i in smiles.iter() {
+            smiles_json.push (
+                CardSmileJson {
+                    name:  i.name.clone(),
+                    image: i.image.clone(),
+                }
+            );
+        }
+
+        let data = SmileCategorieDetailJson {
+            name:   self.name.clone(),
+            smiles: smiles_json,
+        };
+        return Json(data);
     }
 }
 
