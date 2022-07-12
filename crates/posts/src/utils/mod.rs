@@ -209,7 +209,6 @@ pub struct CommentsSmallJson {
 // это объекты ответов
 pub struct RepliesJson {
     pub status:         i32,
-    pub parent_types:   String,
     pub reactions_list: Vec<CardReactionPostJson>,
     pub replies:        Vec<CardReplyJson>,
     pub next_page:      i32,

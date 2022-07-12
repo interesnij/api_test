@@ -12,6 +12,7 @@ use crate::utils::{
     CardReplyJson,
     ReactionsCommentJson,
     ReactionBlockJson,
+    RepliesSmallJson,
 };
 use actix_web::web::Json;
 use crate::models::{Post, PostCommentReaction, PostList};
@@ -177,7 +178,7 @@ impl PostComment {
         };
         return card;
     }
-    pub fn get_reply_json (&self, user_id: i32, reactions_list: Vec<i16>) -> CardCommentJson {
+    pub fn get_reply_json (&self, user_id: i32, reactions_list: Vec<i16>) -> CardReplyJson {
         let card = CardReplyJson {
             content:        self.content.clone(),
             owner_name:     self.owner_name.clone(),
@@ -190,6 +191,53 @@ impl PostComment {
             reactions_list: self.get_reactions_json(user_id, reactions_list.clone()),
         };
         return card;
+    }
+    pub fn get_replies_json (
+        &self,
+        user_id: i32,
+        reactions_list: Vec<i16>,
+        page: i32
+    ) -> RepliesSmallJson {
+        let mut comments_json = Vec::new();
+        let mut next_page_number = 0;
+        let count = self.count_replies();
+        if page > 1 {
+            let step = (page - 1) * 20;
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+            for c in self.get_replies(20, step.into()).iter() {
+                let r_list = reactions_list.clone();
+                comments_json.push(c.get_reply_json(user_id, r_list));
+            }
+        }
+        else {
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+            for c in self.get_replies(20, 0).iter() {
+                let r_list = reactions_list.clone();
+                comments_json.push(c.get_reply_json(user_id, r_list));
+            }
+        }
+
+        return RepliesSmallJson {
+            replies:   comments_json,
+            next_page: next_page_number,
+        };
+    }
+    pub fn get_replies(&self, limit: i64, offset: i64) -> Vec<PostComment> {
+        use crate::schema::post_comments::dsl::post_comments;
+
+        let _connection = establish_connection();
+
+        return post_comments
+            .filter(schema::post_comments::parent_id.eq(self.id))
+            .filter(schema::post_comments::types.eq_any(vec!["a","b"]))
+            .limit(limit)
+            .offset(offset)
+            .load::<PostComment>(&_connection)
+            .expect("E.");
     }
     pub fn is_deleted(&self) -> bool {
         return self.types == "c" && self.types == "d";
