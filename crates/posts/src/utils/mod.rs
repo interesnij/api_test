@@ -232,7 +232,7 @@ pub struct CardCommentJson {
     pub created:        String,
     pub reactions:      i32,
     pub types:          String, // например cpo1
-    pub replies:        usize,    // кол-во ответов
+    pub replies:        i32,    // кол-во ответов
     pub reactions_list: Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
 }
 #[derive(Serialize)]

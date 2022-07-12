@@ -84,6 +84,7 @@ CREATE TABLE post_comments (
     created    TIMESTAMP NOT NULL,
     repost     INT NOT NULL,
     reactions  INT NOT NULL,
+    replies    INT NOT NULL,
 
     CONSTRAINT fk_post_comment
         FOREIGN KEY(post_id)

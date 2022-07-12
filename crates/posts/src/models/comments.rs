@@ -44,6 +44,7 @@ pub struct PostComment {
     pub created:     chrono::NaiveDateTime,
     pub repost:      i32,
     pub reactions:   i32,
+    pub replies:     i32,
 }
 #[derive(Deserialize, Insertable)]
 #[table_name="post_comments"]
@@ -61,6 +62,7 @@ pub struct NewPostComment {
     pub created:     chrono::NaiveDateTime,
     pub repost:      i32,
     pub reactions:   i32,
+    pub replies:     i32,
 }
 
 #[derive(Queryable, Serialize, Deserialize, AsChangeset, Debug)]
@@ -173,7 +175,7 @@ impl PostComment {
             created:        self.created.format("%d-%m-%Y в %H:%M").to_string(),
             reactions:      self.reactions,
             types:          self.get_code(),
-            replies:        self.count_replies(),
+            replies:        self.replies,
             reactions_list: self.get_reactions_json(user_id, reactions_list.clone()),
         };
         return card;
@@ -296,14 +298,13 @@ impl PostComment {
     }
 
     pub fn count_replies(&self) -> usize {
-        return self.get_replies().len();
+        return self.replies;
     }
     pub fn count_replies_ru(&self) -> String {
         use crate::utils::get_count_for_ru;
 
-        let count_usize: usize = self.count_replies() as usize;
         return get_count_for_ru (
-            count_usize.try_into().unwrap(),
+            self.replies,
             " ответ".to_string(),
             " ответа".to_string(),
             " ответов".to_string(),

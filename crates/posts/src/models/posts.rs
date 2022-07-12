@@ -1162,6 +1162,7 @@ impl Post {
             created:    chrono::Local::now().naive_utc(),
             repost:     0,
             reactions:  0,
+            replies:    0,
         };
         let new_comment = diesel::insert_into(schema::post_comments::table)
             .values(&new_comment_form)
