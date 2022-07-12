@@ -324,36 +324,3 @@ table! {
         last_activity -> Timestamp,
     }
 }
-
-joinable!(design_settings -> users (user_id));
-
-allow_tables_to_appear_in_same_query!(
-    design_settings,
-    featured_user_communities,
-    follows,
-    friends,
-    friends_visible_perms,
-    ip_users,
-    list_user_communities_keys,
-    news_user_communities,
-    notify_user_communities,
-    phone_codes,
-    user_anketas,
-    user_blocks,
-    user_brother_sisters,
-    user_children_ones,
-    user_colleagues_ones,
-    user_dad_ones,
-    user_delete_anketas,
-    user_grandsons_ones,
-    user_locations,
-    user_love_statuss,
-    user_mom_ones,
-    user_partner_ones,
-    user_populate_smiles,
-    user_populate_stickers,
-    user_privates,
-    user_profile_notifications,
-    user_profiles,
-    users,
-);
