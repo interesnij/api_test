@@ -126,7 +126,8 @@ impl Post {
         }
 
         for c in comments.iter() {
-            comments_json.push(c.get_comment_json(user_id, reactions_list.clone()));
+            let r_list = reactions_list;
+            comments_json.push(c.get_comment_json(user_id, r_list));
         }
 
         return CommentsSmallJson {
