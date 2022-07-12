@@ -8,7 +8,6 @@ use crate::utils::{
     JsonPosition,
     JsonItemReactions,
     PostsJson,
-    CardPostJson,
     CardParentPostJson,
     RepostsPostJson,
     CardPostJson,
@@ -101,9 +100,7 @@ pub struct EditPostPosition {
 }
 
 impl Post {
-    pub fn get_card_post(
-        &self, user_id: i32, reactions_list: Vec<i16>,
-    ) -> CardPostJson {
+    pub fn get_parent_post_json (&self) -> Option<CardParentPostJson> {
         // получаем родительский пост
         let parent: Option<CardParentPostJson>;
         if self.parent_id.is_some() {
@@ -121,7 +118,9 @@ impl Post {
         else {
             parent = None;
         }
-
+        return parent;
+    }
+    pub fn get_6_reposts_post_json (&self) -> Option<RepostsPostJson> {
         // получаем репосты записи, если есть
         let reposts_window: Option<RepostsPostJson>;
         if self.repost > 0 {
@@ -146,7 +145,36 @@ impl Post {
         else {
             reposts_window = None;
         }
+        return reposts_window;
+    }
+    pub fn get_reposts_post_json (&self) -> Option<RepostsPostJson> {
+        // получаем репосты записи, если есть
+        let reposts_window: Option<RepostsPostJson>;
+        if self.repost > 0 {
+            let mut reposts_json = Vec::new();
+            for r in self.reposts().iter() {
+                reposts_json.push (
+                    CardRepostPostJson {
+                        owner_name:  r.owner_name.clone(),
+                        owner_link:  r.owner_name.clone(),
+                        owner_image: r.owner_image.clone(),
+                    }
+                );
+            }
 
+            reposts_window = Some(RepostsPostJson {
+                status:          200,
+                message_reposts: self.message_reposts_count(),
+                copy_count:      self.count_copy(),
+                posts:           reposts_json,
+            });
+        }
+        else {
+            reposts_window = None;
+        }
+        return reposts_window;
+    }
+    pub fn get_reposts_post_json (&self, user_id: i32, reactions_list: Vec<i16>) -> Option<ReactionBlockJson> {
         // получаем реакции и отреагировавших
         let reactions_blocks: Option<Vec<ReactionBlockJson>>;
         if reactions_list.len() == 0 {
@@ -169,6 +197,54 @@ impl Post {
             }
             reactions_blocks = Some(reactions_json);
         }
+        return reposts_window;
+    }
+
+    pub fn get_post_json (
+        &self, user_id: i32, reactions_list: Vec<i16>,
+    ) -> PostDetailJson {
+        let list = self.get_list();
+        
+        let mut prev: Option<i32> = None;
+        let mut next: Option<i32> = None;
+        let _posts = _list.get_items();
+        for (i, item) in _posts.iter().enumerate().rev() {
+            if item.id == _post.id {
+                if (i + 1) != _posts.len() {
+                    prev = Some(_posts[i + 1].id);
+                };
+                if i != 0 {
+                    next = Some(_posts[i - 1].id);
+                };
+                break;
+            }
+        };
+        return PostDetailJson {
+                content:         self.content,
+                owner_name:      self.owner_name,
+                owner_link:      self.owner_link,
+                owner_image:     self.owner_image,
+                attach:          self.attach,
+                comment_enabled: self.comment_enabled,
+                created:         self.created.format("%d-%m-%Y в %H:%M").to_string(),
+                comment:         self.comment,
+                view:            self.view,
+                repost:          self.repost,
+                is_signature:    self.is_signature,
+                reactions:       self.reactions,
+                types:           self.get_code(),
+                parent:          self.get_parent_post_json(),
+                reposts:         self.get_6_reposts_json(),
+                reactions_list:  self.get_reactions_post_json(user_id, reactions_list),
+                prev:            prev,
+                next:            next,
+                is_user_can_see_comments: list.is_user_can_see_comment(user_id),
+                is_user_can_create_item: list.is_user_can_create_item(user_id),
+            };
+    }
+    pub fn get_detail_post_json (
+        &self, user_id: i32, reactions_list: Vec<i16>,
+    ) -> CardPostJson {
 
         return CardPostJson {
                 id:              self.id,
@@ -185,11 +261,12 @@ impl Post {
                 is_signature:    self.is_signature,
                 reactions:       self.reactions,
                 types:           self.get_code(),
-                parent:          parent,
-                reposts:         reposts_window,
-                reactions_list:  reactions_blocks,
+                parent:          self.get_parent_post_json(),
+                reposts:         self.get_6_reposts_json(),
+                reactions_list:  self.get_reactions_post_json(user_id, reactions_list),
             };
     }
+
     pub fn get_6_reactions_of_types (
         &self, types: &i16, user_reaction: Option<i16>, count: i32
     ) -> ReactionBlockJson {

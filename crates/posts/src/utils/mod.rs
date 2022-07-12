@@ -57,19 +57,21 @@ pub struct CardPostListJson {
 
 // это объект списка записей (подгружается по нажатию на список)
 pub struct PostListDetailJson {
-    pub status:         i32,
-    pub id:             i32,
-    pub name:           String,
-    pub owner_name:     String,
-    pub owner_link:     String,
-    pub owner_image:    Option<String>,
-    pub image:          Option<String>,
-    pub types:          i16,             // здесь просто тип, остальное на месте пририсуем, а такой тип нужен так и так
-    pub count:          i32,
-    pub reactions_list: Vec<i16>,
-    pub posts:          Vec<CardPostJson>,
-    pub lists:          Vec<CardPostListJson>,
-    pub next_page:      i32,
+    // can_see_list не упоминаем, в случае неполных прав вернем статус 403
+    pub status:                  i32,
+    pub id:                      i32,
+    pub name:                    String,
+    pub owner_name:              String,
+    pub owner_link:              String,
+    pub owner_image:             Option<String>,
+    pub image:                   Option<String>,
+    pub types:                   i16,             // здесь просто тип, остальное на месте пририсуем, а такой тип нужен так и так
+    pub count:                   i32,
+    pub reactions_list:          Vec<i16>,
+    pub posts:                   Vec<CardPostJson>,
+    pub lists:                   Vec<CardPostListJson>,
+    pub next_page:               i32,
+    pub is_user_can_create_item: bool,
 }
 
 // это объект страницы записей (подгружается по нажатию на список)
@@ -125,22 +127,27 @@ pub struct CardPostJson {
 #[derive(Serialize)]
 // это запись
 pub struct PostDetailJson {
-    pub content:         Option<String>,
-    pub owner_name:      String,
-    pub owner_link:      String,
-    pub owner_image:     Option<String>,
-    pub attach:          Option<String>,
-    pub comment_enabled: bool,
-    pub created:         String,
-    pub comment:         i32,
-    pub view:            i32,
-    pub repost:          i32,
-    pub is_signature:    bool,
-    pub reactions:       i32,
-    pub types:           String,                         // например pos1
-    pub parent:          Option<CardParentPostJson>,     // пост родитель
-    pub reposts:         Option<RepostsPostJson>,        // кто репостил пост (6 объектов)
-    pub reactions_list:  Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
+    // can_see_list не упоминаем, в случае неполных прав вернем статус 403
+    pub content:                  Option<String>,
+    pub owner_name:               String,
+    pub owner_link:               String,
+    pub owner_image:              Option<String>,
+    pub attach:                   Option<String>,
+    pub comment_enabled:          bool,
+    pub created:                  String,
+    pub comment:                  i32,
+    pub view:                     i32,
+    pub repost:                   i32,
+    pub is_signature:             bool,
+    pub reactions:                i32,
+    pub types:                    String,                         // например pos1
+    pub parent:                   Option<CardParentPostJson>,     // пост родитель
+    pub reposts:                  Option<RepostsPostJson>,        // кто репостил пост (6 объектов)
+    pub reactions_list:           Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
+    pub prev:                     Option<i32>,
+    pub next:                     Option<i32>,
+    pub is_user_can_see_comments: bool,
+    pub is_user_can_create_item:  bool,
 }
 
 #[derive(Serialize)]

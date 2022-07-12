@@ -231,19 +231,18 @@ impl PostList {
     }
 
     pub fn get_json_user_post_list(user_id: i32, list_id: i32, page: i32) -> Json<PostListDetailJson> {
-        use crate::utils::{
-            CardPostListJson,
-            CardParentPostJson,
-            CardPostJson,
-            CardRepostPostJson,
-            RepostsPostJson,
-        };
+        use crate::utils::CardPostListJson;
 
         let mut next_page_number = 0;
         let list = get_post_list(list_id);
         let count = list.count;
-
-        let lists = PostList::get_user_post_lists(user_id, 20, 0);
+        let lists: Vec<PostList>;
+        if list.community_id.is_some() {
+            lists = PostList::get_user_post_lists(list.community_id.unwrap(), 20, 0);
+        }
+        else {
+            let lists = PostList::get_user_post_lists(user_id, 20, 0);
+        }
         let mut lists_json = Vec::new();
         for i in lists.iter() {
             lists_json.push (
@@ -278,24 +277,24 @@ impl PostList {
 
         let mut posts_json = Vec::new();
         for i in posts.iter() {
-            posts_json.push ( i.get_card_post(user_id, reactions_list) )
+            posts_json.push ( i.get_post_json(user_id, reactions_list) )
         }
 
-
         let data = PostListDetailJson {
-            status:           200,
-            id:               list.id,
-            name:             list.name,
-            owner_name:       list.owner_name,
-            owner_link:       list.owner_link,
-            owner_image:      list.owner_image,
-            image:            list.image,
-            types:            list.types,
-            count:            list.count,
-            reactions_list:   reactions_list,
-            posts:            posts_json,
-            lists:            lists_json,
-            next_page:        next_page_number,
+            status:                  200,
+            id:                      list.id,
+            name:                    list.name,
+            owner_name:              list.owner_name,
+            owner_link:              list.owner_link,
+            owner_image:             list.owner_image,
+            image:                   list.image,
+            types:                   list.types,
+            count:                   list.count,
+            reactions_list:          reactions_list,
+            posts:                   posts_json,
+            lists:                   lists_json,
+            next_page:               next_page_number,
+            is_user_can_create_item: list.is_user_can_see_el(user_id),
         };
         return Json(data);
     }
