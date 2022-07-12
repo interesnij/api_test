@@ -268,7 +268,7 @@ impl Post {
                 types:           self.get_code(),
                 parent:          self.get_parent_post_json(),
                 reposts:         self.get_6_reposts_post_json(),
-                reactions_list:  self.get_reactions_json(user_id, reactions_list),
+                reactions_list:  self.get_reactions_json(user_id, reactions_list.clone()),
                 prev:            prev,
                 next:            next,
                 is_user_can_see_comments: list.is_user_can_see_comment(user_id),
