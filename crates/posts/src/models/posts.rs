@@ -130,7 +130,7 @@ impl Post {
         return CommentsSmallJson {
             comments:  comments_json,
             next_page: next_page_number,
-        });
+        };
     }
 
     pub fn get_parent_post_json (&self) -> Option<CardParentPostJson> {
