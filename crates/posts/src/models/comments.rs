@@ -295,16 +295,6 @@ impl PostComment {
         }
     }
 
-    pub fn get_replies(&self) -> Vec<PostComment> {
-        use crate::schema::post_comments::dsl::post_comments;
-
-        let _connection = establish_connection();
-        return post_comments
-            .filter(schema::post_comments::parent_id.eq(self.id))
-            .filter(schema::post_comments::types.eq_any(vec!["a", "b"]))
-            .load::<PostComment>(&_connection)
-            .expect("E");
-    }
     pub fn count_replies(&self) -> usize {
         return self.get_replies().len();
     }
