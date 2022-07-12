@@ -10,11 +10,10 @@ use crate::schema::{
 };
 use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
-use crate::utils::establish_connection;
 use actix_web::web::Json;
 use crate::utils::{
     establish_connection,
-    ReactionJson, CustomLinkJson, CustomLinksJson, 
+    ReactionJson, CustomLinkJson, CustomLinksJson,
     StickerCategoriesJson, CardStickerCategoryJson, StickerCategorieDetailJson, CardStickerJson,
     SmileCategoriesJson, CardSmileCategoryJson, SmileCategorieDetailJson, CardSmileJson,
 };
