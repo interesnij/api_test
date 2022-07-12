@@ -197,24 +197,24 @@ impl Post {
             }
             reactions_blocks = Some(reactions_json);
         }
-        return reposts_window;
+        return reactions_blocks;
     }
 
     pub fn get_post_json (
         &self, user_id: i32, reactions_list: Vec<i16>,
     ) -> PostDetailJson {
         let list = self.get_list();
-        
+
         let mut prev: Option<i32> = None;
         let mut next: Option<i32> = None;
-        let _posts = _list.get_items();
+        let _posts = list.get_items();
         for (i, item) in _posts.iter().enumerate().rev() {
             if item.id == _post.id {
                 if (i + 1) != _posts.len() {
-                    prev = Some(_posts[i + 1].id);
+                    prev = Some(_posts[i + 1].position);
                 };
                 if i != 0 {
-                    next = Some(_posts[i - 1].id);
+                    next = Some(_posts[i - 1].position);
                 };
                 break;
             }
