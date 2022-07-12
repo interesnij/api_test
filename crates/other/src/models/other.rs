@@ -283,7 +283,7 @@ impl StickerCategorie {
             .load::<Sticker>(&_connection)
             .expect("E.");
     }
-    pub fn count_stickers(&self) -> usize {
+    pub fn count_stickers(&self, limit: i64, offset: i64) -> usize {
         use crate::schema::stickers::dsl::stickers;
 
         let _connection = establish_connection();
