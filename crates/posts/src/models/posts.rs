@@ -109,7 +109,7 @@ impl Post {
     ) -> CommentsSmallJson {
         let mut comments_json = Vec::new();
         let mut next_page_number = 0;
-        let comments: Vec<PostComment> - Vec::new();
+        let comments: Vec<PostComment> = Vec::new();
         let count = self.comment;
         if page > 1 {
             let step = (page - 1) * 20;
