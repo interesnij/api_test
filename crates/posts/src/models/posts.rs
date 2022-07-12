@@ -147,12 +147,12 @@ impl Post {
         }
         return reposts_window;
     }
-    pub fn get_reposts_post_json (&self) -> Option<RepostsPostJson> {
+    pub fn get_reposts_post_json (&self, limit: i64, offset: i64) -> Option<RepostsPostJson> {
         // получаем репосты записи, если есть
         let reposts_window: Option<RepostsPostJson>;
         if self.repost > 0 {
             let mut reposts_json = Vec::new();
-            for r in self.reposts().iter() {
+            for r in self.reposts(limit, offset).iter() {
                 reposts_json.push (
                     CardRepostPostJson {
                         owner_name:  r.owner_name.clone(),
@@ -200,21 +200,21 @@ impl Post {
         return reactions_blocks;
     }
 
-    pub fn get_post_json (
+    pub fn get_detail_post_json (
         &self, user_id: i32, reactions_list: Vec<i16>,
-    ) -> PostDetailJson {
+    ) -> CardPostJson {
         let list = self.get_list();
 
         let mut prev: Option<i32> = None;
         let mut next: Option<i32> = None;
         let _posts = list.get_items();
         for (i, item) in _posts.iter().enumerate().rev() {
-            if item.id == _post.id {
+            if item.position == _post.position {
                 if (i + 1) != _posts.len() {
-                    prev = Some(_posts[i + 1].position);
+                    prev = Some(_posts[i + 1].position.into());
                 };
                 if i != 0 {
-                    next = Some(_posts[i - 1].position);
+                    next = Some(_posts[i - 1].position.into());
                 };
                 break;
             }
@@ -242,7 +242,7 @@ impl Post {
                 is_user_can_create_item: list.is_user_can_create_item(user_id),
             };
     }
-    pub fn get_detail_post_json (
+    pub fn get_post_json (
         &self, user_id: i32, reactions_list: Vec<i16>,
     ) -> CardPostJson {
 
