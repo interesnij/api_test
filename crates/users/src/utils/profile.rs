@@ -46,23 +46,6 @@ pub struct IpsJson {
 pub struct IpJson {
     pub ip:    String,
 }
-
-////////
-#[derive(Serialize)]
-pub struct LocationsJson {
-    pub locations: Vec<UserLocationJson>,
-    pub next_page: i32,
-}
-#[derive(Serialize)]
-pub struct LocationJson {
-    pub city_ru:    String,
-    pub city_en:    String,
-    pub region_ru:  String,
-    pub region_en:  String,
-    pub country_ru: String,
-    pub country_en: String,
-}
-
 ////////
 #[derive(Serialize)]
 pub struct AnketaJson {
