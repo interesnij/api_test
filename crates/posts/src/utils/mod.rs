@@ -148,7 +148,7 @@ pub struct PostDetailJson {
     pub next:                     Option<i32>,
     pub is_user_can_see_comments: bool,
     pub is_user_can_create_el:    bool,
-    pub comments:                 CommentsSmallJson,
+    //pub comments:                 CommentsSmallJson,
 }
 
 #[derive(Serialize)]

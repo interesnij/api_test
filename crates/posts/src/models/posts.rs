@@ -276,7 +276,7 @@ impl Post {
                 next:            next,
                 is_user_can_see_comments: list.is_user_can_see_comment(user_id),
                 is_user_can_create_el: list.is_user_can_create_el(user_id),
-                comments: self.get_comments_post_json(user_id, reactions_list.clone(), page),
+                //comments: self.get_comments_post_json(user_id, reactions_list.clone(), page),
             };
     }
     pub fn get_post_json (&self, user_id: i32, reactions_list: Vec<i16>,) -> CardPostJson {
