@@ -177,6 +177,20 @@ impl PostComment {
         };
         return card;
     }
+    pub fn get_reply_json (&self, user_id: i32, reactions_list: Vec<i16>) -> CardCommentJson {
+        let card = CardReplyJson {
+            content:        self.content.clone(),
+            owner_name:     self.owner_name.clone(),
+            owner_link:     self.owner_link.clone(),
+            owner_image:    self.owner_image.clone(),
+            attach:         self.attach.clone(),
+            created:        self.created.format("%d-%m-%Y в %H:%M").to_string(),
+            reactions:      self.reactions,
+            types:          self.get_code(),
+            reactions_list: self.get_reactions_json(user_id, reactions_list.clone()),
+        };
+        return card;
+    }
     pub fn is_deleted(&self) -> bool {
         return self.types == "c" && self.types == "d";
     }
