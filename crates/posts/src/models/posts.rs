@@ -109,25 +109,27 @@ impl Post {
     ) -> CommentsSmallJson {
         let mut comments_json = Vec::new();
         let mut next_page_number = 0;
-        let comments: Vec<PostComment> = Vec::new();
         let count = self.comment;
         if page > 1 {
             let step = (page - 1) * 20;
-            comments = self.get_comments(20, step.into());
+            let comments = self.get_comments(20, step.into());
             if count > (page * 20).try_into().unwrap() {
                 next_page_number = page + 1;
             }
+            for c in comments.iter() {
+                let r_list = reactions_list.clone();
+                comments_json.push(c.get_comment_json(user_id, r_list));
+            }
         }
         else {
-            comments = self.get_comments(20, 0);
+            let  comments = self.get_comments(20, 0);
             if count > 20.try_into().unwrap() {
                 next_page_number = 2;
             }
-        }
-
-        for c in comments.iter() {
-            let r_list = reactions_list.clone();
-            comments_json.push(c.get_comment_json(user_id, r_list));
+            for c in comments.iter() {
+                let r_list = reactions_list.clone();
+                comments_json.push(c.get_comment_json(user_id, r_list));
+            }
         }
 
         return CommentsSmallJson {
