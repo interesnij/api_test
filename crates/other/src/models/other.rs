@@ -12,14 +12,86 @@ use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
 use crate::utils::establish_connection;
 use actix_web::web::Json;
-
+use crate::utils::{
+    establish_connection,
+    ReactionJson, CustomLinkJson,
+    StickerCategoriesJson, CardStickerCategoryJson, StickerCategorieDetailJson, CardStickerJson,
+    SmileCategoriesJson, CardSmileCategoryJson, SmileCategorieDetailJson, CardSmileJson,
+};
 
 /////// CustomLink //////
-#[derive(Debug, Queryable, Serialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize)]
 pub struct CustomLink {
     pub id:    i32,
     pub link:  String,
     pub owner: i16,
+}
+
+impl CustomLink {
+    pub fn get_links_json(page: i32) -> Json<CustomLinksJson> {
+        let mut next_page_number = 0;
+        let count = CustomLink::count_links();
+        let links: Vec<CustomLink>;
+
+        if page > 1 {
+            let step = (page - 1) * 20;
+            links = CustomLink::get_links(20, step.into());
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+        }
+        else {
+            links = CustomLink::get_links(20, 0);
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+        }
+
+        let mut links_json = Vec::new();
+        for i in links.iter() {
+            links_json.push (
+                CustomLinkJson {
+                    link:  i.link.clone(),
+                    owner: i.owner,
+                }
+            );
+        }
+
+        let data = CustomLinksJson {
+            links: selected_post_list_pk,
+            next_page:        next_page_number,
+        };
+        return Json(data);
+    }
+
+    pub fn get_link_json (&self) -> CustomLinkJson {
+        let card = CustomLinkJson {
+            link:  self.link.clone(),
+            owner: self.owner,
+        };
+        return card;
+    }
+    pub fn get_links(&self, limit: i64, offset: i64) -> Vec<CustomLink> {
+        use crate::schema::custom_links::dsl::custom_links;
+
+        let _connection = establish_connection();
+
+        return custom_links
+            .limit(limit)
+            .offset(offset)
+            .load::<PostComment>(&_connection)
+            .expect("E.");
+    }
+    pub fn count_links(&self) -> usize {
+        use crate::schema::custom_links::dsl::custom_links;
+
+        let _connection = establish_connection();
+        return custom_links
+            .select(schema::custom_links::id)
+            .load::<i32>(&_connection)
+            .expect("E.")
+            .len();
+    }
 }
 #[derive(Deserialize, Insertable)]
 #[table_name="custom_links"]
@@ -44,11 +116,17 @@ pub struct StickerCategorie {
 }
 
 impl StickerCategorie {
-    pub fn create_category(name: String, position: i16,
-        user_id: i32, community_id: Option<i32>,
-        owner_name: String, owner_link: String,
-        owner_image: Option<String>, description: Option<String>,
-        avatar: Option<String>) -> StickerCategorie {
+    pub fn create_category (
+        name: String,
+        position: i16,
+        user_id: i32,
+        community_id: Option<i32>,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+        description: Option<String>,
+        avatar: Option<String>
+    ) -> StickerCategorie {
         let _connection = establish_connection();
         let new_form = NewStickerCategorie {
             name:         name,
@@ -96,6 +174,70 @@ impl StickerCategorie {
         else {
             return "/static/images/no_img/smile.gif";
         }
+    }
+    pub fn get_categories_json(page: i32) -> Json<StickerCategoriesJson> {
+        let mut next_page_number = 0;
+        let count = StickerCategorie::count_categories();
+        let categories: Vec<StickerCategorie>;
+
+        if page > 1 {
+            let step = (page - 1) * 20;
+            categories = StickerCategorie::get_categories(20, step.into());
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+        }
+        else {
+            categories = StickerCategorie::get_categories(20, 0);
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+        }
+
+        let mut categories_json = Vec::new();
+        for i in categories.iter() {
+            categories_json.push (
+                CardStickerCategoryJson {
+                    id:     self.id.clone(),
+                    avatar: self.avatar.clone(),
+                }
+            );
+        }
+
+        let data = StickerCategoriesJson {
+            categories: categories_json,
+            next_page:  next_page_number,
+        };
+        return Json(data);
+    }
+
+    pub fn get_category_json (&self) -> CardStickerCategoryJson {
+        let card = CardStickerCategoryJson {
+            id:     self.id.clone(),
+            avatar: self.avatar.clone(),
+        };
+        return card;
+    }
+    pub fn get_categories(&self, limit: i64, offset: i64) -> Vec<StickerCategorie> {
+        use crate::schema::sticker_categories::dsl::sticker_categories;
+
+        let _connection = establish_connection();
+
+        return sticker_categories
+            .limit(limit)
+            .offset(offset)
+            .load::<StickerCategorie>(&_connection)
+            .expect("E.");
+    }
+    pub fn count_categories(&self) -> usize {
+        use crate::schema::sticker_categories::dsl::sticker_categories;
+
+        let _connection = establish_connection();
+        return sticker_categories
+            .select(schema::sticker_categories::id)
+            .load::<i32>(&_connection)
+            .expect("E.")
+            .len();
     }
 }
 
@@ -212,6 +354,68 @@ impl SmileCategorie {
             .get_result::<SmileCategorie>(&_connection)
             .expect("Error.");
         return self;
+    }
+    pub fn get_categories_json(page: i32) -> Json<SmileCategoriesJson> {
+        let mut next_page_number = 0;
+        let count = SmileCategorie::count_categories();
+        let categories: Vec<SmileCategorie>;
+
+        if page > 1 {
+            let step = (page - 1) * 20;
+            categories = SmileCategorie::get_categories(20, step.into());
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+        }
+        else {
+            categories = SmileCategorie::get_categories(20, 0);
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+        }
+
+        let mut categories_json = Vec::new();
+        for i in categories.iter() {
+            categories_json.push (
+                CardSmileCategoryJson {
+                    name: self.name.clone(),
+                }
+            );
+        }
+
+        let data = SmileCategoriesJson {
+            categories: categories_json,
+            next_page:  next_page_number,
+        };
+        return Json(data);
+    }
+
+    pub fn get_category_json (&self) -> CardSmileCategoryJson {
+        let card = CardSmileCategoryJson {
+            name: self.avatar.clone(),
+        };
+        return card;
+    }
+    pub fn get_categories(&self, limit: i64, offset: i64) -> Vec<SmileCategorie> {
+        use crate::schema::smile_categories::dsl::smile_categories;
+
+        let _connection = establish_connection();
+
+        return smile_categories
+            .limit(limit)
+            .offset(offset)
+            .load::<SmileCategorie>(&_connection)
+            .expect("E.");
+    }
+    pub fn count_categories(&self) -> usize {
+        use crate::schema::smile_categories::dsl::smile_categories;
+
+        let _connection = establish_connection();
+        return smile_categories
+            .select(schema::smile_categories::id)
+            .load::<i32>(&_connection)
+            .expect("E.")
+            .len();
     }
 }
 
