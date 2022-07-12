@@ -7,7 +7,7 @@ use crate::utils::{
     establish_connection,
     JsonPosition,
     JsonItemReactions,
-    PostsJson,
+    //PostsJson,
     CardParentPostJson,
     RepostsPostJson,
     CardPostJson,
@@ -627,7 +627,7 @@ impl Post {
             .expect("Error.");
         return true;
     }
-    pub fn plus_reactions(&self, count: i32, user_id: i32) -> () {
+    pub fn plus_reactions(&self, count: i32, _user_id: i32) -> () {
         let _connection = establish_connection();
         diesel::update(self)
             .set(schema::posts::reactions.eq(self.reactions + count))

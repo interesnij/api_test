@@ -516,7 +516,7 @@ impl PostComment {
         return vote.reaction;
     }
 
-    pub fn plus_reactions(&self, count: i32, user_id: i32) -> () {
+    pub fn plus_reactions(&self, count: i32, _user_id: i32) -> () {
         let _connection = establish_connection();
         diesel::update(self)
             .set(schema::post_comments::reactions.eq(self.reactions + count))
