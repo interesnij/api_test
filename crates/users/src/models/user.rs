@@ -3016,7 +3016,7 @@ impl User {
     }
     pub fn get_image_or_null(&self) -> Option<String> {
         if self.s_avatar.is_some() {
-            return Some(self.s_avatar);
+            return self.s_avatar;
         }
         else {
             return None;
@@ -3103,7 +3103,7 @@ impl User {
         let _new = news_user_communities.filter(schema::news_user_communities::id.eq(new_id)).load::<NewsUserCommunitie>(&_connection).expect("E");
         if _new.len() > 0 && _new[0].owner == self.id {
             diesel::update(news_user_communities.filter(schema::news_user_communities::id.eq(new_id)))
-                .set(schema::news_user_communities::list_id.is_null())
+                .set(schema::news_user_communities::list_id.eq(None))
                 .get_result::<NewsUserCommunitie>(&_connection)
                 .expect("Error.");
                 return true;
@@ -3187,7 +3187,7 @@ impl User {
         let _notify = notify_user_communities.filter(schema::notify_user_communities::id.eq(notify_id)).load::<NotifyUserCommunitie>(&_connection).expect("E");
         if _notify.len() > 0 && _notify[0].owner == self.id {
             diesel::update(notify_user_communities.filter(schema::notify_user_communities::id.eq(notify_id)))
-                .set(schema::notify_user_communities::list_id.is_null())
+                .set(schema::notify_user_communities::list_id.eq(None))
                 .get_result::<NotifyUserCommunitie>(&_connection)
                 .expect("Error.");
                 return true;
