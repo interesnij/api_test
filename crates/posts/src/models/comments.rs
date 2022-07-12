@@ -297,7 +297,7 @@ impl PostComment {
         }
     }
 
-    pub fn count_replies(&self) -> usize {
+    pub fn count_replies(&self) -> i32 {
         return self.replies;
     }
     pub fn count_replies_ru(&self) -> String {
