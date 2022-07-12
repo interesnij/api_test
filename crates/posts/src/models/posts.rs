@@ -101,42 +101,7 @@ pub struct EditPostPosition {
 }
 
 impl Post {
-    pub fn get_comments_post_json (
-        &self,
-        user_id: i32,
-        reactions_list: Vec<i16>,
-        page: i32
-    ) -> CommentsSmallJson {
-        let mut comments_json = Vec::new();
-        let mut next_page_number = 0;
-        let count = self.comment;
-        if page > 1 {
-            let step = (page - 1) * 20;
-            //let comments = self.get_comments(20, step.into());
-            //if count > (page * 20).try_into().unwrap() {
-            //    next_page_number = page + 1;
-            //}
-            //for c in comments.iter() {
-            //    let r_list = reactions_list.clone();
-            //    comments_json.push(c.get_comment_json(user_id, r_list));
-            //}
-        }
-        else {
-            //let comments = self.get_comments(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
-            //for c in comments.iter() {
-            //    let r_list = reactions_list.clone();
-            //    comments_json.push(c.get_comment_json(user_id, r_list));
-            //}
-        }
-
-        return CommentsSmallJson {
-            comments:  comments_json,
-            next_page: next_page_number,
-        };
-    }
+    
 
     pub fn get_parent_post_json (&self) -> Option<CardParentPostJson> {
         // получаем родительский пост
