@@ -209,7 +209,7 @@ impl Post {
         let mut next: Option<i32> = None;
         let _posts = list.get_items();
         for (i, item) in _posts.iter().enumerate().rev() {
-            if item.position == _post.position {
+            if item.position == self.id {
                 if (i + 1) != _posts.len() {
                     prev = Some(_posts[i + 1].position.into());
                 };
@@ -239,7 +239,7 @@ impl Post {
                 prev:            prev,
                 next:            next,
                 is_user_can_see_comments: list.is_user_can_see_comment(user_id),
-                is_user_can_create_item: list.is_user_can_create_item(user_id),
+                is_user_can_create_el: list.is_user_can_create_el(user_id),
             };
     }
     pub fn get_post_json (

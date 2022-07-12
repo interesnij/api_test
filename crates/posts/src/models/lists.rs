@@ -281,20 +281,20 @@ impl PostList {
         }
 
         let data = PostListDetailJson {
-            status:                  200,
-            id:                      list.id,
-            name:                    list.name,
-            owner_name:              list.owner_name,
-            owner_link:              list.owner_link,
-            owner_image:             list.owner_image,
-            image:                   list.image,
-            types:                   list.types,
-            count:                   list.count,
-            reactions_list:          reactions_list,
-            posts:                   posts_json,
-            lists:                   lists_json,
-            next_page:               next_page_number,
-            is_user_can_create_item: list.is_user_can_see_el(user_id),
+            status:                200,
+            id:                    list.id,
+            name:                  list.name,
+            owner_name:            list.owner_name,
+            owner_link:            list.owner_link,
+            owner_image:           list.owner_image,
+            image:                 list.image,
+            types:                 list.types,
+            count:                 list.count,
+            reactions_list:        reactions_list,
+            posts:                 posts_json,
+            lists:                 lists_json,
+            next_page:             next_page_number,
+            is_user_can_create_el: list.is_user_can_see_el(user_id),
         };
         return Json(data);
     }
