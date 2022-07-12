@@ -1,3 +1,13 @@
+mod profile;
+mod settings;
+mod lists;
+
+pub use self::{
+    profile::*,
+    settings::*,
+    lists::*,
+};
+
 use diesel::prelude::*;
 use crate::schema;
 use crate::models::User;
@@ -51,4 +61,16 @@ pub fn get_users_from_ids(ids: Vec<i32>) -> Vec<User> {
         .filter(schema::users::types.lt(10))
         .load::<User>(&_connection)
         .expect("E");
+}
+
+pub fn get_user(pk: i32) -> User {
+    use crate::schema::users::dsl::users;
+    let _connection = establish_connection();
+    return users
+        .filter(schema::users::id.eq(pk))
+        .load::<User>(&_connection)
+        .expect("E.")
+        .into_iter()
+        .nth(0)
+        .unwrap();
 }

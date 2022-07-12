@@ -202,8 +202,10 @@ CREATE TABLE featured_user_communities (
     user_id       INT,                            -- рекомендуемый друг
     community_id  INT,                            -- рекомендуемое сообщество
     mute          BOOLEAN NOT NULL DEFAULT false, -- не получать рекомендации источника
-    sleep         TIMESTAMP                       -- не получать рекомендации источника до указанного времени
-
+    sleep         TIMESTAMP,                      -- не получать рекомендации источника до указанного времени
+    owner_name    VARCHAR(200) NOT NULL,
+    owner_link    VARCHAR(200) NOT NULL,
+    owner_image   VARCHAR(500)
 );
 
 -- Ключи новостей -------
@@ -214,7 +216,10 @@ CREATE TABLE news_user_communities (
     user_id      INT,                            -- новости друга
     community_id INT,                            -- новости сообщества
     mute         BOOLEAN NOT NULL DEFAULT false, -- не получать новости источника
-    sleep        TIMESTAMP                       -- не получать новости источника до указанного времени
+    sleep        TIMESTAMP,                      -- не получать новости источника до указанного времени
+    owner_name   VARCHAR(200) NOT NULL,
+    owner_link   VARCHAR(200) NOT NULL,
+    owner_image  VARCHAR(500)
 );
 -- Ключи уыедомлений -------
 CREATE TABLE notify_user_communities (
@@ -224,7 +229,10 @@ CREATE TABLE notify_user_communities (
     user_id      INT,                            -- уведомления друга
     community_id INT,                            -- уведомления сообщества
     mute         BOOLEAN NOT NULL DEFAULT false, -- не получать уведомления источника
-    sleep        TIMESTAMP                       -- не получать уведомления источника до указанного времени
+    sleep        TIMESTAMP,                      -- не получать уведомления источника до указанного времени
+    owner_name   VARCHAR(200) NOT NULL,
+    owner_link   VARCHAR(200) NOT NULL,
+    owner_image  VARCHAR(500)
 );
 
 -- Настройка дизайна -------

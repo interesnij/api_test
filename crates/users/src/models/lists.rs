@@ -368,6 +368,9 @@ pub struct FeaturedUserCommunitie {
     pub community_id: Option<i32>,
     pub mute:         bool,
     pub sleep:        Option<chrono::NaiveDateTime>,
+    pub owner_name:   String,
+    pub owner_link:   String,
+    pub owner_image:  Option<String>,
 }
 #[derive(Deserialize, Insertable)]
 #[table_name="featured_user_communities"]
@@ -378,6 +381,9 @@ pub struct NewFeaturedUserCommunitie {
     pub community_id: Option<i32>,
     pub mute:         bool,
     pub sleep:        Option<chrono::NaiveDateTime>,
+    pub owner_name:   String,
+    pub owner_link:   String,
+    pub owner_image:  Option<String>,
 }
 
 /////// NewsUC //////
@@ -390,6 +396,9 @@ pub struct NewsUserCommunitie {
     pub community_id: Option<i32>,
     pub mute:         bool,
     pub sleep:        Option<chrono::NaiveDateTime>,
+    pub owner_name:   String,
+    pub owner_link:   String,
+    pub owner_image:  Option<String>,
 }
 #[derive(Deserialize, Insertable, AsChangeset)]
 #[table_name="news_user_communities"]
@@ -400,6 +409,9 @@ pub struct NewNewsUserCommunitie {
     pub community_id: Option<i32>,
     pub mute:         bool,
     pub sleep:        Option<chrono::NaiveDateTime>,
+    pub owner_name:   String,
+    pub owner_link:   String,
+    pub owner_image:  Option<String>,
 }
 
 /////// NotifyUC //////
@@ -412,16 +424,22 @@ pub struct NotifyUserCommunitie {
     pub community_id: Option<i32>,
     pub mute:         bool,
     pub sleep:        Option<chrono::NaiveDateTime>,
+    pub owner_name:   String,
+    pub owner_link:   String,
+    pub owner_image:  Option<String>,
 }
 #[derive(Deserialize, Insertable, AsChangeset)]
 #[table_name="notify_user_communities"]
-pub struct NewNotifyUserCommunitie {
+pub struct NewNotifyUserCommunitie { 
     pub owner:        i32,
     pub list_id:      Option<i32>,
     pub user_id:      Option<i32>,
     pub community_id: Option<i32>,
     pub mute:         bool,
     pub sleep:        Option<chrono::NaiveDateTime>,
+    pub owner_name:   String,
+    pub owner_link:   String,
+    pub owner_image:  Option<String>,
 }
 /////====================================////
 
