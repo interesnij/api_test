@@ -71,7 +71,7 @@ pub struct PostListDetailJson {
     pub posts:                   Vec<CardPostJson>,
     pub lists:                   Vec<CardPostListJson>,
     pub next_page:               i32,
-    pub is_user_can_create_item: bool,
+    pub is_user_can_create_el: bool,
 }
 
 // это объект страницы записей (подгружается по нажатию на список)
@@ -147,7 +147,7 @@ pub struct PostDetailJson {
     pub prev:                     Option<i32>,
     pub next:                     Option<i32>,
     pub is_user_can_see_comments: bool,
-    pub is_user_can_create_item:  bool,
+    pub is_user_can_create_el:    bool,
 }
 
 #[derive(Serialize)]
