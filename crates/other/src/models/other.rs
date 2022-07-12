@@ -15,6 +15,7 @@ use actix_web::web::Json;
 use crate::utils::{
     establish_connection,
     ReactionJson, CustomLinkJson,
+    CardSticker, CardSmile,
     StickerCategoriesJson, CardStickerCategoryJson, StickerCategorieDetailJson, CardStickerJson,
     SmileCategoriesJson, CardSmileCategoryJson, SmileCategorieDetailJson, CardSmileJson,
 };
@@ -198,8 +199,8 @@ impl StickerCategorie {
         for i in categories.iter() {
             categories_json.push (
                 CardStickerCategoryJson {
-                    id:     self.id.clone(),
-                    avatar: self.avatar.clone(),
+                    id:     i.id.clone(),
+                    avatar: i.avatar.clone(),
                 }
             );
         }
@@ -378,7 +379,7 @@ impl SmileCategorie {
         for i in categories.iter() {
             categories_json.push (
                 CardSmileCategoryJson {
-                    name: self.name.clone(),
+                    name: i.name.clone(),
                 }
             );
         }
