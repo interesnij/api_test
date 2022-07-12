@@ -220,11 +220,11 @@ impl Post {
             }
         };
         return PostDetailJson {
-                content:         self.content.as_ref(),
-                owner_name:      self.owner_name.as_ref(),
-                owner_link:      self.owner_link.as_ref(),
-                owner_image:     self.owner_image.as_ref(),
-                attach:          self.attach.as_ref(),
+                content:         self.content.clone(),
+                owner_name:      self.owner_name.clone(),
+                owner_link:      self.owner_link.clone(),
+                owner_image:     self.owner_image.clone(),
+                attach:          self.attach.clone(),
                 comment_enabled: self.comment_enabled,
                 created:         self.created.format("%d-%m-%Y в %H:%M").to_string(),
                 comment:         self.comment,
@@ -248,11 +248,11 @@ impl Post {
 
         return CardPostJson {
                 id:              self.id,
-                content:         self.content.as_ref(),
-                owner_name:      self.owner_name.as_ref(),
-                owner_link:      self.owner_link.as_ref(),
-                owner_image:     self.owner_image.as_ref(),
-                attach:          self.attach.as_ref(),
+                content:         self.content.clone(),
+                owner_name:      self.owner_name.clone(),
+                owner_link:      self.owner_link.clone(),
+                owner_image:     self.owner_image.clone(),
+                attach:          self.attach.clone(),
                 comment_enabled: self.comment_enabled,
                 created:         self.created.format("%d-%m-%Y в %H:%M").to_string(),
                 comment:         self.comment,
