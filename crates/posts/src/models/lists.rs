@@ -230,7 +230,7 @@ impl PostList {
         return Json(data);
     }
 
-    pub fn get_json_user_post_list(user_id: i32, list_id: i32, page: i32) -> Json<PostListDetailJson> {
+    pub fn get_json_post_list(user_id: i32, list_id: i32, page: i32) -> Json<PostListDetailJson> {
         use crate::utils::CardPostListJson;
 
         let mut next_page_number = 0;
@@ -241,7 +241,7 @@ impl PostList {
             lists = PostList::get_user_post_lists(list.community_id.unwrap(), 20, 0);
         }
         else {
-            let lists = PostList::get_user_post_lists(user_id, 20, 0);
+            lists = PostList::get_user_post_lists(user_id, 20, 0);
         }
         let mut lists_json = Vec::new();
         for i in lists.iter() {
@@ -277,7 +277,7 @@ impl PostList {
 
         let mut posts_json = Vec::new();
         for i in posts.iter() {
-            posts_json.push ( i.get_post_json(user_id, reactions_list.as_ref()) )
+            posts_json.push ( i.get_post_json(user_id, reactions_list.clone()) )
         }
 
         let data = PostListDetailJson {

@@ -243,7 +243,7 @@ impl Post {
             };
     }
     pub fn get_post_json (
-        &self, user_id: i32, reactions_list: &Vec<i16>,
+        &self, user_id: i32, reactions_list: Vec<i16>,
     ) -> CardPostJson {
 
         return CardPostJson {
@@ -263,7 +263,7 @@ impl Post {
                 types:           self.get_code(),
                 parent:          self.get_parent_post_json(),
                 reposts:         self.get_6_reposts_post_json(),
-                reactions_list:  self.get_reactions_post_json(user_id, (&reactions_list).to_vec()),
+                reactions_list:  self.get_reactions_post_json(user_id, reactions_list),
             };
     }
 
