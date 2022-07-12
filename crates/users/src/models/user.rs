@@ -3016,7 +3016,7 @@ impl User {
     }
     pub fn get_image_or_null(&self) -> Option<String> {
         if self.s_avatar.is_some() {
-            return self.s_avatar;
+            return self.s_avatar.clone();
         }
         else {
             return None;
