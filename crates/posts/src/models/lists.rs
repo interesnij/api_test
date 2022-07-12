@@ -277,7 +277,7 @@ impl PostList {
 
         let mut posts_json = Vec::new();
         for i in posts.iter() {
-            posts_json.push ( i.get_post_json(user_id, reactions_list) )
+            posts_json.push ( i.get_post_json(user_id, reactions_list.as_ref()) )
         }
 
         let data = PostListDetailJson {
@@ -294,7 +294,7 @@ impl PostList {
             posts:                 posts_json,
             lists:                 lists_json,
             next_page:             next_page_number,
-            is_user_can_create_el: list.is_user_can_see_el(user_id),
+            is_user_can_create_el: list.is_user_can_create_el(user_id),
         };
         return Json(data);
     }
