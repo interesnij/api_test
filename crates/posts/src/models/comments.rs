@@ -163,7 +163,7 @@ impl PostComment {
     }
 
     pub fn get_comment_json (&self, user_id: i32, reactions_list: Vec<i16>) -> CardCommentJson {
-        return CardCommentJson {
+        let card = CardCommentJson {
             content:        _parent.content.clone(),
             owner_name:     _parent.owner_name.clone(),
             owner_link:     _parent.owner_link.clone(),
@@ -174,7 +174,8 @@ impl PostComment {
             types:          self.get_code(),
             replies:        self.count_replies(),
             reactions_list: self.get_reactions_json(user_id, reactions_list),
-        });
+        };
+        return Json(card);
     }
     pub fn is_deleted(&self) -> bool {
         return self.types == "c" && self.types == "d";
