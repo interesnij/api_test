@@ -15,6 +15,9 @@ table! {
         community_id -> Nullable<Int4>,
         mute -> Bool,
         sleep -> Nullable<Timestamp>,
+        owner_name -> Varchar,
+        owner_link -> Varchar,
+        owner_image -> Nullable<Varchar>,
     }
 }
 
@@ -89,6 +92,9 @@ table! {
         community_id -> Nullable<Int4>,
         mute -> Bool,
         sleep -> Nullable<Timestamp>,
+        owner_name -> Varchar,
+        owner_link -> Varchar,
+        owner_image -> Nullable<Varchar>,
     }
 }
 
@@ -101,6 +107,9 @@ table! {
         community_id -> Nullable<Int4>,
         mute -> Bool,
         sleep -> Nullable<Timestamp>,
+        owner_name -> Varchar,
+        owner_link -> Varchar,
+        owner_image -> Nullable<Varchar>,
     }
 }
 

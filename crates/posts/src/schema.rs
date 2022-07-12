@@ -53,13 +53,26 @@ table! {
 }
 
 table! {
+    post_comment_votes (id) {
+        id -> Int4,
+        vote -> Int2,
+        user_id -> Int4,
+        post_comment_id -> Int4,
+        reaction -> Int2,
+        owner_name -> Varchar,
+        owner_link -> Varchar,
+        owner_image -> Nullable<Varchar>,
+    }
+}
+
+table! {
     post_comments (id) {
         id -> Int4,
         post_id -> Int4,
         user_id -> Int4,
-        user_name -> Varchar,
-        user_link -> Varchar,
-        user_image -> Nullable<Varchar>,
+        owner_name -> Varchar,
+        owner_link -> Varchar,
+        owner_image -> Nullable<Varchar>,
         sticker_id -> Nullable<Int4>,
         parent_id -> Nullable<Int4>,
         content -> Nullable<Varchar>,
@@ -68,6 +81,7 @@ table! {
         created -> Timestamp,
         repost -> Int4,
         reactions -> Int4,
+        replies -> Int4,
     }
 }
 
@@ -81,6 +95,15 @@ table! {
         create_item -> Nullable<Char>,
         create_comment -> Nullable<Char>,
         can_copy -> Nullable<Char>,
+    }
+}
+
+table! {
+    post_list_reposts (id) {
+        id -> Int4,
+        post_list_id -> Int4,
+        post_id -> Nullable<Int4>,
+        message_id -> Nullable<Int4>,
     }
 }
 
@@ -130,6 +153,27 @@ table! {
         field_14 -> Int4,
         field_15 -> Int4,
         field_16 -> Int4,
+    }
+}
+
+table! {
+    post_reposts (id) {
+        id -> Int4,
+        post_id -> Int4,
+        message_id -> Int4,
+    }
+}
+
+table! {
+    post_votes (id) {
+        id -> Int4,
+        vote -> Int2,
+        user_id -> Int4,
+        post_id -> Int4,
+        reaction -> Int2,
+        owner_name -> Varchar,
+        owner_link -> Varchar,
+        owner_image -> Nullable<Varchar>,
     }
 }
 
@@ -201,6 +245,9 @@ table! {
 }
 
 joinable!(post_comments -> posts (post_id));
+joinable!(post_list_reposts -> post_lists (post_list_id));
+joinable!(post_list_reposts -> posts (post_id));
+joinable!(post_reposts -> posts (post_id));
 joinable!(posts -> post_lists (post_list_id));
 
 allow_tables_to_appear_in_same_query!(
@@ -208,10 +255,14 @@ allow_tables_to_appear_in_same_query!(
     community_post_list_positions,
     community_post_notifications,
     post_comment_reactions,
+    post_comment_votes,
     post_comments,
     post_list_perms,
+    post_list_reposts,
     post_lists,
     post_reactions,
+    post_reposts,
+    post_votes,
     posts,
     posts_perms,
     user_post_list_collections,
