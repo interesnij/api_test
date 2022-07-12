@@ -72,7 +72,7 @@ pub struct SmileCategories {
 }
 #[derive(Serialize)]
 // это карточка карегории смайлов
-pub struct CardSmileCategory {
+pub struct CardSmileCategoryJson {
     pub name: Option<String>,
 }
 

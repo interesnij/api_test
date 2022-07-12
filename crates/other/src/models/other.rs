@@ -80,7 +80,7 @@ impl CustomLink {
         return custom_links
             .limit(limit)
             .offset(offset)
-            .load::<PostComment>(&_connection)
+            .load::<CustomLink>(&_connection)
             .expect("E.");
     }
     pub fn count_links() -> usize {
