@@ -202,7 +202,7 @@ impl Post {
 
     pub fn get_detail_post_json (
         &self, user_id: i32, reactions_list: Vec<i16>,
-    ) -> CardPostJson {
+    ) -> PostDetailJson {
         let list = self.get_list();
 
         let mut prev: Option<i32> = None;
