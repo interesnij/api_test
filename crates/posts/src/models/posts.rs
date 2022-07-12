@@ -174,7 +174,7 @@ impl Post {
         }
         return reposts_window;
     }
-    pub fn get_reactions_post_json (&self, user_id: i32, reactions_list: Vec<i16>) -> Option<Vec<ReactionBlockJson>> {
+    pub fn get_reactions_json (&self, user_id: i32, reactions_list: Vec<i16>) -> Option<Vec<ReactionBlockJson>> {
         // получаем реакции и отреагировавших
         let reactions_blocks: Option<Vec<ReactionBlockJson>>;
         if reactions_list.len() == 0 {
@@ -200,9 +200,7 @@ impl Post {
         return reactions_blocks;
     }
 
-    pub fn get_detail_post_json (
-        &self, user_id: i32, reactions_list: Vec<i16>,
-    ) -> PostDetailJson {
+    pub fn get_detail_post_json (&self, user_id: i32, reactions_list: Vec<i16>,) -> PostDetailJson {
         let list = self.get_list();
 
         let mut prev: Option<i32> = None;
@@ -235,17 +233,14 @@ impl Post {
                 types:           self.get_code(),
                 parent:          self.get_parent_post_json(),
                 reposts:         self.get_6_reposts_post_json(),
-                reactions_list:  self.get_reactions_post_json(user_id, reactions_list),
+                reactions_list:  self.get_reactions_json(user_id, reactions_list),
                 prev:            prev,
                 next:            next,
                 is_user_can_see_comments: list.is_user_can_see_comment(user_id),
                 is_user_can_create_el: list.is_user_can_create_el(user_id),
             };
     }
-    pub fn get_post_json (
-        &self, user_id: i32, reactions_list: Vec<i16>,
-    ) -> CardPostJson {
-
+    pub fn get_post_json (&self, user_id: i32, reactions_list: Vec<i16>,) -> CardPostJson {
         return CardPostJson {
                 id:              self.id,
                 content:         self.content.clone(),
@@ -263,13 +258,11 @@ impl Post {
                 types:           self.get_code(),
                 parent:          self.get_parent_post_json(),
                 reposts:         self.get_6_reposts_post_json(),
-                reactions_list:  self.get_reactions_post_json(user_id, reactions_list),
+                reactions_list:  self.get_reactions_json(user_id, reactions_list),
             };
     }
 
-    pub fn get_6_reactions_of_types (
-        &self, types: &i16, user_reaction: Option<i16>, count: i32
-    ) -> ReactionBlockJson {
+    pub fn get_6_reactions_of_types (&self, types: &i16, user_reaction: Option<i16>, count: i32) -> ReactionBlockJson {
         use crate::schema::post_votes::dsl::post_votes;
         use crate::utils::CardReactionPostJson;
         use crate::models::PostVote;

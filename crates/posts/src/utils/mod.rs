@@ -148,6 +148,7 @@ pub struct PostDetailJson {
     pub next:                     Option<i32>,
     pub is_user_can_see_comments: bool,
     pub is_user_can_create_el:    bool,
+    pub comments:                 Option<CommentsSmallJson>,
 }
 
 #[derive(Serialize)]
@@ -198,11 +199,25 @@ pub struct CommentsJson {
     pub next_page:      i32,
 }
 #[derive(Serialize)]
+// это объекты комментов для встраивания
+pub struct CommentsSmallJson {
+    pub comments:       Vec<CardCommentJson>,
+    pub next_page:      i32,
+}
+
+#[derive(Serialize)]
 // это объекты ответов
 pub struct RepliesJson {
     pub status:         i32,
     pub parent_types:   String,
     pub reactions_list: Vec<CardReactionPostJson>,
+    pub replies:        Vec<CardReplyJson>,
+    pub next_page:      i32,
+}
+#[derive(Serialize)]
+// это объекты ответов для встраивания
+pub struct RepliesSmallJson {
+    pub parent_types:   String,
     pub replies:        Vec<CardReplyJson>,
     pub next_page:      i32,
 }
@@ -218,7 +233,7 @@ pub struct CardCommentJson {
     pub created:        String,
     pub reactions:      i32,
     pub types:          String, // например cpo1
-    pub replies:        i32,    // кол-во ответов
+    pub replies:        usize,    // кол-во ответов
     pub reactions_list: Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
 }
 #[derive(Serialize)]

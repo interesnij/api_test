@@ -11,6 +11,7 @@ use crate::utils::{
     CardCommentJson,
     CardReplyJson,
     ReactionsCommentJson,
+    ReactionBlockJson,
 };
 use actix_web::web::Json;
 use crate::models::{Post, PostCommentReaction, PostList};
@@ -69,6 +70,112 @@ pub struct EditPostComment {
 }
 
 impl PostComment {
+    pub fn get_6_reactions_of_types (
+        &self, types: &i16, user_reaction: Option<i16>, count: i32
+    ) -> ReactionBlockJson {
+        use crate::schema::post_comment_votes::dsl::post_comment_votes;
+        use crate::utils::CardReactionPostJson;
+        use crate::models::PostCommentVote;
+
+        let _connection = establish_connection();
+        let votes = post_comment_votes
+            .filter(schema::post_comment_votes::post_comment_id.eq(self.id))
+            .filter(schema::post_comment_votes::reaction.eq(types))
+            .limit(6)
+            .load::<PostCommentVote>(&_connection)
+            .expect("E");
+
+        let mut user_json = Vec::new();
+        for _item in votes.iter() {
+            user_json.push (
+                CardReactionPostJson {
+                    owner_name:  _item.owner_name.clone(),
+                    owner_link:  _item.owner_name.clone(),
+                    owner_image: _item.owner_image.clone(),
+                    is_user_reaction: &user_reaction.unwrap() == types,
+                }
+            );
+        }
+        return ReactionBlockJson {
+                status:   200,
+                count:    count,
+                reaction: *types,
+                users:    user_json,
+            };
+    }
+    pub fn get_reactions_of_types (
+        &self, types: &i16, user_reaction: Option<i16>, count: i32
+    ) -> ReactionBlockJson {
+        use crate::schema::post_comment_votes::dsl::post_comment_votes;
+        use crate::utils::CardReactionPostJson;
+        use crate::models::PostCommentVote;
+
+        let _connection = establish_connection();
+        let votes = post_comment_votes
+            .filter(schema::post_comment_votes::post_comment_id.eq(self.id))
+            .filter(schema::post_comment_votes::reaction.eq(types))
+            .load::<PostCommentVote>(&_connection)
+            .expect("E");
+
+        let mut user_json = Vec::new();
+        for _item in votes.iter() {
+            user_json.push (
+                CardReactionPostJson {
+                    owner_name:  _item.owner_name.clone(),
+                    owner_link:  _item.owner_name.clone(),
+                    owner_image: _item.owner_image.clone(),
+                    is_user_reaction: &user_reaction.unwrap() == types,
+                }
+            );
+        }
+        return ReactionBlockJson {
+                status:   200,
+                count:    count,
+                reaction: *types,
+                users:    user_json,
+            };
+    }
+
+    pub fn get_reactions_json (&self, user_id: i32, reactions_list: Vec<i16>) -> Option<Vec<ReactionBlockJson>> {
+        // получаем реакции и отреагировавших
+        let reactions_blocks: Option<Vec<ReactionBlockJson>>;
+        if reactions_list.len() == 0 {
+            reactions_blocks = None;
+        }
+        else {
+            let mut reactions_json: Vec<ReactionBlockJson> = Vec::new();
+            let object_reactions_count = self.get_or_create_react_model();
+            let mut user_reaction = 0;
+
+            if self.is_have_user_reaction(user_id) {
+                user_reaction = self.get_user_reaction(user_id);
+            }
+
+            for reaction in reactions_list.iter() {
+                let count = object_reactions_count.count_reactions_of_types(*reaction);
+                if count > 0 {
+                    reactions_json.push(self.get_6_reactions_of_types(reaction, Some(user_reaction), count));
+                }
+            }
+            reactions_blocks = Some(reactions_json);
+        }
+        return reactions_blocks;
+    }
+
+    pub fn get_comment_json (&self, user_id: i32, reactions_list: Vec<i16>) -> CardCommentJson {
+        return CardCommentJson {
+            content:        _parent.content.clone(),
+            owner_name:     _parent.owner_name.clone(),
+            owner_link:     _parent.owner_link.clone(),
+            owner_image:    _parent.owner_image.clone(),
+            attach:         _parent.attach.clone(),
+            created:        _parent.created.format("%d-%m-%Y в %H:%M").to_string(),
+            reactions:      self.reactions,
+            types:          self.get_code(),
+            replies:        self.count_replies(),
+            reactions_list: self.get_reactions_json(user_id, reactions_list),
+        });
+    }
     pub fn is_deleted(&self) -> bool {
         return self.types == "c" && self.types == "d";
     }
