@@ -174,7 +174,7 @@ impl Post {
         }
         return reposts_window;
     }
-    pub fn get_reposts_post_json (&self, user_id: i32, reactions_list: Vec<i16>) -> Option<ReactionBlockJson> {
+    pub fn get_reactions_post_json (&self, user_id: i32, reactions_list: Vec<i16>) -> Option<ReactionBlockJson> {
         // получаем реакции и отреагировавших
         let reactions_blocks: Option<Vec<ReactionBlockJson>>;
         if reactions_list.len() == 0 {
