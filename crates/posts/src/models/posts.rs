@@ -209,12 +209,12 @@ impl Post {
         let mut next: Option<i32> = None;
         let _posts = list.get_items();
         for (i, item) in _posts.iter().enumerate().rev() {
-            if item.position == self.id {
+            if item.position == self.position {
                 if (i + 1) != _posts.len() {
-                    prev = Some(_posts[i + 1].position.into());
+                    prev = Some(_posts[i + 1].id);
                 };
                 if i != 0 {
-                    next = Some(_posts[i - 1].position.into());
+                    next = Some(_posts[i - 1].id);
                 };
                 break;
             }
