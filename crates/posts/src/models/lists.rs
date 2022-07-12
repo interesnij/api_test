@@ -236,7 +236,7 @@ impl PostList {
         let mut next_page_number = 0;
         let list = get_post_list(list_id);
         let count = list.count;
-        let mut lists: Vec<PostList> = Vec::new();
+        let lists: Vec<PostList>;
         if list.community_id.is_some() {
             lists = PostList::get_user_post_lists(list.community_id.unwrap(), 20, 0);
         }
