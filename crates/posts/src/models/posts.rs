@@ -14,6 +14,7 @@ use crate::utils::{
     ReactionBlockJson,
     PostDetailJson,
     CardRepostPostJson,
+    CommentsSmallJson,
 };
 use actix_web::web::Json;
 use crate::models::{
@@ -109,6 +110,7 @@ impl Post {
         let mut comments_json = Vec::new();
         let mut next_page_number = 0;
         let comments: Vec<PostComment>;
+        let count = self.comment;
         if page > 1 {
             let step = (page - 1) * 20;
             comments = self.get_comments(20, step.into());
@@ -117,7 +119,7 @@ impl Post {
             }
         }
         else {
-            comments = self.get_comments(user_id, 20, 0);
+            comments = self.get_comments(20, 0);
             if count > 20.try_into().unwrap() {
                 next_page_number = 2;
             }
