@@ -35,7 +35,7 @@ pub struct CustomLinkJson {
 #[derive(Serialize)]
 // это карточки карегорий стикеров
 pub struct StickerCategoriesJson {
-    pub categories:  Vec<CardStickerCategory>,
+    pub categories:  Vec<CardStickerCategoryJson>,
     pub next_page:   i32,
 }
 #[derive(Serialize)]
@@ -54,7 +54,7 @@ pub struct StickerCategorieDetailJson {
     pub owner_image: Option<String>,
     pub description: Option<String>,
     pub avatar:      Option<String>,
-    pub stickers:    Vec<CardSticker>,
+    pub stickers:    Vec<CardStickerJson>,
     pub next_page:   i32,
 }
 #[derive(Serialize)]
@@ -67,7 +67,7 @@ pub struct CardStickerJson {
 #[derive(Serialize)]
 // это карточки карегорий смайлов
 pub struct SmileCategories {
-    pub categories:  Vec<CardSmileCategory>,
+    pub categories:  Vec<CardSmileCategoryJson>,
     pub next_page:   i32,
 }
 #[derive(Serialize)]
