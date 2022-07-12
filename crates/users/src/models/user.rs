@@ -3265,7 +3265,7 @@ impl User {
             .expect("Error.");
         user.plus_follows(1);
         if user.is_user_can_see_all(self.id) == true {
-            self.add_new_subscriber(user.id);
+            self.add_new_subscriber(&user);
             self.get_or_create_featured_objects(user);
         }
         return true;
@@ -3363,7 +3363,7 @@ impl User {
         self.plus_friends(1);
         self.minus_follows(1);
         if user.is_user_can_see_all(self.id) == false {
-            self.add_new_subscriber(user.id);
+            self.add_new_subscriber(&user);
             self.get_or_create_featured_objects(user);
         }
         return true;
