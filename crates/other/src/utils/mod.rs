@@ -66,25 +66,26 @@ pub struct CardStickerJson {
 
 #[derive(Serialize)]
 // это карточки карегорий смайлов
-pub struct SmileCategories {
+pub struct SmileCategoriesJson {
     pub categories:  Vec<CardSmileCategoryJson>,
     pub next_page:   i32,
 }
 #[derive(Serialize)]
 // это карточка карегории смайлов
 pub struct CardSmileCategoryJson {
-    pub name: Option<String>,
+    pub name: String,
 }
 
 #[derive(Serialize)]
 // это страница карегория смайлов
-pub struct SmileCategorieDetail {
+pub struct SmileCategorieDetailJson {
     pub name:      String,
+    pub smiles:    Vec<CardSmileJson>,
     pub next_page: i32,
 }
 #[derive(Serialize)]
 // это смайл
-pub struct CardSmile {
+pub struct CardSmileJson {
     pub name:  String,
     pub image: String,
 }

@@ -15,7 +15,7 @@ use actix_web::web::Json;
 use crate::utils::{
     establish_connection,
     ReactionJson, CustomLinkJson,
-    CardSticker, CardSmile,
+    CardStickerJson, CardSmileJson,
     StickerCategoriesJson, CardStickerCategoryJson, StickerCategorieDetailJson, CardStickerJson,
     SmileCategoriesJson, CardSmileCategoryJson, SmileCategorieDetailJson, CardSmileJson,
 };
