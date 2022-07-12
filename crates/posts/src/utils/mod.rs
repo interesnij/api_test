@@ -216,7 +216,6 @@ pub struct RepliesJson {
 #[derive(Serialize)]
 // это объекты ответов для встраивания
 pub struct RepliesSmallJson {
-    pub parent_types:   String,
     pub replies:        Vec<CardReplyJson>,
     pub next_page:      i32,
 }
