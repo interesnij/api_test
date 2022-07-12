@@ -29,37 +29,37 @@ use crate::schema::post_comments;
 
 #[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct PostComment {
-    pub id:         i32,
-    pub post_id:    i32,
-    pub user_id:    i32,
-    pub user_name:  String,
-    pub user_link:  String,
-    pub user_image: Option<String>,
-    pub sticker_id: Option<i32>,
-    pub parent_id:  Option<i32>,
-    pub content:    Option<String>,
-    pub attach:     Option<String>,
-    pub types:      String,
-    pub created:    chrono::NaiveDateTime,
-    pub repost:     i32,
-    pub reactions:  i32,
+    pub id:          i32,
+    pub post_id:     i32,
+    pub user_id:     i32,
+    pub owner_name:  String,
+    pub owner_link:  String,
+    pub owner_image: Option<String>,
+    pub sticker_id:  Option<i32>,
+    pub parent_id:   Option<i32>,
+    pub content:     Option<String>,
+    pub attach:      Option<String>,
+    pub types:       String,
+    pub created:     chrono::NaiveDateTime,
+    pub repost:      i32,
+    pub reactions:   i32,
 }
 #[derive(Deserialize, Insertable)]
 #[table_name="post_comments"]
 pub struct NewPostComment {
-    pub post_id:    i32,
-    pub user_id:    i32,
-    pub user_name:  String,
-    pub user_link:  String,
-    pub user_image: Option<String>,
-    pub sticker_id: Option<i32>,
-    pub parent_id:  Option<i32>,
-    pub content:    Option<String>,
-    pub attach:     Option<String>,
-    pub types:      String,
-    pub created:    chrono::NaiveDateTime,
-    pub repost:     i32,
-    pub reactions:  i32,
+    pub post_id:     i32,
+    pub user_id:     i32,
+    pub owner_name:  String,
+    pub owner_link:  String,
+    pub owner_image: Option<String>,
+    pub sticker_id:  Option<i32>,
+    pub parent_id:   Option<i32>,
+    pub content:     Option<String>,
+    pub attach:      Option<String>,
+    pub types:       String,
+    pub created:     chrono::NaiveDateTime,
+    pub repost:      i32,
+    pub reactions:   i32,
 }
 
 #[derive(Queryable, Serialize, Deserialize, AsChangeset, Debug)]
@@ -89,9 +89,9 @@ impl PostComment {
         for _item in votes.iter() {
             user_json.push (
                 CardReactionPostJson {
-                    owner_name:  _item.owner_name.clone(),
-                    owner_link:  _item.owner_name.clone(),
-                    owner_image: _item.owner_image.clone(),
+                    owner_name:        _item.owner_name.clone(),
+                    owner_link:        _item.owner_name.clone(),
+                    owner_image:       _item.owner_image.clone(),
                     is_user_reaction: &user_reaction.unwrap() == types,
                 }
             );

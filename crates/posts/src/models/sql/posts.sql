@@ -70,13 +70,13 @@ CREATE INDEX posts_parent_id_idx ON posts (parent_id);
 CREATE TABLE post_comments (
     id         SERIAL PRIMARY KEY,
 
-    post_id    INT NOT NULL,
-    user_id    INT NOT NULL,
-    user_name  VARCHAR(200) NOT NULL,
-    user_link  VARCHAR(200) NOT NULL,
-    user_image VARCHAR(500),
-    sticker_id INT,
-    parent_id  INT,
+    post_id     INT NOT NULL,
+    user_id     INT NOT NULL,
+    owner_name  VARCHAR(200) NOT NULL,
+    owner_link  VARCHAR(200) NOT NULL,
+    owner_image VARCHAR(500),
+    sticker_id  INT,
+    parent_id   INT,
 
     content    VARCHAR(1000),
     attach     VARCHAR(200),
