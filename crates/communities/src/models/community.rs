@@ -2269,9 +2269,9 @@ impl Community {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_info(
                     user.id,
                     action.clone(),
-                    user.owner_name,
-                    user.owner_link,
-                    user.owner_image
+                    user.owner_name.clone(),
+                    user.owner_link.clone(),
+                    user.owner_image.clone()
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2284,9 +2284,9 @@ impl Community {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_member(
                     user.id,
                     action.clone(),
-                    user.owner_name,
-                    user.owner_link,
-                    user.owner_image
+                    user.owner_name.clone(),
+                    user.owner_link.clone(),
+                    user.owner_image.clone()
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2299,9 +2299,9 @@ impl Community {
                 let _new_perm = NewCommunityVisiblePerm::add_can_send_message(
                     user.id,
                     action.clone(),
-                    user.owner_name,
-                    user.owner_link,
-                    user.owner_image
+                    user.owner_name.clone(),
+                    user.owner_link.clone(),
+                    user.owner_image.clone()
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2314,9 +2314,9 @@ impl Community {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_doc(
                     user.id,
                     action.clone(),
-                    user.owner_name,
-                    user.owner_link,
-                    user.owner_image
+                    user.owner_name.clone(),
+                    user.owner_link.clone(),
+                    user.owner_image.clone()
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2329,9 +2329,9 @@ impl Community {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_music (
                     user.id,
                     action.clone(),
-                    user.owner_name,
-                    user.owner_link,
-                    user.owner_image
+                    user.owner_name.clone(),
+                    user.owner_link.clone(),
+                    user.owner_image.clone()
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2344,9 +2344,9 @@ impl Community {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_survey (
                     user.id,
                     action.clone(),
-                    user.owner_name,
-                    user.owner_link,
-                    user.owner_image
+                    user.owner_name.clone(),
+                    user.owner_link.clone(),
+                    user.owner_image.clone()
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2359,9 +2359,9 @@ impl Community {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_post (
                     user.id,
                     action.clone(),
-                    user.owner_name,
-                    user.owner_link,
-                    user.owner_image
+                    user.owner_name.clone(),
+                    user.owner_link.clone(),
+                    user.owner_image.clone()
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2374,9 +2374,9 @@ impl Community {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_photo (
                     user.id,
                     action.clone(),
-                    user.owner_name,
-                    user.owner_link,
-                    user.owner_image
+                    user.owner_name.clone(),
+                    user.owner_link.clone(),
+                    user.owner_image.clone()
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2389,9 +2389,9 @@ impl Community {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_good (
                     user.id,
                     action.clone(),
-                    user.owner_name,
-                    user.owner_link,
-                    user.owner_image
+                    user.owner_name.clone(),
+                    user.owner_link.clone(),
+                    user.owner_image.clone()
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2404,9 +2404,9 @@ impl Community {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_video (
                     user.id,
                     action.clone(),
-                    user.owner_name,
-                    user.owner_link,
-                    user.owner_image
+                    user.owner_name.clone(),
+                    user.owner_link.clone(),
+                    user.owner_image.clone()
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2419,9 +2419,9 @@ impl Community {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_planner (
                     user.id,
                     action.clone(),
-                    user.owner_name,
-                    user.owner_link,
-                    user.owner_image
+                    user.owner_name.clone(),
+                    user.owner_link.clone(),
+                    user.owner_image.clone()
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2434,9 +2434,9 @@ impl Community {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_forum (
                     user.id,
                     action.clone(),
-                    user.owner_name,
-                    user.owner_link,
-                    user.owner_image
+                    user.owner_name.clone(),
+                    user.owner_link.clone(),
+                    user.owner_image.clone()
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
