@@ -11,7 +11,7 @@ pub struct UserDetailJson {
     pub gender:        String,
     pub device:        String,
     pub language:      String,
-    pub perm:          String,
+    pub perm:          i16,
     pub link:          String, // community.get_link()
     pub city:          Option<String>,
     pub status:        Option<String>,

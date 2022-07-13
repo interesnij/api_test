@@ -455,20 +455,15 @@ impl User {
             .filter(schema::user_locations::user_id.eq(self.id))
             .order(schema::user_locations::id.desc())
             .limit(1)
-            .select((
-                schema::user_locations::city_ru,
-                schema::user_locations::region_ru,
-                schema::user_locations::country_ru,
-            ))
             .load::<String>(&_connection)
             .expect("E")
             .into_iter()
             .nth(0)
             .unwrap();
         let location_json = LocationJson {
-            city_ru:    location[0],
-            region_ru:  location[1],
-            country_ru: location[2],
+            city_ru:    location.city_ru,
+            region_ru:  location.region_ru,
+            country_ru: location.country_ru,
         };
         return Json(location_json);
     }
