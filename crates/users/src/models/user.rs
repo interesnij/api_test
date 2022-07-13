@@ -712,8 +712,7 @@ impl User {
             }
         }
         return Json(UniversalUserCommunityKeysJson {
-            description: "featured".to_string(),
-            users: friends,
+            keys: friends,
             next_page: next_page_number,
         });
     }
