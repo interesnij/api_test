@@ -489,23 +489,7 @@ impl User {
             return str.to_string();
         }
     }
-    pub fn get_populate_smiles_ids(&self) -> Vec<i32> {
-        use crate::schema::user_populate_smiles::dsl::user_populate_smiles;
-        use crate::models::UserPopulateSmile;
 
-        let _connection = establish_connection();
-        let all_populate_smiles = user_populate_smiles
-            .filter(schema::user_populate_smiles::user_id.eq(self.id))
-            .order(schema::user_populate_smiles::count.desc())
-            .limit(20)
-            .load::<UserPopulateSmile>(&_connection)
-            .expect("E");
-        let mut stack = Vec::new();
-        for _item in all_populate_smiles.iter() {
-            stack.push(_item.smile_id);
-        };
-        return stack;
-    }
     pub fn get_populate_smiles_json(&self) -> Json<Vec<UserPopulateSmileJson>> {
         use crate::schema::user_populate_smiles::dsl::user_populate_smiles;
 
@@ -527,37 +511,46 @@ impl User {
         return Json(smiles_json);
     }
 
-    pub fn get_populate_stickers_ids(&self) -> Vec<i32> {
+    pub fn get_populate_stickers_json(&self) -> Json<Vec<UserPopulateStickerJson>> {
         use crate::schema::user_populate_stickers::dsl::user_populate_stickers;
-        use crate::models::UserPopulateSticker;
 
         let _connection = establish_connection();
         let all_populate_stickers = user_populate_stickers
             .filter(schema::user_populate_stickers::user_id.eq(self.id))
             .order(schema::user_populate_stickers::count.desc())
             .limit(20)
-            .load::<UserPopulateSticker>(&_connection)
+            .select((schema::user_populate_stickers::sticker_id, schema::user_populate_stickers::image))
+            .load::<(i32, String)>(&_connection)
             .expect("E");
-        let mut stack = Vec::new();
-        for _item in all_populate_stickers.iter() {
-            stack.push(_item.sticker_id);
-        };
-        return stack;
+        let mut stickers_json = Vec::new();
+        for sticker in all_populate_stickers.iter() {
+            stickers_json.push(UserPopulateStickerJson {
+                sticker_id: sticker.0,
+                image:    sticker.1.clone(),
+            });
+        }
+        return Json(stickers_json);
     }
 
-    pub fn get_color_background(&self) -> String {
+    pub fn get_color_background(&self) -> Json<DesignSettingsJson> {
         use crate::schema::design_settings::dsl::design_settings;
         use crate::models::DesignSetting;
 
         let _connection = establish_connection();
         let _designs = design_settings
             .filter(schema::design_settings::user_id.eq(&self.id))
-            .load::<DesignSetting>(&_connection)
+            .limit(1)
+            .select(schema::design_settings::background)
+            .load::<String>(&_connection)
             .expect("E");
         if _designs.len() > 0 {
-            return _designs[0].background.to_string();
+            return Json(DesignSettingsJson{
+                background: _designs[0].clone(),
+            });
         } else {
-            return "white".to_string();
+            return Json(DesignSettingsJson{
+                background: "white".to_string(),
+            });
         }
     }
     pub fn get_email_status(&self) -> String {
@@ -662,17 +655,14 @@ impl User {
         use crate::models::FeaturedUserCommunitie;
 
         let _connection = establish_connection();
-        let mut stack = Vec::new();
         let featured_friends = featured_user_communities
             .filter(schema::featured_user_communities::owner.eq(self.id))
             .filter(schema::featured_user_communities::community_id.is_null())
             .order(schema::featured_user_communities::id.desc())
+            .select(schema::featured_user_communities::user_id)
             .load::<FeaturedUserCommunitie>(&_connection)
             .expect("E.");
-        for _item in featured_friends.iter() {
-            stack.push(_item.user_id.unwrap());
-        };
-        return stack;
+        return featured_friends;
     }
     pub fn get_6_featured_friends_ids(&self) -> Vec<i32> {
         use crate::schema::featured_user_communities::dsl::featured_user_communities;
