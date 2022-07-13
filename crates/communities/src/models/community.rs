@@ -519,7 +519,7 @@ impl Community {
             .expect("E");
     }
 
-    pub fn create_community(
+    pub fn create_community (
         name: String,
         category_id: i32,
         user_id: i32,
@@ -572,22 +572,25 @@ impl Community {
 
         // записываем приватность нового пользователя
         let _private = NewCommunityPrivate {
-            community_id:       community_id,
-            can_see_member:     "a".to_string(),
-            can_see_info:       "a".to_string(),
-            can_send_message:   "a".to_string(),
-            can_see_post:       "a".to_string(),
-            can_see_photo:      "a".to_string(),
-            can_see_good:       "a".to_string(),
-            can_see_video:      "a".to_string(),
-            can_see_music:      "a".to_string(),
-            can_see_planner:    "a".to_string(),
-            can_see_doc:        "a".to_string(),
-            can_see_survey:     "a".to_string(),
-            can_see_settings:   "c".to_string(),
-            can_see_log:        "c".to_string(),
-            can_see_stat:       "c".to_string(),
-            can_see_forum:      "a".to_string(),
+            community_id:     community_id,
+            can_see_member:   "a".to_string(),
+            can_see_info:     "a".to_string(),
+            can_send_message: "a".to_string(),
+            can_see_post:     "a".to_string(),
+            can_see_photo:    "a".to_string(),
+            can_see_good:     "a".to_string(),
+            can_see_video:    "a".to_string(),
+            can_see_music:    "a".to_string(),
+            can_see_planner:  "a".to_string(),
+            can_see_doc:      "a".to_string(),
+            can_see_survey:   "a".to_string(),
+            can_see_settings: "c".to_string(),
+            can_see_log:      "c".to_string(),
+            can_see_stat:     "c".to_string(),
+            can_see_forum:    "a".to_string(),
+            owner_name:       owner_name,
+            owner_link:       owner_link,
+            owner_image:      owner_image
         };
         diesel::insert_into(schema::community_privates::table)
             .values(&_private)
@@ -2552,6 +2555,9 @@ pub struct CommunityPrivate {
     pub can_see_log:      String,
     pub can_see_stat:     String,
     pub can_see_forum:    String,
+    pub owner_name:       String,
+    pub owner_link:       String,
+    pub owner_image:      Option<String>,
 }
 #[derive(Deserialize, Insertable)]
 #[table_name="community_privates"]
@@ -2572,6 +2578,9 @@ pub struct NewCommunityPrivate {
     pub can_see_log:      String,
     pub can_see_stat:     String,
     pub can_see_forum:    String,
+    pub owner_name:       String,
+    pub owner_link:       String,
+    pub owner_image:      Option<String>,
 }
 
 /////// CommunityNotifications //////
@@ -2970,6 +2979,9 @@ pub struct CommunityWorkPerm {
     pub can_work_doc:     Option<String>,
     pub can_work_music:   Option<String>,
     pub can_work_survey:  Option<String>,
+    pub owner_name:       String,
+    pub owner_link:       String,
+    pub owner_image:      Option<String>,
 }
 
 #[derive(Deserialize, Insertable)]
@@ -2995,6 +3007,10 @@ pub struct NewCommunityWorkPerm {
     pub can_work_doc:     Option<String>,
     pub can_work_music:   Option<String>,
     pub can_work_survey:  Option<String>,
+
+    pub owner_name:       String,
+    pub owner_link:       String,
+    pub owner_image:      Option<String>,
 }
 
 /////// CommunityBannerUser //////
