@@ -7,4 +7,4 @@ release = false
 # The address to serve on.
 address = "194.58.90.123"
 # The port to serve on.
-port = 8080
+port = 8100
