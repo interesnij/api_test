@@ -2253,7 +2253,7 @@ impl Community {
 
         let mut users_ids = Vec::new();
         let _connection = establish_connection();
-        for item in users.iter() { 
+        for item in users.iter() {
             users_ids.push(item.id);
         }
 
@@ -2590,9 +2590,6 @@ pub struct CommunityPrivate {
     pub can_see_log:      String,
     pub can_see_stat:     String,
     pub can_see_forum:    String,
-    pub owner_name:       String,
-    pub owner_link:       String,
-    pub owner_image:      Option<String>,
 }
 #[derive(Deserialize, Insertable)]
 #[table_name="community_privates"]
@@ -2613,9 +2610,6 @@ pub struct NewCommunityPrivate {
     pub can_see_log:      String,
     pub can_see_stat:     String,
     pub can_see_forum:    String,
-    pub owner_name:       String,
-    pub owner_link:       String,
-    pub owner_image:      Option<String>,
 }
 
 /////// CommunityNotifications //////
