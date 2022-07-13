@@ -36,18 +36,17 @@ pub struct CommunityDetailJson {
 ////////
 #[derive(Serialize)]
 // универсальный сериализатор для списков пользователей
-pub struct UsersJson {
-    pub users:     Vec<CardUserJson>,
+pub struct OwnersJson {
+    pub users:     Vec<CardOwnerJson>,
     pub next_page: i32,
 }
 #[derive(Serialize)]
 // это объект пользователя
-pub struct CardUserJson {
-    pub id:         i32,
-    pub first_name: String,
-    pub last_name:  String,
-    pub link:       String,
-    pub image:      String,
+pub struct CardOwnerJson {
+    pub id:          i32,
+    pub owner_name:  String,
+    pub owner_link:  String,
+    pub owner_image: Option<String>,
 }
 
 ////////

@@ -10,8 +10,9 @@ pub struct UsersListJson {
 #[derive(Serialize)]
 // это объект пользователя
 pub struct CardUserJson {
+    pub id:         i32,
     pub first_name: String,
     pub last_name:  String,
     pub link:       String,
-    pub image:      String,
+    pub image:      Option<String>,
 }

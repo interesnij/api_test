@@ -18,7 +18,7 @@ use serde::{Serialize, Deserialize};
 use crate::utils::establish_connection;
 use actix_web::web::Json;
 use crate::utils::{
-    CardUserJson,
+    CardOwnerJson,
 };
 
 /////// CommunityCategories //////
@@ -2247,7 +2247,7 @@ impl Community {
     }
 
 
-    pub fn set_friends_visible_perms(&self, action: String, users: Vec<CardUserJson>, types: String) -> bool {
+    pub fn set_friends_visible_perms(&self, action: String, users: Vec<CardOwnerJson>, types: String) -> bool {
         use crate::schema::community_visible_perms::dsl::community_visible_perms;
         use crate::schema::communities_memberships::dsl::communities_memberships;
 
