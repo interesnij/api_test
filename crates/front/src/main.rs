@@ -11,7 +11,7 @@ struct TestData {
 
 #[function_component(App)]
 fn app() -> Html {
-    let test = use_state(||);
+    let test = use_state(|| TestData);
     {
         let test = test.clone();
         use_effect_with_deps(move |_| {
