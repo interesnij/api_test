@@ -2625,6 +2625,9 @@ pub struct CommunityVisiblePerm {
     pub can_see_planner_comment: Option<String>,
     pub can_see_forum:           Option<String>,
     pub can_see_forum_comment:   Option<String>,
+    pub owner_name:              String,
+    pub owner_link:              String,
+    pub owner_image:             Option<String>,
 }
 
 #[derive(Deserialize, Insertable)]
@@ -2652,6 +2655,9 @@ pub struct NewCommunityVisiblePerm {
     pub can_see_planner_comment: Option<String>,
     pub can_see_forum:           Option<String>,
     pub can_see_forum_comment:   Option<String>,
+    pub owner_name:              String,
+    pub owner_link:              String,
+    pub owner_image:             Option<String>,
 }
 
 impl NewCommunityVisiblePerm {
