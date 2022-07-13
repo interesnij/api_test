@@ -455,7 +455,7 @@ impl User {
             .filter(schema::user_locations::user_id.eq(self.id))
             .order(schema::user_locations::id.desc())
             .limit(1)
-            .load::<String>(&_connection)
+            .load::<UserLocation>(&_connection)
             .expect("E")
             .into_iter()
             .nth(0)
