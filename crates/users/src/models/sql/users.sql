@@ -248,8 +248,6 @@ CREATE TABLE design_settings (
 CREATE UNIQUE INDEX design_settings_unq ON design_settings (user_id, id);
 
 -- Настройки приватности пользователя -------
--- 1:Все пользователи; 4:Друзья; 5:Друзья и друзья друзей;6:Только я
--- 17:Друзья, кроме; 18:Некоторые друзья
 CREATE TABLE user_privates (
     id                SERIAL PRIMARY KEY,
     user_id           INT NOT NULL,
@@ -286,19 +284,21 @@ CREATE UNIQUE INDEX user_profile_notifications_unq ON user_profile_notifications
 
 -- Популярные смайлы -------
 CREATE TABLE user_populate_smiles (
-    id        SERIAL PRIMARY KEY,
-    user_id   INT NOT NULL,
-    smile_id  INT NOT NULL,
-    count     INT NOT NULL DEFAULT 0
+    id       SERIAL PRIMARY KEY,
+    user_id  INT NOT NULL,
+    smile_id INT NOT NULL,
+    count    INT NOT NULL DEFAULT 0,
+    image    VARCHAR(500) NOT NULL,
 );
 CREATE UNIQUE INDEX user_populate_smiles_unq ON user_populate_smiles (user_id, smile_id);
 
 -- Популярные стикеры -------
 CREATE TABLE user_populate_stickers (
-    id          SERIAL PRIMARY KEY,
-    user_id     INT NOT NULL,
-    sticker_id  INT NOT NULL,
-    count       INT NOT NULL DEFAULT 0
+    id         SERIAL PRIMARY KEY,
+    user_id    INT NOT NULL,
+    sticker_id INT NOT NULL,
+    count      INT NOT NULL DEFAULT 0,
+    image      VARCHAR(500) NOT NULL,
 );
 CREATE UNIQUE INDEX user_populate_stickers_unq ON user_populate_stickers (user_id, sticker_id);
 

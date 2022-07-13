@@ -5,7 +5,7 @@ use diesel::prelude::*;
 use crate::schema;
 use crate::models::{
     UserLocation, UserProfile, Friend,
-    Follow, UserPrivate, UserBlock,
+    Follow, UserPrivate, UserBlock
 };
 use crate::schema::{
     users,
@@ -349,7 +349,7 @@ impl User {
         //show_wall_notify_items(1, self.id);
     }
 
-    pub fn get_plus_or_create_populate_smile(&self, smile_id: i32) {
+    pub fn get_plus_or_create_populate_smile(&self, smile_id: i32, image: String) {
         use crate::schema::user_populate_smiles::dsl::user_populate_smiles;
         use crate::models::{UserPopulateSmile, NewUserPopulateSmile};
 
@@ -371,6 +371,7 @@ impl User {
                 user_id:  self.id,
                 smile_id: smile_id,
                 count:    1,
+                image:    image,
             };
             diesel::insert_into(schema::user_populate_smiles::table)
                 .values(&new_smile)
@@ -378,7 +379,7 @@ impl User {
                 .expect("Error.");
         }
     }
-    pub fn get_plus_or_create_populate_sticker(&self, sticker_id: i32) {
+    pub fn get_plus_or_create_populate_sticker(&self, sticker_id: i32, image: String) {
         use crate::schema::user_populate_stickers::dsl::user_populate_stickers;
         use crate::models::{UserPopulateSticker, NewUserPopulateSticker};
 
@@ -400,6 +401,7 @@ impl User {
                 user_id:    self.id,
                 sticker_id: sticker_id,
                 count:      1,
+                image:      image,
             };
             diesel::insert_into(schema::user_populate_stickers::table)
                 .values(&new_sticker)

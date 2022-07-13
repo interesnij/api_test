@@ -430,7 +430,7 @@ pub struct NotifyUserCommunitie {
 }
 #[derive(Deserialize, Insertable, AsChangeset)]
 #[table_name="notify_user_communities"]
-pub struct NewNotifyUserCommunitie { 
+pub struct NewNotifyUserCommunitie {
     pub owner:        i32,
     pub list_id:      Option<i32>,
     pub user_id:      Option<i32>,
@@ -497,13 +497,15 @@ pub struct UserPopulateSmile {
     pub user_id:  i32,
     pub smile_id: i32,
     pub count:    i32,
+    pub image:    String,
 }
 #[derive(Deserialize, Insertable)]
 #[table_name="user_populate_smiles"]
 pub struct NewUserPopulateSmile {
-    pub user_id:   i32,
-    pub smile_id:  i32,
-    pub count:     i32,
+    pub user_id:  i32,
+    pub smile_id: i32,
+    pub count:    i32,
+    pub image:    String,
 }
 
 /////// UserPopulateStickers //////
@@ -513,6 +515,7 @@ pub struct UserPopulateSticker {
     pub user_id:    i32,
     pub sticker_id: i32,
     pub count:      i32,
+    pub image:      String,
 }
 #[derive(Deserialize, Insertable)]
 #[table_name="user_populate_stickers"]
@@ -520,6 +523,7 @@ pub struct NewUserPopulateSticker {
     pub user_id:    i32,
     pub sticker_id: i32,
     pub count:      i32,
+    pub image:      String,
 }
 
 /////// UserNotifications //////
