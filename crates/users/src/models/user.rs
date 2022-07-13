@@ -660,7 +660,7 @@ impl User {
             .filter(schema::featured_user_communities::community_id.is_null())
             .order(schema::featured_user_communities::id.desc())
             .select(schema::featured_user_communities::user_id)
-            .load::<FeaturedUserCommunitie>(&_connection)
+            .load::<i32>(&_connection)
             .expect("E.");
         return featured_friends;
     }
