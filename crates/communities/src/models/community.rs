@@ -823,19 +823,9 @@ impl Community {
             .filter(schema::communities_memberships::user_id.eq(user_id))
             .load::<CommunitiesMembership>(&_connection)
             .expect("E");
-        let member_form = NewCommunitiesMembership {
-            user_id: user_id,
-            community_id: self.id,
-            is_administrator: true,
-            is_moderator: false,
-            is_editor: false,
-            is_advertiser: false,
-            created: member[0].created,
-            visited: member[0].visited,
-        };
 
         diesel::update(&member[0])
-            .set(member_form)
+            .set(schema::communities_memberships::is_administrator.eq(true))
             .get_result::<CommunitiesMembership>(&_connection)
             .expect("Error.");
         return true;
@@ -851,19 +841,9 @@ impl Community {
             .filter(schema::communities_memberships::user_id.eq(user_id))
             .load::<CommunitiesMembership>(&_connection)
             .expect("E");
-        let member_form = NewCommunitiesMembership {
-            user_id: user_id,
-            community_id: self.id,
-            is_administrator: false,
-            is_moderator: false,
-            is_editor: true,
-            is_advertiser: false,
-            created: member[0].created,
-            visited: member[0].visited,
-        };
 
         diesel::update(&member[0])
-            .set(member_form)
+            .set(schema::communities_memberships::is_editor.eq(true))
             .get_result::<CommunitiesMembership>(&_connection)
             .expect("Error.");
         return true;
@@ -879,19 +859,9 @@ impl Community {
             .filter(schema::communities_memberships::user_id.eq(user_id))
             .load::<CommunitiesMembership>(&_connection)
             .expect("E");
-        let member_form = NewCommunitiesMembership {
-            user_id: user_id,
-            community_id: self.id,
-            is_administrator: false,
-            is_moderator: false,
-            is_editor: true,
-            is_advertiser: false,
-            created: member[0].created,
-            visited: member[0].visited,
-        };
 
         diesel::update(&member[0])
-            .set(member_form)
+            .set(schema::communities_memberships::is_moderator.eq(true))
             .get_result::<CommunitiesMembership>(&_connection)
             .expect("Error.");
         return true;
@@ -907,19 +877,9 @@ impl Community {
             .filter(schema::communities_memberships::user_id.eq(user_id))
             .load::<CommunitiesMembership>(&_connection)
             .expect("E");
-        let member_form = NewCommunitiesMembership {
-            user_id: user_id,
-            community_id: self.id,
-            is_administrator: false,
-            is_moderator: false,
-            is_editor: false,
-            is_advertiser: true,
-            created: member[0].created,
-            visited: member[0].visited,
-        };
 
         diesel::update(&member[0])
-            .set(member_form)
+            .set(schema::communities_memberships::is_advertiser.eq(true))
             .get_result::<CommunitiesMembership>(&_connection)
             .expect("Error.");
         return true;
