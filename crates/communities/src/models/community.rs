@@ -17,6 +17,9 @@ use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
 use crate::utils::establish_connection;
 use actix_web::web::Json;
+use crate::utils::{
+    CardUserJson,
+};
 
 /////// CommunityCategories //////
 #[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
@@ -2244,16 +2247,13 @@ impl Community {
     }
 
 
-    pub fn set_friends_visible_perms(&self, action: String, users: String, types: String) -> bool {
+    pub fn set_friends_visible_perms(&self, action: String, users: Vec<CardUserJson>, types: String) -> bool {
         use crate::schema::community_visible_perms::dsl::community_visible_perms;
         use crate::schema::communities_memberships::dsl::communities_memberships;
 
-        let _connection = establish_connection();
         let mut users_ids = Vec::new();
-        let v: Vec<&str> = users.split(", ").collect();
-        for item in v.iter() {
-            if !item.is_empty() {
-                let pk: i32 = item.parse().unwrap();
+        let _connection = establish_connection();
+        for item in users.iter() {
                 users_ids.push(pk);
             }
         }
@@ -2269,10 +2269,13 @@ impl Community {
         diesel::delete(community_visible_perms.filter(schema::community_visible_perms::user_id.eq_any(members_stack))).execute(&_connection).expect("E");
 
         if types == "can_see_info".to_string() {
-            for user_id in users_ids.iter() {
+            for user in users.iter() {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_info(
-                    *user_id,
+                    user.id,
                     action.clone(),
+                    user.owner_name,
+                    user.owner_link,
+                    user.owner_image
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2281,10 +2284,13 @@ impl Community {
             }
         }
         else if types == "can_see_member".to_string() {
-            for user_id in users_ids.iter() {
+            for user in users.iter() {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_member(
-                    *user_id,
+                    user.id,
                     action.clone(),
+                    user.owner_name,
+                    user.owner_link,
+                    user.owner_image
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2293,10 +2299,13 @@ impl Community {
             }
         }
         else if types == "can_send_message".to_string() {
-            for user_id in users_ids.iter() {
+            for user in users.iter() {
                 let _new_perm = NewCommunityVisiblePerm::add_can_send_message(
-                    *user_id,
+                    user.id,
                     action.clone(),
+                    user.owner_name,
+                    user.owner_link,
+                    user.owner_image
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2305,10 +2314,13 @@ impl Community {
             }
         }
         else if types == "can_see_doc".to_string() {
-            for user_id in users_ids.iter() {
+            for user in users.iter() {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_doc(
-                    *user_id,
+                    user.id,
                     action.clone(),
+                    user.owner_name,
+                    user.owner_link,
+                    user.owner_image
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2317,10 +2329,13 @@ impl Community {
             }
         }
         else if types == "can_see_music".to_string() {
-            for user_id in users_ids.iter() {
+            for user in users.iter() {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_music (
-                    *user_id,
+                    user.id,
                     action.clone(),
+                    user.owner_name,
+                    user.owner_link,
+                    user.owner_image
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2329,10 +2344,13 @@ impl Community {
             }
         }
         else if types == "can_see_survey".to_string() {
-            for user_id in users_ids.iter() {
+            for user in users.iter() {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_survey (
-                    *user_id,
+                    user.id,
                     action.clone(),
+                    user.owner_name,
+                    user.owner_link,
+                    user.owner_image
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2341,10 +2359,13 @@ impl Community {
             }
         }
         else if types == "can_see_post".to_string() {
-            for user_id in users_ids.iter() {
+            for user in users.iter() {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_post (
-                    *user_id,
+                    user.id,
                     action.clone(),
+                    user.owner_name,
+                    user.owner_link,
+                    user.owner_image
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2353,10 +2374,13 @@ impl Community {
             }
         }
         else if types == "can_see_photo".to_string() {
-            for user_id in users_ids.iter() {
+            for user in users.iter() {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_photo (
-                    *user_id,
+                    user.id,
                     action.clone(),
+                    user.owner_name,
+                    user.owner_link,
+                    user.owner_image
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2365,10 +2389,13 @@ impl Community {
             }
         }
         else if types == "can_see_good".to_string() {
-            for user_id in users_ids.iter() {
+            for user in users.iter() {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_good (
-                    *user_id,
+                    user.id,
                     action.clone(),
+                    user.owner_name,
+                    user.owner_link,
+                    user.owner_image
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2377,10 +2404,13 @@ impl Community {
             }
         }
         else if types == "can_see_video".to_string() {
-            for user_id in users_ids.iter() {
+            for user in users.iter() {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_video (
-                    *user_id,
+                    user.id,
                     action.clone(),
+                    user.owner_name,
+                    user.owner_link,
+                    user.owner_image
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2389,10 +2419,13 @@ impl Community {
             }
         }
         else if types == "can_see_planner".to_string() {
-            for user_id in users_ids.iter() {
+            for user in users.iter() {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_planner (
-                    *user_id,
+                    user.id,
                     action.clone(),
+                    user.owner_name,
+                    user.owner_link,
+                    user.owner_image
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2401,10 +2434,13 @@ impl Community {
             }
         }
         else if types == "can_see_forum".to_string() {
-            for user_id in users_ids.iter() {
+            for user in users.iter() {
                 let _new_perm = NewCommunityVisiblePerm::add_can_see_forum (
-                    *user_id,
+                    user.id,
                     action.clone(),
+                    user.owner_name,
+                    user.owner_link,
+                    user.owner_image
                 );
                 diesel::insert_into(schema::community_visible_perms::table)
                     .values(&_new_perm)
@@ -2661,7 +2697,13 @@ pub struct NewCommunityVisiblePerm {
 }
 
 impl NewCommunityVisiblePerm {
-    pub fn add_can_see_info(user_id: i32, can_see_info: String) -> Self {
+    pub fn add_can_see_info (
+        user_id: i32,
+        can_see_info: String,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> Self {
         NewCommunityVisiblePerm {
             user_id:                 user_id,
             can_see_info:            Some(can_see_info),
@@ -2684,9 +2726,18 @@ impl NewCommunityVisiblePerm {
             can_see_planner_comment: None,
             can_see_forum:           None,
             can_see_forum_comment:   None,
+            owner_name:              owner_name,
+            owner_link:              owner_link,
+            owner_image:             owner_image,
         }
     }
-    pub fn add_can_see_member(user_id: i32, can_see_member: String) -> Self {
+    pub fn add_can_see_member (
+        user_id: i32,
+        can_see_info: String,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> Self {
         NewCommunityVisiblePerm {
             user_id:                 user_id,
             can_see_info:            None,
@@ -2709,9 +2760,18 @@ impl NewCommunityVisiblePerm {
             can_see_planner_comment: None,
             can_see_forum:           None,
             can_see_forum_comment:   None,
+            owner_name:              owner_name,
+            owner_link:              owner_link,
+            owner_image:             owner_image,
         }
     }
-    pub fn add_can_send_message(user_id: i32, can_send_message: String) -> Self {
+    pub fn add_can_send_message (
+        user_id: i32,
+        can_see_info: String,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> Self {
         NewCommunityVisiblePerm {
             user_id:                 user_id,
             can_see_info:            None,
@@ -2734,9 +2794,18 @@ impl NewCommunityVisiblePerm {
             can_see_planner_comment: None,
             can_see_forum:           None,
             can_see_forum_comment:   None,
+            owner_name:              owner_name,
+            owner_link:              owner_link,
+            owner_image:             owner_image,
         }
     }
-    pub fn add_can_see_doc(user_id: i32, can_see_doc: String) -> Self {
+    pub fn add_can_see_doc (
+        user_id: i32,
+        can_see_info: String,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> Self {
         NewCommunityVisiblePerm {
             user_id:                 user_id,
             can_see_info:            None,
@@ -2759,9 +2828,18 @@ impl NewCommunityVisiblePerm {
             can_see_planner_comment: None,
             can_see_forum:           None,
             can_see_forum_comment:   None,
+            owner_name:              owner_name,
+            owner_link:              owner_link,
+            owner_image:             owner_image,
         }
     }
-    pub fn add_can_see_music(user_id: i32, can_see_music: String) -> Self {
+    pub fn add_can_see_music (
+        user_id: i32,
+        can_see_info: String,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> Self {
         NewCommunityVisiblePerm {
             user_id:                 user_id,
             can_see_info:            None,
@@ -2784,9 +2862,18 @@ impl NewCommunityVisiblePerm {
             can_see_planner_comment: None,
             can_see_forum:           None,
             can_see_forum_comment:   None,
+            owner_name:              owner_name,
+            owner_link:              owner_link,
+            owner_image:             owner_image,
         }
     }
-    pub fn add_can_see_survey(user_id: i32, can_see_survey: String) -> Self {
+    pub fn add_can_see_survey (
+        user_id: i32,
+        can_see_info: String,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> Self {
         NewCommunityVisiblePerm {
             user_id:                 user_id,
             can_see_info:            None,
@@ -2809,9 +2896,18 @@ impl NewCommunityVisiblePerm {
             can_see_planner_comment: None,
             can_see_forum:           None,
             can_see_forum_comment:   None,
+            owner_name:              owner_name,
+            owner_link:              owner_link,
+            owner_image:             owner_image,
         }
     }
-    pub fn add_can_see_post(user_id: i32, can_see_post: String) -> Self {
+    pub fn add_can_see_post (
+        user_id: i32,
+        can_see_info: String,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> Self {
         NewCommunityVisiblePerm {
             user_id:                 user_id,
             can_see_info:            None,
@@ -2834,9 +2930,18 @@ impl NewCommunityVisiblePerm {
             can_see_planner_comment: None,
             can_see_forum:           None,
             can_see_forum_comment:   None,
+            owner_name:              owner_name,
+            owner_link:              owner_link,
+            owner_image:             owner_image,
         }
     }
-    pub fn add_can_see_photo(user_id: i32, can_see_photo: String) -> Self {
+    pub fn add_can_see_photo (
+        user_id: i32,
+        can_see_info: String,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> Self {
         NewCommunityVisiblePerm {
             user_id:                 user_id,
             can_see_info:            None,
@@ -2859,9 +2964,18 @@ impl NewCommunityVisiblePerm {
             can_see_planner_comment: None,
             can_see_forum:           None,
             can_see_forum_comment:   None,
+            owner_name:              owner_name,
+            owner_link:              owner_link,
+            owner_image:             owner_image,
         }
     }
-    pub fn add_can_see_good(user_id: i32, can_see_good: String) -> Self {
+    pub fn add_can_see_good (
+        user_id: i32,
+        can_see_info: String,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> Self {
         NewCommunityVisiblePerm {
             user_id:                 user_id,
             can_see_info:            None,
@@ -2884,9 +2998,18 @@ impl NewCommunityVisiblePerm {
             can_see_planner_comment: None,
             can_see_forum:           None,
             can_see_forum_comment:   None,
+            owner_name:              owner_name,
+            owner_link:              owner_link,
+            owner_image:             owner_image,
         }
     }
-    pub fn add_can_see_video(user_id: i32, can_see_video: String) -> Self {
+    pub fn add_can_see_video (
+        user_id: i32,
+        can_see_info: String,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> Self {
         NewCommunityVisiblePerm {
             user_id:                 user_id,
             can_see_info:            None,
@@ -2909,9 +3032,18 @@ impl NewCommunityVisiblePerm {
             can_see_planner_comment: None,
             can_see_forum:           None,
             can_see_forum_comment:   None,
+            owner_name:              owner_name,
+            owner_link:              owner_link,
+            owner_image:             owner_image,
         }
     }
-    pub fn add_can_see_planner(user_id: i32, can_see_planner: String) -> Self {
+    pub fn add_can_see_planner (
+        user_id: i32,
+        can_see_info: String,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> Self {
         NewCommunityVisiblePerm {
             user_id:                 user_id,
             can_see_info:            None,
@@ -2934,9 +3066,18 @@ impl NewCommunityVisiblePerm {
             can_see_planner_comment: None,
             can_see_forum:           None,
             can_see_forum_comment:   None,
+            owner_name:              owner_name,
+            owner_link:              owner_link,
+            owner_image:             owner_image,
         }
     }
-    pub fn add_can_see_forum(user_id: i32, can_see_forum: String) -> Self {
+    pub fn add_can_see_forum (
+        user_id: i32,
+        can_see_info: String,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> Self {
         NewCommunityVisiblePerm {
             user_id:                 user_id,
             can_see_info:            None,
@@ -2959,6 +3100,9 @@ impl NewCommunityVisiblePerm {
             can_see_planner_comment: None,
             can_see_forum:           Some(can_see_forum),
             can_see_forum_comment:   None,
+            owner_name:              owner_name,
+            owner_link:              owner_link,
+            owner_image:             owner_image,
         }
     }
 }
