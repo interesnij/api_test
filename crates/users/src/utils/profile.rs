@@ -3,6 +3,25 @@ use serde::Serialize;
 
 ////////
 #[derive(Serialize)]
+pub struct UserDetailJson {
+    pub id:            i32,
+    pub first_name:    String,
+    pub last_name:     String,
+    pub types:         i16,
+    pub gender:        String,
+    pub device:        String,
+    pub language:      String,
+    pub perm:          String,
+    pub link:          String, // community.get_link()
+    pub city:          Option<String>,
+    pub status:        Option<String>,
+    pub image:         Option<String>,
+    pub birthday:      String,
+    pub last_activity: String,
+}
+
+////////
+#[derive(Serialize)]
 pub struct LocationsJson {
     pub locations: Vec<LocationJson>,
     pub next_page: i32,
@@ -10,11 +29,11 @@ pub struct LocationsJson {
 #[derive(Serialize)]
 pub struct LocationJson {
     pub city_ru:    String,
-    pub city_en:    String,
+    //pub city_en:    String,
     pub region_ru:  String,
-    pub region_en:  String,
+    //pub region_en:  String,
     pub country_ru: String,
-    pub country_en: String,
+    //pub country_en: String,
 }
 
 ////////
@@ -46,6 +65,20 @@ pub struct IpsJson {
 pub struct IpJson {
     pub ip:    String,
 }
+
+////////
+#[derive(Serialize)]
+pub struct ListsUserCommunitiesJson {
+    pub lists:     Vec<ListUserCommunitiesJson>,
+    pub next_page: i32,
+}
+#[derive(Serialize)]
+pub struct ListUserCommunitiesJson {
+    pub id:    i32,
+    pub name:  String,
+    pub types: String,
+}
+
 ////////
 #[derive(Serialize)]
 pub struct AnketaJson {
@@ -65,13 +98,14 @@ pub struct LoveStatusJson {
     pub female_status: String,
 }
 
-////////
-#[derive(Serialize)]
-pub struct ListUserCommunitiesJson {
-    pub name: String,
-}
 
 //////// FeaturedUserCommunities, NewsUserCommunities, NotifyUserCommunities
+////////
+#[derive(Serialize)]
+pub struct UniversalUserCommunityKeysJson {
+    pub keys:      Vec<UniversalUserCommunityKeyJson>,
+    pub next_page: i32,
+}
 #[derive(Serialize)]
 pub struct UniversalUserCommunityKeyJson {
     pub id:           i32,

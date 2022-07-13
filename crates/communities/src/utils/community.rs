@@ -28,7 +28,7 @@ pub struct CommunityDetailJson {
     pub types:       i16,
     pub perm:        String,
     pub link:        String, // community.get_link()
-    pub b_avatar:    Option<String>,
+    pub image:       Option<String>,
     pub cover:       Option<String>,
     pub user_id:     i32,
 }

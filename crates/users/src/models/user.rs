@@ -1,6 +1,24 @@
 use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
-use crate::utils::establish_connection;
+use crate::utils::{
+    establish_connection,
+    UserDetailJson,
+    LocationsJson,
+    LocationJson,
+    ProfileJson,
+    IpsJson,
+    ListsUserCommunitiesJson,
+    UniversalUserCommunityKeysJson,
+    DesignSettingsJson,
+    UserPrivateJson,
+    UserProfileNotificationJson,
+    UserPopulateStickerJson,
+    UserPopulateSmileJson,
+    FriendsVisiblePermJson,
+    PhoneCodeJson,
+    UserWorkPermJson,
+    UsersListJson,
+};
 use diesel::prelude::*;
 use crate::schema;
 use crate::models::{
@@ -147,6 +165,25 @@ pub struct EditTypesUser {
 }
 
 impl User {
+    pub fn get_user_detail_json(&self) -> Json<UserDetailJson> {
+         let user_json = UserDetailJson {
+             id:            self.id,
+             first_name:    self.first_name,
+             last_name:     self.last_name,
+             types:         self.types,
+             gender:        self.gender,
+             device:        self.device,
+             language:      self.language,
+             perm:          self.perm,
+             link:          self.get_link(), // community.get_link()
+             city:          self.city,
+             status:        self.status,
+             image:         self.get_bb_avatar(),
+             birthday:      self.birthday.format("%d-%m-%Y").to_string(),
+             last_activity: self.last_activity.format("%d-%m-%Y в %H:%M").to_string(),
+         };
+         return Json(user_json);
+    }
     pub fn get_full_name(&self) -> String {
         self.first_name.clone() + &" ".to_string() + &self.last_name.clone()
     }
@@ -410,6 +447,31 @@ impl User {
         }
     }
 
+    pub fn get_last_location(&self) -> Json(LocationJson) {
+        use crate::schema::user_locations::dsl::user_locations;
+
+        let _connection = establish_connection();
+        let location = user_locations
+            .filter(schema::user_locations::user_id.eq(self.id))
+            .order(schema::user_locations::id.desc())
+            .limit(1)
+            .select(
+                schema::user_locations::city_ru,
+                schema::user_locations::region_ru,
+                schema::user_locations::country_ru,
+            )
+            .load::<Vec<String>>(&_connection)
+            .expect("E")
+            .into_iter()
+            .nth(0)
+            .unwrap();
+        let location_json = LocationJson {
+            city_ru:    location[0],
+            region_ru:  location[1],
+            country_ru: location[2],
+        };
+        return Json(location_json);
+    }
     pub fn get_last_location(&self) -> UserLocation {
         use crate::schema::user_locations::dsl::user_locations;
 
@@ -417,6 +479,7 @@ impl User {
         return user_locations
             .filter(schema::user_locations::user_id.eq(self.id))
             .order(schema::user_locations::id.desc())
+            .limit(1)
             .load::<UserLocation>(&_connection)
             .expect("E")
             .into_iter()
