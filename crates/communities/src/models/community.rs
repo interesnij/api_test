@@ -2723,7 +2723,7 @@ impl NewCommunityVisiblePerm {
     }
     pub fn add_can_see_member (
         user_id: i32,
-        can_see_info: String,
+        can_see_member: String,
         owner_name: String,
         owner_link: String,
         owner_image: Option<String>,
@@ -2757,7 +2757,7 @@ impl NewCommunityVisiblePerm {
     }
     pub fn add_can_send_message (
         user_id: i32,
-        can_see_info: String,
+        can_see_message: String,
         owner_name: String,
         owner_link: String,
         owner_image: Option<String>,
@@ -2791,7 +2791,7 @@ impl NewCommunityVisiblePerm {
     }
     pub fn add_can_see_doc (
         user_id: i32,
-        can_see_info: String,
+        can_see_doc: String,
         owner_name: String,
         owner_link: String,
         owner_image: Option<String>,
@@ -2825,7 +2825,7 @@ impl NewCommunityVisiblePerm {
     }
     pub fn add_can_see_music (
         user_id: i32,
-        can_see_info: String,
+        can_see_music: String,
         owner_name: String,
         owner_link: String,
         owner_image: Option<String>,
@@ -2859,7 +2859,7 @@ impl NewCommunityVisiblePerm {
     }
     pub fn add_can_see_survey (
         user_id: i32,
-        can_see_info: String,
+        can_see_survey: String,
         owner_name: String,
         owner_link: String,
         owner_image: Option<String>,
@@ -2893,7 +2893,7 @@ impl NewCommunityVisiblePerm {
     }
     pub fn add_can_see_post (
         user_id: i32,
-        can_see_info: String,
+        can_see_post: String,
         owner_name: String,
         owner_link: String,
         owner_image: Option<String>,
@@ -2927,7 +2927,7 @@ impl NewCommunityVisiblePerm {
     }
     pub fn add_can_see_photo (
         user_id: i32,
-        can_see_info: String,
+        can_see_photo: String,
         owner_name: String,
         owner_link: String,
         owner_image: Option<String>,
@@ -2961,7 +2961,7 @@ impl NewCommunityVisiblePerm {
     }
     pub fn add_can_see_good (
         user_id: i32,
-        can_see_info: String,
+        can_see_good: String,
         owner_name: String,
         owner_link: String,
         owner_image: Option<String>,
@@ -2995,7 +2995,7 @@ impl NewCommunityVisiblePerm {
     }
     pub fn add_can_see_video (
         user_id: i32,
-        can_see_info: String,
+        can_see_video: String,
         owner_name: String,
         owner_link: String,
         owner_image: Option<String>,
@@ -3029,7 +3029,7 @@ impl NewCommunityVisiblePerm {
     }
     pub fn add_can_see_planner (
         user_id: i32,
-        can_see_info: String,
+        can_see_planner: String,
         owner_name: String,
         owner_link: String,
         owner_image: Option<String>,
@@ -3063,7 +3063,7 @@ impl NewCommunityVisiblePerm {
     }
     pub fn add_can_see_forum (
         user_id: i32,
-        can_see_info: String,
+        can_see_forum: String,
         owner_name: String,
         owner_link: String,
         owner_image: Option<String>,
