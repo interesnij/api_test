@@ -17,7 +17,7 @@ fn app() -> Html {
         use_effect_with_deps(move |_| {
             let test = test.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                let fetched_test: Vec<TestData> = Request::get("/api/v1/test/")
+                let fetched_test: TestData = Request::get("/api/v1/test/")
                     .send()
                     .await
                     .unwrap()
