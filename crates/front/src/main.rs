@@ -5,8 +5,8 @@ use serde::Deserialize;
 
 #[derive(Clone, PartialEq, Deserialize)]
 struct TestData {
-    pub name:        String,
-    pub description: String,
+    name:        String,
+    description: String,
 }
 
 #[function_component(App)]
