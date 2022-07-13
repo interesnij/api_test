@@ -15,3 +15,9 @@ port = 8100
 # Например, `/api/v1/resource/x/y/z` -> `/resource/x/y/z`
 rewrite = "/tutorial/"
 backend = "https://yew.rs/tutorial/"
+
+#[[proxy]]
+# В этом примере прокси-сервера WebSocket есть серверная часть и поле ws. В этом примере будет прослушиваться
+# Подключения к WebSocket в `/api/ws` и прокси-сервер для `ws://localhost:9000/api/ws`.
+#backend = "ws://localhost:9000/api/ws"
+#ws = true
