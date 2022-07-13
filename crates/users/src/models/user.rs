@@ -168,16 +168,16 @@ impl User {
     pub fn get_user_detail_json(&self) -> Json<UserDetailJson> {
          let user_json = UserDetailJson {
              id:            self.id,
-             first_name:    self.first_name,
-             last_name:     self.last_name,
+             first_name:    self.first_name.clone(),
+             last_name:     self.last_name.clone(),
              types:         self.types,
-             gender:        self.gender,
-             device:        self.device,
-             language:      self.language,
+             gender:        self.gender.clone(),
+             device:        self.device.clone(),
+             language:      self.language.clone(),
              perm:          self.perm,
              link:          self.get_slug(), // community.get_link()
-             city:          self.city,
-             status:        self.status,
+             city:          self.city.clone(),
+             status:        self.status.clone(),
              image:         self.get_bb_avatar(),
              birthday:      self.birthday.format("%d-%m-%Y").to_string(),
              last_activity: self.last_activity.format("%d-%m-%Y в %H:%M").to_string(),
