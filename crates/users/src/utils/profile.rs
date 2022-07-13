@@ -28,12 +28,12 @@ pub struct LocationsJson {
 }
 #[derive(Serialize)]
 pub struct LocationJson {
-    pub city_ru:    String,
-    //pub city_en:    String,
-    pub region_ru:  String,
-    //pub region_en:  String,
-    pub country_ru: String,
-    //pub country_en: String,
+    pub city_ru:    Option<String>,
+    //pub city_en:    Option<String>,
+    pub region_ru:  Option<String>,
+    //pub region_en:  Option<String>,
+    pub country_ru: Option<String>,
+    //pub country_en: Option<String>,
 }
 
 ////////
