@@ -2,42 +2,30 @@ use yew::prelude::*;
 use reqwasm::http::Request;
 use serde::Deserialize;
 
+
 #[derive(Clone, PartialEq, Deserialize)]
-struct Video {
-    id: usize,
-    title: String,
-    speaker: String,
-    url: String,
-}
-
-#[derive(Properties, PartialEq)]
-struct VideosListProps {
-    videos: Vec<Video>,
-}
-
-#[function_component(VideosList)]
-fn videos_list(VideosListProps { videos }: &VideosListProps) -> Html {
-    videos.iter().map(|video| html! {
-        <p>{format!("{}: {}", video.speaker, video.title)}</p>
-    }).collect()
+struct TestData {
+    pub name:        String,
+    pub description: String,
 }
 
 #[function_component(App)]
 fn app() -> Html {
-    let videos = use_state(|| vec![]);
+
+    let test = use_state(|| vec![]);
     {
-        let videos = videos.clone();
+        let test = test.clone();
         use_effect_with_deps(move |_| {
-            let videos = videos.clone();
+            let test = test.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                let fetched_videos: Vec<Video> = Request::get("/tutorial/data.json")
+                let fetched_test: Vec<TestData> = Request::get("/api/v1/test/")
                     .send()
                     .await
                     .unwrap()
                     .json()
                     .await
                     .unwrap();
-                videos.set(fetched_videos);
+                test.set(fetched_test);
             });
             || ()
         }, ());
@@ -45,10 +33,10 @@ fn app() -> Html {
 
     html! {
         <>
-        <h1>{ "RustConf Explorer" }</h1>
+        <h1>{ "Первый тест" }</h1>
         <div>
-          <h3>{ "Videos to watch" }</h3>
-          <VideosList videos={(*videos).clone()} />
+          <h3>{ test.name }</h3>
+          <p>{ test.description } </p>
         </div>
     </>
     }
