@@ -535,7 +535,6 @@ impl User {
 
     pub fn get_color_background(&self) -> Json<DesignSettingsJson> {
         use crate::schema::design_settings::dsl::design_settings;
-        use crate::models::DesignSetting;
 
         let _connection = establish_connection();
         let _designs = design_settings
@@ -691,6 +690,7 @@ impl User {
     pub fn get_featured_friends_json(&self, page: i32) -> Json<UniversalUserCommunityKeysJson> {
         let _connection = establish_connection();
 
+        let mut next_page_number = 0;
         let keys: Vec<UniversalUserCommunityKeyJson>;
         let count = self.get_featured_friends_count();
 
@@ -717,7 +717,6 @@ impl User {
         use crate::models::FeaturedUserCommunitie;
 
         let _connection = establish_connection();
-        let mut next_page_number = 0;
         let featured_friends = featured_user_communities
             .filter(schema::featured_user_communities::owner.eq(self.id))
             .filter(schema::featured_user_communities::community_id.is_null())
@@ -3591,9 +3590,8 @@ impl User {
                 .filter(schema::user_blocks::target_id.eq(user.id)))
                 .execute(&_connection)
                 .expect("E");
-        return true;
     }
-    pub fn plus_friend_visited(&self, user_id: i32) -> bool {
+    pub fn plus_friend_visited(&self, user_id: i32) -> () {
         use crate::schema::friends::dsl::friends;
 
         let _connection = establish_connection();
