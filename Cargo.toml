@@ -1,7 +1,10 @@
 [workspace]
 members = [
+  "crates/front",
+  "crates/back",
   "crates/other",
   "crates/users",
   "crates/communities",
-  "crates/posts"
+  "crates/posts",
+  "crates/files",
 ]
