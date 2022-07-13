@@ -711,7 +711,7 @@ impl User {
                 next_page_number = 2;
             }
         }
-        return Json(UsersListJson {
+        return Json(UniversalUserCommunityKeysJson {
             description: "featured".to_string(),
             users: friends,
             next_page: next_page_number,
@@ -737,7 +737,7 @@ impl User {
                 id:           i.id,
                 list_id:      i.list_id,
                 mute:         i.mute,
-                sleep:        Some(i.sleep.format("%d-%m-%Y в %H:%M").to_string()),
+                sleep:        i.sleep.unwrap().format("%d-%m-%Y в %H:%M").to_string(),
                 owner_name:   i.owner_name.clone(),
                 owner_link:   i.owner_link.clone(),
                 owner_image:  i.owner_image.clone(),

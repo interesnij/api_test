@@ -111,7 +111,7 @@ pub struct UniversalUserCommunityKeyJson {
     pub id:           i32,
     pub list_id:      Option<i32>,
     pub mute:         bool,
-    pub sleep:        Option<String>,
+    pub sleep:        String,
     pub owner_name:   String,
     pub owner_link:   String,
     pub owner_image:  Option<String>,
