@@ -1,5 +1,6 @@
 use yew::prelude::*;
 use reqwasm::http::Request;
+use serde::Deserialize;
 
 #[derive(Clone, PartialEq, Deserialize)]
 struct Video {
