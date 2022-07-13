@@ -591,9 +591,6 @@ impl Community {
             can_see_log:      "c".to_string(),
             can_see_stat:     "c".to_string(),
             can_see_forum:    "a".to_string(),
-            owner_name:       owner_name,
-            owner_link:       owner_link,
-            owner_image:      owner_image
         };
         diesel::insert_into(schema::community_privates::table)
             .values(&_private)
