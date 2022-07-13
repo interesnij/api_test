@@ -2757,7 +2757,7 @@ impl NewCommunityVisiblePerm {
     }
     pub fn add_can_send_message (
         user_id: i32,
-        can_see_message: String,
+        can_send_message: String,
         owner_name: String,
         owner_link: String,
         owner_image: Option<String>,
