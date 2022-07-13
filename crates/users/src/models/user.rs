@@ -497,6 +497,7 @@ impl User {
         let all_populate_smiles = user_populate_smiles
             .filter(schema::user_populate_smiles::user_id.eq(self.id))
             .order(schema::user_populate_smiles::count.desc())
+            .limit(20)
             .load::<UserPopulateSmile>(&_connection)
             .expect("E");
         let mut stack = Vec::new();
@@ -504,6 +505,25 @@ impl User {
             stack.push(_item.smile_id);
         };
         return stack;
+    }
+    pub fn get_populate_smiles_ids(&self) -> Json<Vec<UserPopulateSmileJson>> {
+        use crate::schema::user_populate_smiles::dsl::user_populate_smiles;
+
+        let _connection = establish_connection();
+        let all_populate_smiles = user_populate_smiles
+            .filter(schema::user_populate_smiles::user_id.eq(self.id))
+            .order(schema::user_populate_smiles::count.desc())
+            .limit(20)
+            .select((schema::user_populate_smiles::smile_id, schema::user_populate_smiles::image))
+            .load::<(i32, String)>(&_connection)
+            .expect("E");
+        let smiles_json = Vec::new();
+        for smile in all_populate_smiles.iter() {
+        smiles_json.push(LocationJson {
+            smile_id: smile.0,
+            image:    smile.1,
+        });
+        return Json(smiles_json);
     }
 
     pub fn get_populate_stickers_ids(&self) -> Vec<i32> {
@@ -514,6 +534,7 @@ impl User {
         let all_populate_stickers = user_populate_stickers
             .filter(schema::user_populate_stickers::user_id.eq(self.id))
             .order(schema::user_populate_stickers::count.desc())
+            .limit(20)
             .load::<UserPopulateSticker>(&_connection)
             .expect("E");
         let mut stack = Vec::new();
