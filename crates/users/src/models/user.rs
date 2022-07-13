@@ -175,7 +175,7 @@ impl User {
              device:        self.device,
              language:      self.language,
              perm:          self.perm,
-             link:          self.get_link(), // community.get_link()
+             link:          self.get_slug(), // community.get_link()
              city:          self.city,
              status:        self.status,
              image:         self.get_bb_avatar(),
@@ -460,7 +460,7 @@ impl User {
                 schema::user_locations::region_ru,
                 schema::user_locations::country_ru,
             ))
-            .load::<Vec<String>>(&_connection)
+            .load::<String>(&_connection)
             .expect("E")
             .into_iter()
             .nth(0)

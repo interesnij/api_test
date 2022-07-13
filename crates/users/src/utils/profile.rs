@@ -15,7 +15,7 @@ pub struct UserDetailJson {
     pub link:          String, // community.get_link()
     pub city:          Option<String>,
     pub status:        Option<String>,
-    pub image:         Option<String>,
+    pub image:         String,
     pub birthday:      String,
     pub last_activity: String,
 }
