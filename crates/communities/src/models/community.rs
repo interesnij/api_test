@@ -2467,9 +2467,9 @@ pub struct CommunitiesMembership {
     pub is_advertiser:    bool,
     pub created:          chrono::NaiveDateTime,
     pub visited:          i32,
-    pub owner_name:       i32,
-    pub owner_link:       i32,
-    pub owner_image:      i32,
+    pub owner_name:       String,
+    pub owner_link:       String,
+    pub owner_image:      Option<String>,
 }
 
 #[derive(Deserialize, Insertable, AsChangeset)]
