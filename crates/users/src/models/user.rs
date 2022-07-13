@@ -506,7 +506,7 @@ impl User {
         };
         return stack;
     }
-    pub fn get_populate_smiles_ids(&self) -> Json<Vec<UserPopulateSmileJson>> {
+    pub fn get_populate_smiles_json(&self) -> Json<Vec<UserPopulateSmileJson>> {
         use crate::schema::user_populate_smiles::dsl::user_populate_smiles;
 
         let _connection = establish_connection();
