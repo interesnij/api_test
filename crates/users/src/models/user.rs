@@ -695,24 +695,24 @@ impl User {
 
         let _connection = establish_connection();
 
-        let friends: Vec<User>;
+        let keys: Vec<UniversalUserCommunityKeyJson>;
         let count = self.get_featured_friends_count();
 
         if page > 1 {
             let step = (page - 1) * 20;
-            friends = self.get_featured_friends(20, step.into());
+            keys = self.get_featured_friends(20, step.into());
             if count > (page * 20).try_into().unwrap() {
                 next_page_number = page + 1;
             }
         }
         else {
-            friends = self.get_featured_friends(20, 0);
+            keys = self.get_featured_friends(20, 0);
             if count > 20.try_into().unwrap() {
                 next_page_number = 2;
             }
         }
         return Json(UniversalUserCommunityKeysJson {
-            keys: friends,
+            keys: keys,
             next_page: next_page_number,
         });
     }
