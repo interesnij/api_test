@@ -722,6 +722,7 @@ impl User {
         use crate::models::FeaturedUserCommunitie;
 
         let _connection = establish_connection();
+        let mut next_page_number = 0;
         let featured_friends = featured_user_communities
             .filter(schema::featured_user_communities::owner.eq(self.id))
             .filter(schema::featured_user_communities::community_id.is_null())
