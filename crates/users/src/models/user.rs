@@ -447,7 +447,7 @@ impl User {
         }
     }
 
-    pub fn get_last_location(&self) -> Json(LocationJson) {
+    pub fn get_last_location_json(&self) -> Json<LocationJson> {
         use crate::schema::user_locations::dsl::user_locations;
 
         let _connection = establish_connection();
