@@ -455,11 +455,11 @@ impl User {
             .filter(schema::user_locations::user_id.eq(self.id))
             .order(schema::user_locations::id.desc())
             .limit(1)
-            .select(
+            .select((
                 schema::user_locations::city_ru,
                 schema::user_locations::region_ru,
                 schema::user_locations::country_ru,
-            )
+            ))
             .load::<Vec<String>>(&_connection)
             .expect("E")
             .into_iter()
