@@ -110,8 +110,6 @@ pub struct UniversalUserCommunityKeysJson {
 pub struct UniversalUserCommunityKeyJson {
     pub id:           i32,
     pub list_id:      Option<i32>,
-    //pub user_id:      Option<i32>,
-    //pub community_id: Option<i32>,
     pub mute:         bool,
     pub sleep:        Option<String>,
     pub owner_name:   String,

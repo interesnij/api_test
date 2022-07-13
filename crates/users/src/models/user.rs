@@ -711,26 +711,13 @@ impl User {
                 next_page_number = 2;
             }
         }
-
-        let mut users_json = Vec::new();
-        for f in friends.iter() {
-            users_json.push (
-                CardUserJson {
-                    id:         f.id,
-                    first_name: f.first_name,
-                    last_name:  f.last_name,
-                    link:       f.link,
-                    image:      f.image,
-                }
-            );
-        }
         return Json(UsersListJson {
             description: "featured".to_string(),
-            users: users_json,
+            users: friends,
             next_page: next_page_number,
         });
     }
-    pub fn get_featured_friends(&self, limit: i64, offset: i64) -> Vec<User> {
+    pub fn get_featured_friends(&self, limit: i64, offset: i64) -> Vec<UniversalUserCommunityKeyJson> {
         use crate::schema::featured_user_communities::dsl::featured_user_communities;
         use crate::models::FeaturedUserCommunitie;
 
@@ -741,18 +728,22 @@ impl User {
             .order(schema::featured_user_communities::id.desc())
             .limit(limit)
             .offset(offset)
-            .select(schema::featured_user_communities::user_id.nullable())
-            .load::<Option<i32>>(&_connection)
+            .load::<FeaturedUserCommunitie>(&_connection)
             .expect("E.");
 
         let mut stack = Vec::new();
         for i in featured_friends {
-            stack.push(i.unwrap())
+            stack.push(UniversalUserCommunityKeyJson {
+                id:           i.id,
+                list_id:      i.list_id,
+                mute:         i.mute,
+                sleep:        i.sleep.format("%d-%m-%Y в %H:%M").to_string(),
+                owner_name:   i.owner_name.clone(),
+                owner_link:   i.owner_link.clone(),
+                owner_image:  i.owner_image.clone(),
+            })
         }
-        return users
-            .filter(schema::users::id.eq_any(stack))
-            .load::<User>(&_connection)
-            .expect("E.");
+        return Json(stack);
     }
     pub fn get_6_featured_friends(&self) -> Vec<User> {
         use crate::schema::users::dsl::users;
