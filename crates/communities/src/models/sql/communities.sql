@@ -43,7 +43,10 @@ CREATE TABLE communities_memberships (
     is_editor         BOOLEAN NOT NULL DEFAULT false, -- Редактор?
     is_advertiser     BOOLEAN NOT NULL DEFAULT false, -- Рекламщик?
     created           TIMESTAMP NOT NULL,             -- Создано
-    visited           INT NOT NULL DEFAULT 0         -- Визиты в сообщество
+    visited           INT NOT NULL DEFAULT 0,         -- Визиты в сообщество
+    owner_name        VARCHAR(200) NOT NULL,
+    owner_link        VARCHAR(200) NOT NULL,
+    owner_image       VARCHAR(500)
 );
 CREATE UNIQUE INDEX communities_memberships_unq ON communities_memberships (user_id, community_id);
 
@@ -101,7 +104,10 @@ CREATE UNIQUE INDEX community_notifications_unq ON community_notifications (id, 
 CREATE TABLE community_banner_users (
     id           SERIAL PRIMARY KEY,
     community_id INT NOT NULL,
-    user_id      INT NOT NULL
+    user_id      INT NOT NULL,
+    owner_name   VARCHAR(200) NOT NULL,
+    owner_link   VARCHAR(200) NOT NULL,
+    owner_image  VARCHAR(500)
 );
 CREATE UNIQUE INDEX community_banner_users_unq ON community_banner_users (community_id, user_id);
 
@@ -111,7 +117,10 @@ CREATE TABLE community_follows (
     user_id      INT NOT NULL,
     community_id INT NOT NULL,
     view         BOOLEAN NOT NULL DEFAULT false,
-    visited      INT NOT NULL
+    visited      INT NOT NULL,
+    owner_name   VARCHAR(200) NOT NULL,
+    owner_link   VARCHAR(200) NOT NULL,
+    owner_image  VARCHAR(500)
 );
 CREATE UNIQUE INDEX follows_community_user_unq ON community_follows (user_id, community_id);
 
@@ -120,10 +129,12 @@ CREATE TABLE community_invites (
     id             SERIAL PRIMARY KEY,
     user_id        INT NOT NULL,
     community_id   INT NOT NULL,
-    invite_creator INT NOT NULL
+    invite_creator INT NOT NULL,
+    owner_name     VARCHAR(200) NOT NULL,
+    owner_link     VARCHAR(200) NOT NULL,
+    owner_image    VARCHAR(500)
 );
-CREATE UNIQUE INDEX community_invites_unq ON follows (user_id, community_id);
-
+CREATE UNIQUE INDEX community_invites_unq ON community_invites (user_id, community_id);
 
 CREATE TABLE community_visible_perms (
     id                      SERIAL PRIMARY KEY,

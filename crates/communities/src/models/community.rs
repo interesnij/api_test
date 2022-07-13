@@ -487,11 +487,20 @@ impl Community {
         return self.types < 10;
     }
 
-    pub fn create_banned_user(&self, user_id: i32) -> () {
+    pub fn create_banned_user (
+        &self,
+        user_id:     i32,
+        owner_name:  String,
+        owner_link:  String,
+        owner_image: Option<String>,
+    ) -> () {
         let _connection = establish_connection();
         let new_banned_user = NewCommunityBannerUser {
-            user_id: user_id,
+            user_id:      user_id,
             community_id: self.id,
+            owner_name:   owner_name,
+            owner_link:   owner_link,
+            owner_image:  owner_image,
         };
         diesel::insert_into(schema::community_banner_users::table)
             .values(&new_banned_user)
@@ -510,8 +519,15 @@ impl Community {
             .expect("E");
     }
 
-    pub fn create_community(name: String, category_id: i32, user_id: i32, types: i16) -> String {
-        let user_id = user_id;
+    pub fn create_community(
+        name: String,
+        category_id: i32,
+        user_id: i32,
+        types: i16,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>
+    ) -> String {
 
         let _connection = establish_connection();
         let count = Community::count_communities() + 1;
@@ -590,7 +606,17 @@ impl Community {
             .get_result::<CommunityNotification>(&_connection)
             .expect("Error saving community_notification.");
 
-        CommunitiesMembership::create_membership(user_id, &new_community, true, false, false, false);
+        CommunitiesMembership::create_membership (
+            user_id,
+            &new_community,
+            true,
+            false,
+            false,
+            false,
+            owner_name,
+            owner_link,
+            owner_image
+        );
         return new_community.link;
     }
 
@@ -2441,6 +2467,9 @@ pub struct CommunitiesMembership {
     pub is_advertiser:    bool,
     pub created:          chrono::NaiveDateTime,
     pub visited:          i32,
+    pub owner_name:       i32,
+    pub owner_link:       i32,
+    pub owner_image:      i32,
 }
 
 #[derive(Deserialize, Insertable, AsChangeset)]
@@ -2454,9 +2483,22 @@ pub struct NewCommunitiesMembership {
     pub is_advertiser:    bool,
     pub created:          chrono::NaiveDateTime,
     pub visited:          i32,
+    pub owner_name:       String,
+    pub owner_link:       String,
+    pub owner_image:      Option<String>,
 }
 impl CommunitiesMembership {
-    pub fn create_membership(user_id: i32, community: &Community, is_administrator: bool, is_editor: bool, is_advertiser: bool, is_moderator: bool) -> CommunitiesMembership {
+    pub fn create_membership (
+        user_id: i32,
+        community: &Community,
+        is_administrator: bool,
+        is_editor: bool,
+        is_advertiser: bool,
+        is_moderator: bool,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>
+    ) -> CommunitiesMembership {
         let _connection = establish_connection();
 
         let new_member_form = NewCommunitiesMembership {
@@ -2468,6 +2510,9 @@ impl CommunitiesMembership {
             is_advertiser:    is_advertiser,
             created:          chrono::Local::now().naive_utc(),
             visited:          0,
+            owner_name:       owner_name,
+            owner_link:       owner_link,
+            owner_image:      owner_image,
         };
         let new_member = diesel::insert_into(schema::communities_memberships::table)
             .values(&new_member_form)
@@ -2998,12 +3043,18 @@ pub struct CommunityBannerUser {
     pub id:           i32,
     pub community_id: i32,
     pub user_id:      i32,
+    pub owner_name:   String,
+    pub owner_link:   String,
+    pub owner_image:  Option<String>,
 }
 #[derive(Deserialize, Insertable)]
 #[table_name="community_banner_users"]
 pub struct NewCommunityBannerUser {
     pub community_id: i32,
     pub user_id:      i32,
+    pub owner_name:   String,
+    pub owner_link:   String,
+    pub owner_image:  Option<String>,
 }
 
 /////// CommunityFollow //////
@@ -3014,6 +3065,9 @@ pub struct CommunityFollow {
     pub community_id: i32,
     pub view:         bool,
     pub visited:      i32,
+    pub owner_name:   String,
+    pub owner_link:   String,
+    pub owner_image:  Option<String>,
 }
 #[derive(Deserialize, Insertable)]
 #[table_name="community_follows"]
@@ -3022,4 +3076,7 @@ pub struct NewCommunityFollow {
     pub community_id: i32,
     pub view:         bool,
     pub visited:      i32,
+    pub owner_name:   String,
+    pub owner_link:   String,
+    pub owner_image:  Option<String>,
 }

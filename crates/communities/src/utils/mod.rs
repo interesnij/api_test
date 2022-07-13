@@ -1,6 +1,12 @@
+mod community;
+use serde::Serialize;
 use diesel::prelude::*;
 use crate::schema;
+use crate::models::Community;
 
+pub use self::{
+    community::*,
+};
 
 pub fn establish_connection() -> PgConnection {
     use dotenv::dotenv;
@@ -39,4 +45,27 @@ pub fn get_count_for_ru_alt(count: i32, word1: String, word2: String, word3: Str
     else {
         return word3;
     }
+}
+
+pub fn get_community(id: i32) -> Community {
+    use crate::schema::communitys::dsl::communitys;
+    let _connection = establish_connection();
+    return communitys
+        .filter(schema::communitys::id.eq(id))
+        .load::<Community>(&_connection)
+        .expect("E.")
+        .into_iter()
+        .nth(0)
+        .unwrap();
+}
+pub fn get_community_with_link(link: String) -> Community {
+    use crate::schema::communitys::dsl::communitys;
+    let _connection = establish_connection();
+    return communitys
+        .filter(schema::communitys::link.eq("/".to_owned() + &link + &"/".to_string()))
+        .load::<Community>(&_connection)
+        .expect("E.")
+        .into_iter()
+        .nth(0)
+        .unwrap();
 }

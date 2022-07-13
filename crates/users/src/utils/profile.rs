@@ -73,7 +73,7 @@ pub struct ListUserCommunitiesJson {
 
 //////// FeaturedUserCommunities, NewsUserCommunities, NotifyUserCommunities
 #[derive(Serialize)]
-pub struct UniversalUserCommunityKey {
+pub struct UniversalUserCommunityKeyJson {
     pub id:           i32,
     pub list_id:      Option<i32>,
     //pub user_id:      Option<i32>,
@@ -87,13 +87,13 @@ pub struct UniversalUserCommunityKey {
 
 ////////
 #[derive(Serialize)]
-pub struct DesignSettings {
+pub struct DesignSettingsJson {
     pub background: String,
 }
 
 ////////
 #[derive(Serialize)]
-pub struct Private {
+pub struct UserPrivateJson {
     pub can_see_all:       String,
     pub can_see_community: String,
     pub can_see_info:      String,
@@ -112,9 +112,77 @@ pub struct Private {
 
 ////////
 #[derive(Serialize)]
-pub struct UserProfileNotification {
+pub struct UserProfileNotificationJson {
     pub connection_request:   bool,
     pub connection_confirmed: bool,
     pub community_invite:     bool,
     pub message:              bool,
+}
+
+////////
+#[derive(Serialize)]
+pub struct UserPopulateStickerJson {
+    pub user_id:    i32,
+    pub sticker_id: i32,
+    pub image:      String,
+}
+
+////////
+#[derive(Serialize)]
+pub struct UserPopulateSmileJson {
+    pub user_id:  i32,
+    pub smile_id: i32,
+    pub image:    String,
+}
+
+////////
+#[derive(Serialize)]
+pub struct FriendsVisiblePermJson {
+    pub can_see_community:       String,
+    pub can_see_info:            String,
+    pub can_see_friend:          String,
+    pub can_send_message:        String,
+    pub can_add_in_chat:         String,
+    pub can_see_doc:             String,
+    pub can_see_music:           String,
+    pub can_see_survey:          String,
+    pub can_see_post:            String,
+    pub can_see_post_comment:    String,
+    pub can_see_photo:           String,
+    pub can_see_photo_comment:   String,
+    pub can_see_good:            String,
+    pub can_see_good_comment:    String,
+    pub can_see_video:           String,
+    pub can_see_video_comment:   String,
+    pub can_see_planner:         String,
+    pub can_see_planner_comment: String,
+    pub can_see_all:             String,
+}
+
+////////
+#[derive(Serialize)]
+pub struct PhoneCodeJson {
+    pub phone: String,
+    pub code:  i32,
+}
+
+////////
+#[derive(Serialize)]
+pub struct UserWorkPermJson {
+    pub can_copy_post:    String,
+    pub can_copy_photo:   String,
+    pub can_copy_good:    String,
+    pub can_copy_video:   String,
+    pub can_copy_planner: String,
+    pub can_copy_doc:     String,
+    pub can_copy_music:   String,
+    pub can_copy_survey:  String,
+    pub can_work_post:    String,
+    pub can_work_photo:   String,
+    pub can_work_good:    String,
+    pub can_work_video:   String,
+    pub can_work_planner: String,
+    pub can_work_doc:     String,
+    pub can_work_music:   String,
+    pub can_work_survey:  String,
 }
