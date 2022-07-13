@@ -521,7 +521,7 @@ impl User {
         for smile in all_populate_smiles.iter() {
             smiles_json.push(UserPopulateSmileJson {
                 smile_id: smile.0,
-                image:    smile.1,
+                image:    smile.1.clone(),
             });
         }
         return Json(smiles_json);
