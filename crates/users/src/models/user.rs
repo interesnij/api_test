@@ -689,7 +689,7 @@ impl User {
         }
         return stack;
     }
-    pub fn get_featured_friends_json(&self, page: i32) -> Json<UsersListJson> {
+    pub fn get_featured_friends_json(&self, page: i32) -> Json<UniversalUserCommunityKeysJson> {
         use crate::schema::featured_user_communities::dsl::featured_user_communities;
         use crate::models::FeaturedUserCommunitie;
 
@@ -700,13 +700,13 @@ impl User {
 
         if page > 1 {
             let step = (page - 1) * 20;
-            friends = self.get_featured_friends(20, step.into());
+            friends = self.get_featured_friends_json(20, step.into());
             if count > (page * 20).try_into().unwrap() {
                 next_page_number = page + 1;
             }
         }
         else {
-            friends = self.get_featured_friends(20, 0);
+            friends = self.get_featured_friends_json(20, 0);
             if count > 20.try_into().unwrap() {
                 next_page_number = 2;
             }
@@ -717,7 +717,7 @@ impl User {
             next_page: next_page_number,
         });
     }
-    pub fn get_featured_friends(&self, limit: i64, offset: i64) -> Vec<UniversalUserCommunityKeyJson> {
+    pub fn get_featured_friends_json(&self, limit: i64, offset: i64) -> Vec<UniversalUserCommunityKeyJson> {
         use crate::schema::featured_user_communities::dsl::featured_user_communities;
         use crate::models::FeaturedUserCommunitie;
 
@@ -737,7 +737,7 @@ impl User {
                 id:           i.id,
                 list_id:      i.list_id,
                 mute:         i.mute,
-                sleep:        i.sleep.format("%d-%m-%Y в %H:%M").to_string(),
+                sleep:        Some(i.sleep.format("%d-%m-%Y в %H:%M").to_string()),
                 owner_name:   i.owner_name.clone(),
                 owner_link:   i.owner_link.clone(),
                 owner_image:  i.owner_image.clone(),
