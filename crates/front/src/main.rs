@@ -30,7 +30,7 @@ fn app() -> Html {
         use_effect_with_deps(move |_| {
             let videos = videos.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                let fetched_videos: Vec<Video> = Request::get("https://yew.rs/tutorial/data.json")
+                let fetched_videos: Vec<Video> = Request::get("/tutorial/data.json")
                     .send()
                     .await
                     .unwrap()

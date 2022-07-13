@@ -8,3 +8,10 @@ release = false
 address = "194.58.90.123"
 # The port to serve on.
 port = 8100
+
+[[proxy]]
+# В этом примере прокси-сервера есть серверная часть и поле перезаписи. Запросы, полученные на `перезапись`, будут
+# # проксируется на серверную часть после перезаписи префикса `rewrite` на префикс URL-адреса `backend'.
+# Например, `/api/v1/resource/x/y/z` -> `/resource/x/y/z`
+rewrite = "/tutorial/"
+backend = "https://yew.rs/tutorial/"
