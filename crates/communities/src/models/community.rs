@@ -2254,7 +2254,7 @@ impl Community {
         let mut users_ids = Vec::new();
         let _connection = establish_connection();
         for item in users.iter() {
-            users_ids.push(pk);
+            users_ids.push(item.user_id); 
         }
 
         let _members = communities_memberships
