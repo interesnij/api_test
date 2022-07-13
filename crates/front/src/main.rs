@@ -11,7 +11,6 @@ struct TestData {
 
 #[function_component(App)]
 fn app() -> Html {
-
     let test = use_state(|| vec![]);
     {
         let test = test.clone();
@@ -35,8 +34,8 @@ fn app() -> Html {
         <>
         <h1>{ "Первый тест" }</h1>
         <div>
-          <h3>{ test.name }</h3>
-          <p>{ test.description } </p>
+          <h3>{format!("{}", test.name)}</h3>
+          <p>{format!("{}", test.description)}</p>
         </div>
     </>
     }
