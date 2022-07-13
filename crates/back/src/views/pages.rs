@@ -23,7 +23,7 @@ pub async fn index_page() -> impl Responder {
 }
 pub async fn test_page(req: HttpRequest) -> Json<TestData> {
     return Json(TestData {
-        name:        "Test name",
-        description: "Test description",
+        name:        "Test name".to_string(),
+        description: "Test description".to_string(),
     });
 }
