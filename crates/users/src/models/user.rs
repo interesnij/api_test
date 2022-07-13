@@ -674,25 +674,83 @@ impl User {
         use crate::models::FeaturedUserCommunitie;
 
         let _connection = establish_connection();
-        let mut stack = Vec::new();
-        let featured_friends = &featured_user_communities
+        let featured_friends = featured_user_communities
             .filter(schema::featured_user_communities::owner.eq(self.id))
             .filter(schema::featured_user_communities::community_id.is_null())
             .order(schema::featured_user_communities::id.desc())
             .limit(6)
-            .load::<FeaturedUserCommunitie>(&_connection)
+            .select(schema::featured_user_communities::user_id.nullable())
+            .load::<Option<i32>>(&_connection)
             .expect("E.");
-        for _item in featured_friends.iter() {
-            stack.push(_item.user_id.unwrap());
-        };
+
+        let mut stack = Vec::new();
+        for i in featured_friends {
+            stack.push(i.unwrap())
+        }
         return stack;
     }
-    pub fn get_featured_friends(&self) -> Vec<User> {
-        use crate::schema::users::dsl::users;
+    pub fn get_featured_friends_json(&self, page: i32) -> Json<UsersListJson> {
+        use crate::schema::featured_user_communities::dsl::featured_user_communities;
+        use crate::models::FeaturedUserCommunitie;
 
         let _connection = establish_connection();
+
+        let friends: Vec<User>;
+        let count = self.get_featured_friends_count();
+
+        if page > 1 {
+            let step = (page - 1) * 20;
+            friends = self.get_featured_friends(20, step.into());
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+        }
+        else {
+            friends = self.get_featured_friends(20, 0);
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+        }
+
+        let mut users_json = Vec::new();
+        for f in friends.iter() {
+            users_json.push (
+                CardUserJson {
+                    id:         f.id,
+                    first_name: f.first_name,
+                    last_name:  f.last_name,
+                    link:       f.link,
+                    image:      f.image,
+                }
+            );
+        }
+        return Json(UsersListJson {
+            description: "featured".to_string(),
+            users: users_json,
+            next_page: next_page_number,
+        });
+    }
+    pub fn get_featured_friends(&self, limit: i64, offset: i64) -> Vec<User> {
+        use crate::schema::featured_user_communities::dsl::featured_user_communities;
+        use crate::models::FeaturedUserCommunitie;
+
+        let _connection = establish_connection();
+        let featured_friends = featured_user_communities
+            .filter(schema::featured_user_communities::owner.eq(self.id))
+            .filter(schema::featured_user_communities::community_id.is_null())
+            .order(schema::featured_user_communities::id.desc())
+            .limit(limit)
+            .offset(offset)
+            .select(schema::featured_user_communities::user_id.nullable())
+            .load::<Option<i32>>(&_connection)
+            .expect("E.");
+
+        let mut stack = Vec::new();
+        for i in featured_friends {
+            stack.push(i.unwrap())
+        }
         return users
-            .filter(schema::users::id.eq_any(self.get_featured_friends_ids()))
+            .filter(schema::users::id.eq_any(stack))
             .load::<User>(&_connection)
             .expect("E.");
     }
