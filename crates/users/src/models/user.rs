@@ -519,10 +519,11 @@ impl User {
             .expect("E");
         let smiles_json = Vec::new();
         for smile in all_populate_smiles.iter() {
-        smiles_json.push(LocationJson {
-            smile_id: smile.0,
-            image:    smile.1,
-        });
+            smiles_json.push(LocationJson {
+                smile_id: smile.0,
+                image:    smile.1,
+            });
+        }
         return Json(smiles_json);
     }
 
