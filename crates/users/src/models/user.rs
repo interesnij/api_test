@@ -517,7 +517,7 @@ impl User {
             .select((schema::user_populate_smiles::smile_id, schema::user_populate_smiles::image))
             .load::<(i32, String)>(&_connection)
             .expect("E");
-        let smiles_json = Vec::new();
+        let mut smiles_json = Vec::new();
         for smile in all_populate_smiles.iter() {
             smiles_json.push(UserPopulateSmileJson {
                 smile_id: smile.0,
