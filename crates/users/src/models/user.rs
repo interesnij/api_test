@@ -717,7 +717,7 @@ impl User {
             next_page: next_page_number,
         });
     }
-    pub fn get_featured_friends(&self, limit: i64, offset: i64) -> Json<Vec<UniversalUserCommunityKeyJson>> {
+    pub fn get_featured_friends(&self, limit: i64, offset: i64) -> Vec<UniversalUserCommunityKeyJson> {
         use crate::schema::featured_user_communities::dsl::featured_user_communities;
         use crate::models::FeaturedUserCommunitie;
 
@@ -743,7 +743,7 @@ impl User {
                 owner_image:  i.owner_image.clone(),
             })
         }
-        return Json(stack);
+        return stack;
     }
     pub fn get_6_featured_friends(&self) -> Vec<User> {
         use crate::schema::users::dsl::users;
