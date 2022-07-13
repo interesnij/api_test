@@ -156,7 +156,6 @@ pub struct UserProfileNotificationJson {
 ////////
 #[derive(Serialize)]
 pub struct UserPopulateStickerJson {
-    pub user_id:    i32,
     pub sticker_id: i32,
     pub image:      String,
 }
@@ -164,7 +163,6 @@ pub struct UserPopulateStickerJson {
 ////////
 #[derive(Serialize)]
 pub struct UserPopulateSmileJson {
-    pub user_id:  i32,
     pub smile_id: i32,
     pub image:    String,
 }
