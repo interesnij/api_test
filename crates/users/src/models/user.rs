@@ -653,7 +653,6 @@ impl User {
 
     pub fn get_featured_friends_ids(&self) -> Vec<i32> {
         use crate::schema::featured_user_communities::dsl::featured_user_communities;
-        use crate::models::FeaturedUserCommunitie;
 
         let _connection = establish_connection();
         let featured_friends = featured_user_communities
@@ -672,7 +671,6 @@ impl User {
     }
     pub fn get_6_featured_friends_ids(&self) -> Vec<i32> {
         use crate::schema::featured_user_communities::dsl::featured_user_communities;
-        use crate::models::FeaturedUserCommunitie;
 
         let _connection = establish_connection();
         let featured_friends = featured_user_communities
@@ -691,9 +689,6 @@ impl User {
         return stack;
     }
     pub fn get_featured_friends_json(&self, page: i32) -> Json<UniversalUserCommunityKeysJson> {
-        use crate::schema::featured_user_communities::dsl::featured_user_communities;
-        use crate::models::FeaturedUserCommunitie;
-
         let _connection = establish_connection();
 
         let keys: Vec<UniversalUserCommunityKeyJson>;
@@ -3222,8 +3217,8 @@ impl User {
         }
         return false;
     }
-    pub fn delete_new_subscriber_from_list(&self, new_id: i32) -> bool {
-        use crate::models::{NewsUserCommunitie, NewNewsUserCommunitie};
+    pub fn delete_new_subscriber_from_list(&self, new_id: i32) -> () {
+        use crate::models::NewsUserCommunitie;
         use crate::schema::news_user_communities::dsl::news_user_communities;
 
         let _connection = establish_connection();
@@ -3235,12 +3230,10 @@ impl User {
                 .set(schema::news_user_communities::list_id.eq(null_value))
                 .get_result::<NewsUserCommunitie>(&_connection)
                 .expect("Error.");
-                return true;
             }
-        return false;
     }
 
-    pub fn add_notification_subscriber(&self, user: &User) -> bool {
+    pub fn add_notification_subscriber(&self, user: &User) -> () {
         use crate::models::{NotifyUserCommunitie, NewNotifyUserCommunitie};
         use crate::schema::notify_user_communities::dsl::notify_user_communities;
 
@@ -3266,9 +3259,8 @@ impl User {
                     .get_result::<NotifyUserCommunitie>(&_connection)
                     .expect("Error.");
         }
-        return true;
     }
-    pub fn add_notification_subscriber_in_list(&self, notify_id: i32, list_id: i32) -> bool {
+    pub fn add_notification_subscriber_in_list(&self, notify_id: i32, list_id: i32) -> () {
         use crate::models::{NotifyUserCommunitie, ListUserCommunitiesKey};
         use crate::schema::notify_user_communities::dsl::notify_user_communities;
         use crate::schema::list_user_communities_keys::dsl::list_user_communities_keys;
@@ -3282,11 +3274,9 @@ impl User {
                 .set(schema::notify_user_communities::list_id.eq(_list[0].id))
                 .get_result::<NotifyUserCommunitie>(&_connection)
                 .expect("Error.");
-            return true;
         }
-        return false;
     }
-    pub fn delete_notification_subscriber(&self, user_id: i32) -> bool {
+    pub fn delete_notification_subscriber(&self, user_id: i32) -> () {
         use crate::models::NotifyUserCommunitie;
         use crate::schema::notify_user_communities::dsl::notify_user_communities;
 
@@ -3304,12 +3294,10 @@ impl User {
                 )
                 .execute(&_connection)
                 .expect("E");
-            return true;
         }
-        return false;
     }
-    pub fn delete_notification_subscriber_from_list(&self, notify_id: i32) -> bool {
-        use crate::models::{NotifyUserCommunitie, NewNotifyUserCommunitie};
+    pub fn delete_notification_subscriber_from_list(&self, notify_id: i32) -> () {
+        use crate::models::NotifyUserCommunitie;
         use crate::schema::notify_user_communities::dsl::notify_user_communities;
 
         let _connection = establish_connection();
@@ -3320,9 +3308,7 @@ impl User {
                 .set(schema::notify_user_communities::list_id.eq(null_value))
                 .get_result::<NotifyUserCommunitie>(&_connection)
                 .expect("Error.");
-                return true;
             }
-        return false;
     }
     pub fn get_or_create_featured_objects(&self, user: User) -> () {
         use crate::models::{NewFeaturedUserCommunitie, FeaturedUserCommunitie};
@@ -3376,9 +3362,9 @@ impl User {
             //}
     }
 
-    pub fn follow_user(&self, user: User) -> bool {
+    pub fn follow_user(&self, user: User) -> () {
         if self.id == user.id || self.is_self_user_in_block(user.id) || self.is_followers_user_with_id(user.id) || self.is_following_user_with_id(user.id) {
-            return false;
+            return;
         }
         use crate::models::NewFollow;
 
@@ -3398,11 +3384,10 @@ impl User {
             self.add_new_subscriber(&user);
             self.get_or_create_featured_objects(user);
         }
-        return true;
     }
-    pub fn follow_view_user(&self, user: User) -> bool {
+    pub fn follow_view_user(&self, user: User) -> () {
         if self.id == user.id || !self.is_followers_user_with_id(user.id) {
-            return false;
+            return;
         }
         use crate::schema::follows::dsl::follows;
 
@@ -3417,12 +3402,11 @@ impl User {
             .set(schema::follows::view.eq(true))
             .get_result::<Follow>(&_connection)
             .expect("Error.");
-        return true;
     }
 
-    pub fn unfollow_user(&self, user: User) -> bool {
+    pub fn unfollow_user(&self, user: User) -> () {
         if self.id == user.id || !self.is_following_user_with_id(user.id) {
-            return false;
+            return;
         }
         use crate::schema::follows::dsl::follows;
 
@@ -3442,14 +3426,12 @@ impl User {
                 .expect("E");
             self.delete_new_subscriber(user.id);
             user.minus_follows(1);
-            return true;
         }
-        return false;
     }
 
-    pub fn frend_user(&self, user: User) -> bool {
+    pub fn frend_user(&self, user: User) -> () {
         if self.id == user.id || !self.is_followers_user_with_id(user.id) {
-            return false;
+            return;
         }
         use crate::models::NewFriend;
         use crate::schema::follows::dsl::follows;
@@ -3496,11 +3478,10 @@ impl User {
             self.add_new_subscriber(&user);
             self.get_or_create_featured_objects(user);
         }
-        return true;
     }
-    pub fn unfrend_user(&self, user: User) -> bool {
+    pub fn unfrend_user(&self, user: User) -> () {
         if self.id == user.id || !self.is_connected_with_user_with_id(user.id) {
-            return false;
+            return;
         }
         use crate::models::NewFollow;
         use crate::schema::friends::dsl::friends;
@@ -3537,12 +3518,11 @@ impl User {
         if user.is_user_can_see_all(self.id) == false {
             self.delete_new_subscriber(user.id);
         }
-        return true;
     }
 
-    pub fn block_user(&self, user: User) -> bool {
+    pub fn block_user(&self, user: User) -> () {
         if self.id == user.id || self.is_user_in_block(user.id) {
-            return false;
+            return;
         }
         //use crate::schema::user_blocks::dsl::user_blocks;
         use crate::models::NewUserBlock;
@@ -3597,11 +3577,10 @@ impl User {
             .expect("Error.");
         self.delete_new_subscriber(user.id);
         self.delete_notification_subscriber(user.id);
-        return true;
     }
-    pub fn unblock_user(&self, user: User) -> bool {
+    pub fn unblock_user(&self, user: User) -> () {
         if self.id == user.id || !self.is_user_in_block(user.id) {
-            return false;
+            return;
         }
         use crate::schema::user_blocks::dsl::user_blocks;
 
@@ -3627,7 +3606,6 @@ impl User {
                 .set(schema::friends::visited.eq(_connect[0].visited + 1))
                 .get_result::<Friend>(&_connection)
                 .expect("Error.");
-        return true;
     }
 
     pub fn get_members_for_notify_ids(&self) -> Vec<i32> {
