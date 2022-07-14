@@ -128,7 +128,7 @@ pub struct CardPostJson {
     pub parent:          Option<CardParentPostJson>,     // пост родитель
     pub reposts:         Option<RepostsPostJson>,        // кто репостил пост (6 объектов)
     pub reactions_list:  Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
-    pub hash_test:       Option<HashMap>,
+    pub hash_test:       Option<HashMap<K, V>>,
 }
 
 #[derive(Serialize)]
