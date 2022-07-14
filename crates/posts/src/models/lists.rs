@@ -548,9 +548,9 @@ impl PostList {
         let mut json = Vec::new();
         for i in items.iter() {
             json.push (CardUserJson {
-                owner_name: i.owner_name,
-                owner_link: i.owner_link,
-                owner_image: i.owner_image,
+                owner_name: i.owner_name.clone(),
+                owner_link: i.owner_link.clone(),
+                owner_image: i.owner_image.clone(),
             })
         }
         return json;
