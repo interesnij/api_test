@@ -2047,20 +2047,20 @@ impl User {
         return json;
     }
 
-    pub fn get_common_friends_of_user_json(&self, user: User, page: i32) -> Json<UsersListJson> {
+    pub fn get_common_friends_of_user_json(&self, user: &User, page: i32) -> Json<UsersListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.count_common_friends_of_user();
+        let count = self.count_common_friends_of_user(user);
 
         if page > 1 {
             let step = (page - 1) * 20;
-            users = self.get_common_friends_of_user(user, 20, step.into());
+            users = self.get_common_friends_of_user(&user, 20, step.into());
             if count > (page * 20).try_into().unwrap() {
                 next_page_number = page + 1;
             }
         }
         else {
-            users = self.get_common_friends_of_user(user, 20, 0);
+            users = self.get_common_friends_of_user(&user, 20, 0);
             if count > 20.try_into().unwrap() {
                 next_page_number = 2;
             }
