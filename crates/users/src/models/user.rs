@@ -2162,7 +2162,7 @@ impl User {
 
     pub fn get_ids_for_main_news(&self) -> (Vec<i32>, Vec<i32>) {
         use crate::schema::news_user_communities::dsl::news_user_communities;
-        use crate::models::FeaturedUserCommunitie;
+        use crate::models::NewsUserCommunitie;
 
         let _connection = establish_connection();
         let news = news_user_communities
