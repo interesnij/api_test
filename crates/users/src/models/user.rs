@@ -1776,16 +1776,16 @@ impl User {
         };
 
         let _connection = establish_connection();
-        let followers =  follows
+        let followers = follows
             .filter(schema::follows::followed_user.eq(self.id))
             .order(schema::follows::visited.desc())
             .limit(limit)
             .offset(offset)
-            .select(schema::friends::user_id)
+            .select(schema::follows::user_id)
             .load::<i32>(&_connection)
             .expect("E.");
         let _users = users
-            .filter(schema::users::id.eq_any(stack))
+            .filter(schema::users::id.eq_any(followers))
             .filter(schema::users::types.lt(11))
             .load::<User>(&_connection)
             .expect("E.");
@@ -1813,7 +1813,7 @@ impl User {
             .filter(schema::follows::followed_user.eq(self.id))
             .order(schema::follows::visited.desc())
             .limit(6)
-            .select(schema::friends::user_id)
+            .select(schema::follows::user_id)
             .load::<i32>(&_connection)
             .expect("E.");
         let _users = users
