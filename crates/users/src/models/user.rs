@@ -740,7 +740,31 @@ impl User {
         return stack;
     }
     pub fn get_6_featured_friends(&self) -> Vec<UniversalUserCommunityKeyJson> {
-        return get_featured_friends[..6];
+        use crate::schema::featured_user_communities::dsl::featured_user_communities;
+        use crate::models::FeaturedUserCommunitie;
+
+        let _connection = establish_connection();
+        let featured_friends = featured_user_communities
+            .filter(schema::featured_user_communities::owner.eq(self.id))
+            .filter(schema::featured_user_communities::community_id.is_null())
+            .order(schema::featured_user_communities::id.desc())
+            .limit(6)
+            .load::<FeaturedUserCommunitie>(&_connection)
+            .expect("E.");
+
+        let mut stack = Vec::new();
+        for i in featured_friends {
+            stack.push(UniversalUserCommunityKeyJson {
+                id:           i.id,
+                list_id:      i.list_id,
+                mute:         i.mute,
+                sleep:        i.sleep.unwrap().format("%d-%m-%Y в %H:%M").to_string(),
+                owner_name:   i.owner_name.clone(),
+                owner_link:   i.owner_link.clone(),
+                owner_image:  i.owner_image.clone(),
+            })
+        }
+        return stack;
     }
     pub fn get_featured_friends_count(&self) -> usize {
         return self.get_featured_friends_ids().len();
@@ -901,7 +925,7 @@ impl User {
 
         return Json(profile_json);
     }
-    pub fn get_profile(&self) -> Profile {
+    pub fn get_profile(&self) -> UserProfile {
         use crate::schema::user_profiles::dsl::user_profiles;
 
         let _connection = establish_connection();
@@ -1277,8 +1301,8 @@ impl User {
             .select(schema::user_blocks::target_id)
             .load::<i32>(&_connection)
             .expect("E");
-        blocked_users = users
-            .filter(schema::users::id.eq_any(stack))
+        let blocked_users = users
+            .filter(schema::users::id.eq_any(all_user_blocks))
             .filter(schema::users::types.lt(10))
             .load::<User>(&_connection)
             .expect("E.");
@@ -1548,7 +1572,7 @@ impl User {
             .expect("E.");
 
         for _item in user_friends.iter() {
-            stack.push(_item);
+            stack.push(*_item);
         };
         for friend in self.get_friends(500, 0).iter() {
             let user_friend_friends = friends
@@ -1557,8 +1581,8 @@ impl User {
                 .load::<i32>(&_connection)
                 .expect("E.");
             for f in user_friend_friends.iter() {
-                if stack.iter().any(|&i| i!=f) {
-                    stack.push(f);
+                if stack.iter().any(|&i| &i!=f) {
+                    stack.push(*f);
                 }
             }
         }
