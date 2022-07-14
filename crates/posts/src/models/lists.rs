@@ -550,12 +550,11 @@ impl PostList {
                 next_page_number = 2;
             }
         }
-        return Json(UsersListJson {
+        return Json(UserListJson {
             users:     users,
             next_page: next_page_number,
         });
     }
-
     pub fn get_can_see_el_exclude(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::post_list_perms::dsl::post_list_perms;
         use crate::models::PostListPerm;
