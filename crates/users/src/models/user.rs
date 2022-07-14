@@ -689,8 +689,6 @@ impl User {
         return stack;
     }
     pub fn get_featured_friends_json(&self, page: i32) -> Json<UniversalUserCommunityKeysJson> {
-        let _connection = establish_connection();
-
         let mut next_page_number = 0;
         let keys: Vec<UniversalUserCommunityKeyJson>;
         let count = self.get_featured_friends_count();
@@ -1041,7 +1039,8 @@ impl User {
         let _connection = establish_connection();
         return user_blocks
             .filter(schema::user_blocks::user_id.eq(self.id))
-            .load::<UserBlock>(&_connection)
+            .select(schema::user_blocks::id)
+            .load::<i32>(&_connection)
             .expect("E.")
             .len();
     }
@@ -1238,7 +1237,31 @@ impl User {
         );
     }
 
-    pub fn get_blocked_users(&self, limit: i64, offset: i64) -> Json<UsersListJson> {
+    pub fn get_blocked_users_json(&self, page: i32) -> Json<UsersListJson> {
+        let mut next_page_number = 0;
+        let users: Vec<CardUserJson>;
+        let count = self.count_blacklist();
+
+        if page > 1 {
+            let step = (page - 1) * 20;
+            users = self.get_blocked_users(20, step.into());
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+        }
+        else {
+            users = self.get_blocked_users(20, 0);
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+        }
+        return Json(UsersListJson {
+            users: users,
+            next_page: next_page_number,
+        });
+    }
+
+    pub fn get_blocked_users(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::{
             user_blocks::dsl::user_blocks,
             users::dsl::users,
@@ -1255,20 +1278,20 @@ impl User {
             .expect("E");
         blocked_users = users
             .filter(schema::users::id.eq_any(stack))
+            .filter(schema::users::types.lt(10))
             .load::<User>(&_connection)
             .expect("E.");
         let mut blocked_json = Vec::new();
         for user in blocked_users {
-            blocked_json.push (
-                CardUserJson {
-                    id:         user.id,
-                    first_name: user.first_name.clone(),
-                    last_name:  user.last_name.clone(),
-                    link:       user.link.clone(),
-                    image:      user.s_avatar.clone(),
-                }
-            );
+            blocked_json.push (CardUserJson {
+                id:         user.id,
+                first_name: user.first_name.clone(),
+                last_name:  user.last_name.clone(),
+                link:       user.link.clone(),
+                image:      user.s_avatar.clone(),
+            });
         }
+        return blocked_users;
     }
 
     pub fn count_friends(&self) -> i32 {

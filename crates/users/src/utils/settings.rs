@@ -17,6 +17,41 @@ use crate::utils::{
     UserWorkPermJson,
     UsersListJson,
 };
+pub fn get_featured_friends_json(&self, page: i32) -> Json<UniversalUserCommunityKeysJson> {
+    let mut next_page_number = 0;
+    let keys: Vec<UniversalUserCommunityKeyJson>;
+    let count = self.get_featured_friends_count();
+
+    if page > 1 {
+        let step = (page - 1) * 20;
+        keys = self.get_featured_friends(20, step.into());
+        if count > (page * 20).try_into().unwrap() {
+            next_page_number = page + 1;
+        }
+    }
+    else {
+        keys = self.get_featured_friends(20, 0);
+        if count > 20.try_into().unwrap() {
+            next_page_number = 2;
+        }
+    }
+    return Json(UniversalUserCommunityKeysJson {
+        keys: keys,
+        next_page: next_page_number,
+    });
+}
+let mut blocked_json = Vec::new();
+for user in blocked_users {
+    blocked_json.push (
+        CardUserJson {
+            id:         user.id,
+            first_name: user.first_name.clone(),
+            last_name:  user.last_name.clone(),
+            link:       user.link.clone(),
+            image:      user.s_avatar.clone(),
+        }
+    );
+}
 pub fn get_featured_friends(&self, limit: i64, offset: i64) -> Vec<UniversalUserCommunityKeyJson> {
     use crate::schema::featured_user_communities::dsl::featured_user_communities;
     use crate::models::FeaturedUserCommunitie;
