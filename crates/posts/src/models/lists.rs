@@ -868,7 +868,7 @@ impl PostList {
         return json;
     }
 
-    pub fn get_create_comment_exclude_users_ids(&self) -> Vec<i32> {
+    pub fn get_can_create_comment_exclude_users_ids(&self) -> Vec<i32> {
         use crate::schema::post_list_perms::dsl::post_list_perms;
 
         let _connection = establish_connection();
@@ -881,7 +881,7 @@ impl PostList {
 
         return items;
     }
-    pub fn get_create_comment_include_users_ids(&self) -> Vec<i32> {
+    pub fn get_can_create_comment_include_users_ids(&self) -> Vec<i32> {
         use crate::schema::post_list_perms::dsl::post_list_perms;
 
         let _connection = establish_connection();
@@ -895,20 +895,20 @@ impl PostList {
         return items;
     }
 
-    pub fn get_can_comment_el_exclude_json(&self, page: i32) -> Json<UserListJson> {
+    pub fn get_can_create_comment_exclude_json(&self, page: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
         let count = self.get_can_comment_el_exclude_users_ids().len();
 
         if page > 1 {
             let step = (page - 1) * 20;
-            users = self.get_can_comment_el_exclude(20, step.into());
+            users = self.get_can_create_comment_exclude(20, step.into());
             if count > (page * 20).try_into().unwrap() {
                 next_page_number = page + 1;
             }
         }
         else {
-            users = self.get_can_comment_el_exclude(20, 0);
+            users = self.get_can_create_comment_exclude(20, 0);
             if count > 20.try_into().unwrap() {
                 next_page_number = 2;
             }
@@ -918,7 +918,7 @@ impl PostList {
             next_page: next_page_number,
         });
     }
-    pub fn get_can_comment_el_exclude(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
+    pub fn get_can_create_comment_exclude(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::post_list_perms::dsl::post_list_perms;
         use crate::models::PostListPerm;
 
@@ -942,20 +942,20 @@ impl PostList {
         return json;
     }
 
-    pub fn get_can_comment_el_include_json(&self, page: i32) -> Json<UserListJson> {
+    pub fn get_can_create_comment_include_json(&self, page: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_can_comment_el_include_users_ids().len();
+        let count = self.get_can_create_comment_include_users_ids().len();
 
         if page > 1 {
             let step = (page - 1) * 20;
-            users = self.get_can_comment_el_include(20, step.into());
+            users = self.get_can_create_comment_include(20, step.into());
             if count > (page * 20).try_into().unwrap() {
                 next_page_number = page + 1;
             }
         }
         else {
-            users = self.get_can_comment_el_include(20, 0);
+            users = self.get_can_create_comment_include(20, 0);
             if count > 20.try_into().unwrap() {
                 next_page_number = 2;
             }
@@ -965,7 +965,7 @@ impl PostList {
             next_page: next_page_number,
         });
     }
-    pub fn get_can_comment_el_include(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
+    pub fn get_can_create_comment_include(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::post_list_perms::dsl::post_list_perms;
         use crate::models::PostListPerm;
 
