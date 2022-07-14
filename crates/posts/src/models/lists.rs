@@ -1066,17 +1066,17 @@ impl PostList {
     pub fn get_copy_el_include_json(&self, page: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_can_comment_el_include_users_ids().len();
+        let count = self.get_copy_el_include_users_ids().len();
 
         if page > 1 {
             let step = (page - 1) * 20;
-            users = self.get_can_comment_el_include(20, step.into());
+            users = self.get_copy_el_include(20, step.into());
             if count > (page * 20).try_into().unwrap() {
                 next_page_number = page + 1;
             }
         }
         else {
-            users = self.get_can_comment_el_include(20, 0);
+            users = self.get_copy_el_include(20, 0);
             if count > 20.try_into().unwrap() {
                 next_page_number = 2;
             }
