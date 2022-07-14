@@ -534,7 +534,7 @@ impl PostList {
     }
     pub fn get_can_see_el_exclude_users(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::post_list_perms::dsl::post_list_perms;
-        use crate::schema::models::PostListPerm;
+        use crate::models::PostListPerm;
 
         let _connection = establish_connection();
         let items = post_list_perms
