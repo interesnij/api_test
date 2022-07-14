@@ -1256,6 +1256,7 @@ impl User {
             }
         }
         return Json(UsersListJson {
+            description: "Черный спсок".to_string(),
             users: users,
             next_page: next_page_number,
         });
@@ -1511,7 +1512,7 @@ impl User {
         use crate::schema::friends::dsl::friends;
 
         let _connection = establish_connection();
-        let mut stack = Vec::new();
+        let mut stack: Vec<i32> = Vec::new();
         let _friends = friends
             .filter(schema::friends::user_id.eq(self.id))
             .select(schema::friends::target_user_id)
@@ -1523,7 +1524,7 @@ impl User {
         use crate::schema::friends::dsl::friends;
 
         let _connection = establish_connection();
-        let mut stack = Vec::new();
+        let mut stack: Vec<i32> = Vec::new();
         let _friends = friends
             .filter(schema::friends::user_id.eq(self.id))
             .order(schema::friends::visited.desc())
@@ -1538,7 +1539,7 @@ impl User {
         use crate::schema::friends::dsl::friends;
 
         let _connection = establish_connection();
-        let mut stack = Vec::new();
+        let mut stack: Vec<i32> = Vec::new();
 
         let user_friends = friends
             .filter(schema::friends::user_id.eq(self.id))
