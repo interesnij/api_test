@@ -101,7 +101,196 @@ pub struct EditPostPosition {
 }
 
 impl Post {
-    
+    pub fn get_comments(&self, limit: i64, offset: i64) -> Vec<PostComment> {
+        use crate::schema::post_comments::dsl::post_comments;
+
+        let _connection = establish_connection();
+
+        return post_comments
+            .filter(schema::post_comments::post_id.eq(self.id))
+            .filter(schema::post_comments::types.eq_any(vec!["a","b"]))
+            .filter(schema::post_comments::parent_id.is_null())
+            .limit(limit)
+            .offset(offset)
+            .load::<PostComment>(&_connection)
+            .expect("E.");
+    }
+    pub fn get_comments_post_json (
+        &self,
+        user_id: i32,
+        reactions_list: Vec<i16>,
+        page: i32
+    ) -> CommentsSmallJson {
+        let mut comments_json = Vec::new();
+        let mut next_page_number = 0;
+        let count = self.comment;
+        if page > 1 {
+            let step = (page - 1) * 20;
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+            for c in self.get_comments(20, step.into()).iter() {
+                let r_list = reactions_list.clone();
+                comments_json.push(c.get_comment_json(user_id, r_list));
+            }
+        }
+        else {
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+            for c in self.get_comments(20, 0).iter() {
+                let r_list = reactions_list.clone();
+                comments_json.push(c.get_comment_json(user_id, r_list));
+            }
+        }
+
+        return CommentsSmallJson {
+            comments:  comments_json,
+            next_page: next_page_number,
+        };
+    }
+
+    pub fn get_parent_post_json (&self) -> Option<CardParentPostJson> {
+        // получаем родительский пост
+        let parent: Option<CardParentPostJson>;
+        if self.parent_id.is_some() {
+            let _parent = self.get_parent();
+            parent = Some(CardParentPostJson {
+                id:              _parent.id,
+                content:         _parent.content.clone(),
+                owner_name:      _parent.owner_name.clone(),
+                owner_link:      _parent.owner_link.clone(),
+                owner_image:     _parent.owner_image.clone(),
+                attach:          _parent.attach.clone(),
+                created:         _parent.created.format("%d-%m-%Y в %H:%M").to_string(),
+            })
+        }
+        else {
+            parent = None;
+        }
+        return parent;
+    }
+    pub fn get_6_reposts_post_json (&self) -> Option<RepostsPostJson> {
+        // получаем репосты записи, если есть
+        let reposts_window: Option<RepostsPostJson>;
+        if self.repost > 0 {
+            let mut reposts_json = Vec::new();
+            for r in self.window_reposts().iter() {
+                reposts_json.push (
+                    CardRepostPostJson {
+                        owner_name:  r.owner_name.clone(),
+                        owner_link:  r.owner_name.clone(),
+                        owner_image: r.owner_image.clone(),
+                    }
+                );
+            }
+
+            reposts_window = Some(RepostsPostJson {
+                status:          200,
+                message_reposts: self.message_reposts_count(),
+                copy_count:      self.count_copy(),
+                posts:           reposts_json,
+            });
+        }
+        else {
+            reposts_window = None;
+        }
+        return reposts_window;
+    }
+    pub fn get_reposts_post_json (&self, limit: i64, offset: i64) -> Option<RepostsPostJson> {
+        // получаем репосты записи, если есть
+        let reposts_window: Option<RepostsPostJson>;
+        if self.repost > 0 {
+            let mut reposts_json = Vec::new();
+            for r in self.reposts(limit, offset).iter() {
+                reposts_json.push (
+                    CardRepostPostJson {
+                        owner_name:  r.owner_name.clone(),
+                        owner_link:  r.owner_name.clone(),
+                        owner_image: r.owner_image.clone(),
+                    }
+                );
+            }
+
+            reposts_window = Some(RepostsPostJson {
+                status:          200,
+                message_reposts: self.message_reposts_count(),
+                copy_count:      self.count_copy(),
+                posts:           reposts_json,
+            });
+        }
+        else {
+            reposts_window = None;
+        }
+        return reposts_window;
+    }
+    pub fn get_reactions_json (&self, user_id: i32, reactions_list: Vec<i16>) -> Option<Vec<ReactionBlockJson>> {
+        // получаем реакции и отреагировавших
+        let reactions_blocks: Option<Vec<ReactionBlockJson>>;
+        if reactions_list.len() == 0 {
+            reactions_blocks = None;
+        }
+        else {
+            let mut reactions_json: Vec<ReactionBlockJson> = Vec::new();
+            let object_reactions_count = self.get_or_create_react_model();
+            let mut user_reaction = 0;
+
+            if self.is_have_user_reaction(user_id) {
+                user_reaction = self.get_user_reaction(user_id);
+            }
+
+            for reaction in reactions_list.iter() {
+                let count = object_reactions_count.count_reactions_of_types(*reaction);
+                if count > 0 {
+                    reactions_json.push(self.get_6_reactions_of_types(reaction, Some(user_reaction), count));
+                }
+            }
+            reactions_blocks = Some(reactions_json);
+        }
+        return reactions_blocks;
+    }
+
+    pub fn get_detail_post_json (&self, user_id: i32, page: i32) -> PostDetailJson {
+        let list = self.get_list();
+        let reactions_list = list.get_reactions_list();
+        let mut prev: Option<i32> = None;
+        let mut next: Option<i32> = None;
+        let _posts = list.get_items();
+        for (i, item) in _posts.iter().enumerate().rev() {
+            if item.position == self.position {
+                if (i + 1) != _posts.len() {
+                    prev = Some(_posts[i + 1].id);
+                };
+                if i != 0 {
+                    next = Some(_posts[i - 1].id);
+                };
+                break;
+            }
+        };
+        return PostDetailJson {
+                content:         self.content.clone(),
+                owner_name:      self.owner_name.clone(),
+                owner_link:      self.owner_link.clone(),
+                owner_image:     self.owner_image.clone(),
+                attach:          self.attach.clone(),
+                comment_enabled: self.comment_enabled,
+                created:         self.created.format("%d-%m-%Y в %H:%M").to_string(),
+                comment:         self.comment,
+                view:            self.view,
+                repost:          self.repost,
+                is_signature:    self.is_signature,
+                reactions:       self.reactions,
+                types:           self.get_code(),
+                parent:          self.get_parent_post_json(),
+                reposts:         self.get_6_reposts_post_json(),
+                reactions_list:  self.get_reactions_json(user_id, reactions_list.clone()),
+                prev:            prev,
+                next:            next,
+                is_user_can_see_comments: list.is_user_can_see_comment(user_id),
+                is_user_can_create_el: list.is_user_can_create_el(user_id),
+                comments: self.get_comments_post_json(user_id, reactions_list.clone(), page),
+            };
+    }
     pub fn get_post_json (&self, user_id: i32, reactions_list: Vec<i16>,) -> CardPostJson {
         return CardPostJson {
                 id:              self.id,
