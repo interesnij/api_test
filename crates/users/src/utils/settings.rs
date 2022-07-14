@@ -44,29 +44,29 @@ pub fn get_blocked_users_json(&self, page: i32) -> Json<UsersListJson> {
     });
 }
 
-pub fn get_blocked_users(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
+pub fn get_friends(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
     use crate::schema::{
-        user_blocks::dsl::user_blocks,
         users::dsl::users,
+        friends::dsl::friends,
     };
 
     let _connection = establish_connection();
-    let all_user_blocks = user_blocks
-        .filter(schema::user_blocks::user_id.eq(self.id))
-        .order(schema::user_blocks::id.desc())
+    let friend_ids = friends
+        .filter(schema::friends::user_id.eq(self.id))
         .limit(limit)
         .offset(offset)
-        .select(schema::user_blocks::target_id)
+        .select(schema::friends::target_user_id)
         .load::<i32>(&_connection)
-        .expect("E");
-    blocked_users = users
-        .filter(schema::users::id.eq_any(stack))
+        .expect("E.");
+    let friends = users
+        .filter(schema::users::id.eq_any(friend_ids))
         .filter(schema::users::types.lt(10))
         .load::<User>(&_connection)
         .expect("E.");
-    let mut blocked_json = Vec::new();
-    for user in blocked_users {
-        blocked_json.push (CardUserJson {
+
+    let mut json = Vec::new();
+    for user in friends {
+        json.push (CardUserJson {
             id:         user.id,
             first_name: user.first_name.clone(),
             last_name:  user.last_name.clone(),
@@ -74,7 +74,7 @@ pub fn get_blocked_users(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
             image:      user.s_avatar.clone(),
         });
     }
-    return blocked_json;
+    return json;
 }
 
 pub fn get_featured_friends(&self, limit: i64, offset: i64) -> Vec<UniversalUserCommunityKeyJson> {

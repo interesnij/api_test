@@ -1589,40 +1589,144 @@ impl User {
         return stack;
     }
 
-    pub fn get_friends(&self, limit: i64, offset: i64) -> Vec<User> {
-        use crate::schema::users::dsl::users;
+    pub fn get_friends_json(&self, page: i32) -> Json<UsersListJson> {
+        let mut next_page_number = 0;
+        let users: Vec<CardUserJson>;
+        let count = self.count_friends();
+
+        if page > 1 {
+            let step = (page - 1) * 20;
+            users = self.get_friends(20, step.into());
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+        }
+        else {
+            users = self.get_friends(20, 0);
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+        }
+        return Json(UsersListJson {
+            description: "Друзья".to_string(),
+            users: users,
+            next_page: next_page_number,
+        });
+    }
+
+    pub fn get_friends(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
+        use crate::schema::{
+            users::dsl::users,
+            friends::dsl::friends,
+        };
 
         let _connection = establish_connection();
-        return users
-            .filter(schema::users::id.eq_any(self.get_friends_ids()))
+        let friend_ids = friends
+            .filter(schema::friends::user_id.eq(self.id))
             .limit(limit)
             .offset(offset)
+            .select(schema::friends::target_user_id)
+            .load::<i32>(&_connection)
+            .expect("E.");
+        let friends = users
+            .filter(schema::users::id.eq_any(friend_ids))
+            .filter(schema::users::types.lt(10))
             .load::<User>(&_connection)
             .expect("E.");
+
+        let mut json = Vec::new();
+        for user in friends {
+            json.push (CardUserJson {
+                id:         user.id,
+                first_name: user.first_name.clone(),
+                last_name:  user.last_name.clone(),
+                link:       user.link.clone(),
+                image:      user.s_avatar.clone(),
+            });
+        }
+        return json;
     }
     pub fn get_6_friends(&self) -> Vec<User> {
         use crate::schema::users::dsl::users;
 
         let _connection = establish_connection();
-        return users
+        let friends = users
             .filter(schema::users::id.eq_any(self.get_6_friends_ids()))
+            .filter(schema::users::types.lt(10))
             .load::<User>(&_connection)
             .expect("E.");
+
+        let mut json = Vec::new();
+        for user in friends {
+            json.push (CardUserJson {
+                id:         user.id,
+                first_name: user.first_name.clone(),
+                last_name:  user.last_name.clone(),
+                link:       user.link.clone(),
+                image:      user.s_avatar.clone(),
+            });
+        }
+        return json;
     }
 
-    pub fn get_online_friends(&self, limit: i64, offset: i64) -> Vec<User> {
-        use crate::schema::users::dsl::users;
+    pub fn get_online_users_json(&self, page: i32) -> Json<UsersListJson> {
+        let mut next_page_number = 0;
+        let users: Vec<CardUserJson>;
+        let count = self.get_online_friends_count();
+
+        if page > 1 {
+            let step = (page - 1) * 20;
+            users = self.get_online_friends(20, step.into());
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+        }
+        else {
+            users = self.get_online_friends(20, 0);
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+        }
+        return Json(UsersListJson {
+            description: "Друзья в сети".to_string(),
+            users: users,
+            next_page: next_page_number,
+        });
+    }
+    pub fn get_online_friends(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
+        use crate::schema::{
+            users::dsl::users,
+            friends::dsl::friends,
+        };
         use chrono::Duration;
 
         let _connection = establish_connection();
-
-        return users
-            .filter(schema::users::id.eq_any(self.get_friends_ids()))
-            .filter(schema::users::last_activity.gt(chrono::Local::now().naive_utc() - Duration::seconds(300)))
+        let friend_ids = friends
+            .filter(schema::friends::user_id.eq(self.id))
             .limit(limit)
             .offset(offset)
+            .select(schema::friends::target_user_id)
+            .load::<i32>(&_connection)
+            .expect("E.");
+
+        let _users = users
+            .filter(schema::users::id.eq_any(friend_ids))
+            .filter(schema::users::types.lt(10))
+            .filter(schema::users::last_activity.gt(chrono::Local::now().naive_utc() - Duration::seconds(300)))
             .load::<User>(&_connection)
             .expect("E.");
+
+        let mut json = Vec::new();
+        for user in _users {
+            json.push (CardUserJson {
+                id:         user.id,
+                first_name: user.first_name.clone(),
+                last_name:  user.last_name.clone(),
+                link:       user.link.clone(),
+                image:      user.s_avatar.clone(),
+            });
+        }
+        return json;
     }
     pub fn get_online_friends_count(&self) -> usize {
         return self.get_online_friends(500, 0).len();
@@ -1641,9 +1745,35 @@ impl User {
             .expect("E.");
     }
 
-    pub fn get_followers(&self, limit: i64, offset: i64) -> Vec<User> {
-        use crate::schema::follows::dsl::follows;
-        use crate::schema::users::dsl::users;
+    pub fn get_get_followers_json(&self, page: i32) -> Json<UsersListJson> {
+        let mut next_page_number = 0;
+        let users: Vec<CardUserJson>;
+        let count = self.count_followers();
+
+        if page > 1 {
+            let step = (page - 1) * 20;
+            users = self.get_followers(20, step.into());
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+        }
+        else {
+            users = self.get_followers(20, 0);
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+        }
+        return Json(UsersListJson {
+            description: "Подписчики".to_string(),
+            users: users,
+            next_page: next_page_number,
+        });
+    }
+    pub fn get_followers(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
+        use crate::schema::{
+            users::dsl::users,
+            follows::dsl::follows,
+        };
 
         let _connection = establish_connection();
         let followers =  follows
@@ -1651,40 +1781,58 @@ impl User {
             .order(schema::follows::visited.desc())
             .limit(limit)
             .offset(offset)
-            .load::<Follow>(&_connection)
+            .select(schema::friends::user_id)
+            .load::<i32>(&_connection)
             .expect("E.");
-
-        let mut stack = Vec::new();
-        for _item in followers.iter() {
-            stack.push(_item.user_id);
-        };
-        return users
+        let _users = users
             .filter(schema::users::id.eq_any(stack))
             .filter(schema::users::types.lt(11))
             .load::<User>(&_connection)
             .expect("E.");
+
+        let mut json = Vec::new();
+        for user in friends {
+            json.push (CardUserJson {
+                id:         user.id,
+                first_name: user.first_name.clone(),
+                last_name:  user.last_name.clone(),
+                link:       user.link.clone(),
+                image:      user.s_avatar.clone(),
+            });
+        }
+        return json;
     }
-    pub fn get_6_followers(&self) -> Vec<User> {
-        use crate::schema::follows::dsl::follows;
-        use crate::schema::users::dsl::users;
+    pub fn get_6_followers(&self) -> Vec<CardUserJson> {
+        use crate::schema::{
+            users::dsl::users,
+            follows::dsl::follows,
+        };
 
         let _connection = establish_connection();
         let followers =  follows
             .filter(schema::follows::followed_user.eq(self.id))
             .order(schema::follows::visited.desc())
             .limit(6)
-            .load::<Follow>(&_connection)
+            .select(schema::friends::user_id)
+            .load::<i32>(&_connection)
             .expect("E.");
-
-        let mut stack = Vec::new();
-        for _item in followers.iter() {
-            stack.push(_item.user_id);
-        };
-        return users
+        let _users = users
             .filter(schema::users::id.eq_any(stack))
             .filter(schema::users::types.lt(11))
             .load::<User>(&_connection)
             .expect("E.");
+
+        let mut json = Vec::new();
+        for user in friends {
+            json.push (CardUserJson {
+                id:         user.id,
+                first_name: user.first_name.clone(),
+                last_name:  user.last_name.clone(),
+                link:       user.link.clone(),
+                image:      user.s_avatar.clone(),
+            });
+        }
+        return json;
     }
     pub fn get_all_users_count(&self) -> usize {
         use crate::schema::users::dsl::users;
