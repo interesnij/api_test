@@ -1903,7 +1903,7 @@ impl User {
         use crate::schema::users::dsl::users;
 
         let _connection = establish_connection();
-        let users_list: User;
+        let users_list: Vec<User>;
         if self.types == 3 {
             users_list = users
                 .filter(schema::users::types.eq(7))
@@ -1954,10 +1954,10 @@ impl User {
         }
         return json;
     }
-    pub fn get_anon_users_json(&self, page: i32) -> Json<UsersListJson> {
+    pub fn get_anon_users_json(page: i32) -> Json<UsersListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_anon_users_count();
+        let count = User::get_anon_users_count();
 
         if page > 1 {
             let step = (page - 1) * 20;
