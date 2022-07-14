@@ -1628,14 +1628,14 @@ impl User {
             .select(schema::friends::target_user_id)
             .load::<i32>(&_connection)
             .expect("E.");
-        let friends = users
+        let _friends = users
             .filter(schema::users::id.eq_any(friend_ids))
             .filter(schema::users::types.lt(10))
             .load::<User>(&_connection)
             .expect("E.");
 
         let mut json = Vec::new();
-        for user in friends {
+        for user in _friends {
             json.push (CardUserJson {
                 id:         user.id,
                 first_name: user.first_name.clone(),
@@ -1646,7 +1646,7 @@ impl User {
         }
         return json;
     }
-    pub fn get_6_friends(&self) -> Vec<User> {
+    pub fn get_6_friends(&self) -> Vec<CardUserJson> {
         use crate::schema::users::dsl::users;
 
         let _connection = establish_connection();
