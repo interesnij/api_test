@@ -1791,7 +1791,7 @@ impl User {
             .expect("E.");
 
         let mut json = Vec::new();
-        for user in friends {
+        for user in _users {
             json.push (CardUserJson {
                 id:         user.id,
                 first_name: user.first_name.clone(),
@@ -1823,7 +1823,7 @@ impl User {
             .expect("E.");
 
         let mut json = Vec::new();
-        for user in friends {
+        for user in _users {
             json.push (CardUserJson {
                 id:         user.id,
                 first_name: user.first_name.clone(),
