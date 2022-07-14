@@ -645,10 +645,10 @@ impl PostComment {
         let _connection = establish_connection();
         let votes = post_comment_votes
             .filter(schema::post_comment_votes::post_comment_id.eq(self.id))
-            .select(post_comment_votes::user_id)
+            .select(schema::post_comment_votes::user_id)
             .load::<i32>(&_connection)
             .expect("E");
-        return stack;
+        return votes;
     }
 
     pub fn is_have_user_reaction(&self, user_id: i32) -> bool {
