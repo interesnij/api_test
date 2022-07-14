@@ -232,7 +232,6 @@ impl PostComment {
         use crate::schema::post_comments::dsl::post_comments;
 
         let _connection = establish_connection();
-
         return post_comments
             .filter(schema::post_comments::parent_id.eq(self.id))
             .filter(schema::post_comments::types.eq_any(vec!["a","b"]))
@@ -642,17 +641,13 @@ impl PostComment {
 
     pub fn reactions_ids(&self) -> Vec<i32> {
         use crate::schema::post_comment_votes::dsl::post_comment_votes;
-        use crate::models::PostCommentVote;
 
         let _connection = establish_connection();
         let votes = post_comment_votes
             .filter(schema::post_comment_votes::post_comment_id.eq(self.id))
-            .load::<PostCommentVote>(&_connection)
+            .select(post_comment_votes::user_id)
+            .load::<i32>(&_connection)
             .expect("E");
-        let mut stack = Vec::new();
-        for _item in votes.iter() {
-            stack.push(_item.user_id);
-        };
         return stack;
     }
 
@@ -662,19 +657,19 @@ impl PostComment {
 
     pub fn get_user_reaction(&self, user_id: i32) -> i16 {
         use crate::schema::post_comment_votes::dsl::post_comment_votes;
-        use crate::models::PostCommentVote;
         // "/static/images/reactions/" + get_user_reaction + ".jpg"
         let _connection = establish_connection();
         let vote = post_comment_votes
             .filter(schema::post_comment_votes::user_id.eq(user_id))
             .filter(schema::post_comment_votes::post_comment_id.eq(self.id))
-            .load::<PostCommentVote>(&_connection)
+            .select(schema::post_comment_votes::reaction)
+            .load::<i16>(&_connection)
             .expect("E.")
             .into_iter()
             .nth(0)
             .unwrap();
 
-        return vote.reaction;
+        return vote;
     }
 
     pub fn plus_reactions(&self, count: i32, _user_id: i32) -> () {

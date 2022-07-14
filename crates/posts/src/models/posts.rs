@@ -7,7 +7,6 @@ use crate::utils::{
     establish_connection,
     JsonPosition,
     JsonItemReactions,
-    //PostsJson,
     CardParentPostJson,
     RepostsPostJson,
     CardPostJson,
@@ -105,7 +104,6 @@ impl Post {
         use crate::schema::post_comments::dsl::post_comments;
 
         let _connection = establish_connection();
-
         return post_comments
             .filter(schema::post_comments::post_id.eq(self.id))
             .filter(schema::post_comments::types.eq_any(vec!["a","b"]))
@@ -969,17 +967,13 @@ impl Post {
         return self.repost > 0;
     }
 
-    //pub fn fixed_post(&self, user: User) -> bool {
-    //    if user.is_can_fixed_post() {
-    //        let _connection = establish_connection();
-    //        diesel::update(self)
-    //            .set(schema::posts::types.eq("b"))
-    //            .get_result::<Post>(&_connection)
-    //            .expect("E");
-    //        return true;
-    //    }
-    //    return false;
-    //}
+    pub fn fixed_post(&self) -> () {
+        let _connection = establish_connection();
+        diesel::update(self)
+            .set(schema::posts::types.eq("b"))
+            .get_result::<Post>(&_connection)
+            .expect("E");
+    }
     pub fn unfixed_post(&self) -> bool {
         let _connection = establish_connection();
         diesel::update(self)
@@ -1084,15 +1078,12 @@ impl Post {
         use crate::models::PostVote;
 
         let _connection = establish_connection();
-        let votes = post_votes
+        let votes_ids = post_votes
             .filter(schema::post_votes::post_id.eq(self.id))
-            .load::<PostVote>(&_connection)
+            .select(schema::post_votes::user_id)
+            .load::<i32>(&_connection)
             .expect("E");
-        let mut stack = Vec::new();
-        for _item in votes.iter() {
-            stack.push(_item.user_id);
-        };
-        return stack;
+        return votes_ids;
     }
 
     pub fn is_have_user_reaction(&self, user_id: i32) -> bool {
