@@ -848,9 +848,9 @@ impl PostList {
         let _post_list_positions = community_post_list_positions
             .filter(schema::community_post_list_positions::community_id.eq(community_id))
             .filter(schema::community_post_list_positions::types.eq("a"))
-            .select(schema::community_post_list_positions::list_id)
             .limit(1)
-            .load::<CommunityPostListPosition>(&_connection)
+            .select(schema::community_post_list_positions::list_id)
+            .load::<i32>(&_connection)
             .expect("E.");
         if _post_list_positions.len() > 0 {
             return _post_list_positions
@@ -871,14 +871,14 @@ impl PostList {
             .filter(schema::user_post_list_positions::user_id.eq(user_id))
             .filter(schema::user_post_list_positions::types.eq("a"))
             .limit(1)
-            .load::<UserPostListPosition>(&_connection)
+            .select(schema::user_post_list_positions::list_id)
+            .load::<i32>(&_connection)
             .expect("E.");
         if _post_list_positions.len() > 0 {
             return _post_list_positions
             .into_iter()
             .nth(0)
-            .unwrap()
-            .list_id;
+            .unwrap();
         }
         else {
             return PostList::get_user_post_list(user_id).id;
@@ -1685,7 +1685,6 @@ impl PostList {
          )
          .execute(&_connection)
          .expect("E");
-        return true;
     }
 
     pub fn copy_item(pk: i32, user_or_communities: Vec<String>) -> () {
