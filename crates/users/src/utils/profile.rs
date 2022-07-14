@@ -50,7 +50,7 @@ pub struct ProfileJson {
     pub videos:         i32,
     pub articles:       i32,
     pub planners:       i32,
-    pub avatar_id:      i32,
+    pub avatar_id:      Option<i32>,
     pub survey:         i32,
     pub saved_playlist: String,
 }
