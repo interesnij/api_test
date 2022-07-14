@@ -121,7 +121,7 @@ impl Post {
         reactions_list: Vec<i16>,
         page: i32
     ) -> CommentsSmallJson {
-        //let mut comments_json = Vec::new();
+        let mut comments_json = Vec::new();
         let mut next_page_number = 0;
         let count = self.comment;
         if page > 1 {
