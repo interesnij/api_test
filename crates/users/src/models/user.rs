@@ -1291,7 +1291,7 @@ impl User {
                 image:      user.s_avatar.clone(),
             });
         }
-        return blocked_users;
+        return blocked_json;
     }
 
     pub fn count_friends(&self) -> i32 {

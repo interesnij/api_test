@@ -40,18 +40,7 @@ pub fn get_featured_friends_json(&self, page: i32) -> Json<UniversalUserCommunit
         next_page: next_page_number,
     });
 }
-let mut blocked_json = Vec::new();
-for user in blocked_users {
-    blocked_json.push (
-        CardUserJson {
-            id:         user.id,
-            first_name: user.first_name.clone(),
-            last_name:  user.last_name.clone(),
-            link:       user.link.clone(),
-            image:      user.s_avatar.clone(),
-        }
-    );
-}
+
 pub fn get_featured_friends(&self, limit: i64, offset: i64) -> Vec<UniversalUserCommunityKeyJson> {
     use crate::schema::featured_user_communities::dsl::featured_user_communities;
     use crate::models::FeaturedUserCommunitie;
