@@ -1,5 +1,4 @@
 use crate::schema;
-use diesel::prelude::*;
 use crate::schema::{
     follows,
     friends,

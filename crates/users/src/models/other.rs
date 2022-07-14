@@ -1,5 +1,4 @@
 use crate::schema;
-use diesel::prelude::*;
 use crate::schema::{
     phone_codes,
     //friends_work_perms,

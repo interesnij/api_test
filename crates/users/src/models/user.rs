@@ -19,6 +19,7 @@ use crate::utils::{
     PhoneCodeJson,
     UserWorkPermJson,
     UsersListJson,
+    CardUserJson,
 };
 use diesel::prelude::*;
 use crate::schema;
@@ -740,14 +741,8 @@ impl User {
         }
         return stack;
     }
-    pub fn get_6_featured_friends(&self) -> Vec<User> {
-        use crate::schema::users::dsl::users;
-
-        let _connection = establish_connection();
-        return users
-            .filter(schema::users::id.eq_any(self.get_6_featured_friends_ids()))
-            .load::<User>(&_connection)
-            .expect("E.");
+    pub fn get_6_featured_friends(&self) -> Vec<UniversalUserCommunityKeyJson> {
+        return get_featured_friends[..6];
     }
     pub fn get_featured_friends_count(&self) -> usize {
         return self.get_featured_friends_ids().len();
@@ -762,10 +757,11 @@ impl User {
             .filter(schema::featured_user_communities::owner.eq(self.id))
             .filter(schema::featured_user_communities::user_id.is_null())
             .order(schema::featured_user_communities::id.desc())
-            .load::<FeaturedUserCommunitie>(&_connection)
+            .select(schema::featured_user_communities::community_id.nullable())
+            .load::<Option<i32>>(&_connection)
             .expect("E.");
         for _item in featured_communities.iter() {
-            stack.push(_item.community_id.unwrap());
+            stack.push(_item.unwrap());
         };
         return stack;
     }
@@ -780,10 +776,11 @@ impl User {
             .filter(schema::featured_user_communities::user_id.is_null())
             .order(schema::featured_user_communities::id.desc())
             .limit(6)
-            .load::<FeaturedUserCommunitie>(&_connection)
+            .select(schema::featured_user_communities::community_id.nullable())
+            .load::<Option<i32>>(&_connection)
             .expect("E.");
         for _item in featured_communities.iter() {
-            stack.push(_item.community_id.unwrap());
+            stack.push(_item.unwrap());
         };
         return stack;
     }
@@ -885,7 +882,28 @@ impl User {
             return "desctop/users/button/".to_owned() + &suffix + &"default_user.stpl".to_string();
         }
     }
-    pub fn get_profile(&self) -> UserProfile {
+    pub fn get_profile_json(&self) -> Json<ProfileJson> {
+        let profile = self.get_profile();
+        let profile_json = ProfileJson {
+            posts:          profile.posts,
+            friends:        profile.friends,
+            follows:        profile.follows,
+            communities:    profile.communities,
+            photos:         profile.photos,
+            goods:          profile.goods,
+            docs:           profile.docs,
+            tracks:         profile.tracks,
+            videos:         profile.videos,
+            articles:       profile.articles,
+            planners:       profile.planners,
+            avatar_id:      profile.avatar_id,
+            survey:         profile.survey,
+            saved_playlist: profile.saved_playlist.clone(),
+        };
+
+        return Json(profile_json);
+    }
+    pub fn get_profile(&self) -> Profile {
         use crate::schema::user_profiles::dsl::user_profiles;
 
         let _connection = establish_connection();
@@ -1220,9 +1238,11 @@ impl User {
         );
     }
 
-    pub fn get_blocked_users(&self, limit: i64, offset: i64) -> Vec<User> {
-        use crate::schema::user_blocks::dsl::user_blocks;
-        use crate::schema::users::dsl::users;
+    pub fn get_blocked_users(&self, limit: i64, offset: i64) -> Json<UsersListJson> {
+        use crate::schema::{
+            user_blocks::dsl::user_blocks,
+            users::dsl::users,
+        };
 
         let _connection = establish_connection();
         let all_user_blocks = user_blocks
@@ -1230,16 +1250,25 @@ impl User {
             .order(schema::user_blocks::id.desc())
             .limit(limit)
             .offset(offset)
-            .load::<UserBlock>(&_connection)
+            .select(schema::user_blocks::target_id)
+            .load::<i32>(&_connection)
             .expect("E");
-        let mut stack = Vec::new();
-        for _item in all_user_blocks.iter() {
-            stack.push(_item.target_id);
-        };
-        return users
+        blocked_users = users
             .filter(schema::users::id.eq_any(stack))
             .load::<User>(&_connection)
             .expect("E.");
+        let mut blocked_json = Vec::new();
+        for user in blocked_users {
+            blocked_json.push (
+                CardUserJson {
+                    id:         user.id,
+                    first_name: user.first_name.clone(),
+                    last_name:  user.last_name.clone(),
+                    link:       user.link.clone(),
+                    image:      user.s_avatar.clone(),
+                }
+            );
+        }
     }
 
     pub fn count_friends(&self) -> i32 {
@@ -1462,12 +1491,10 @@ impl User {
         let mut stack = Vec::new();
         let _friends = friends
             .filter(schema::friends::user_id.eq(self.id))
-            .load::<Friend>(&_connection)
+            .select(schema::friends::target_user_id)
+            .load::<i32>(&_connection)
             .expect("E.");
-        for _item in _friends.iter() {
-            stack.push(_item.target_user_id);
-        };
-        return stack;
+        return _friends;
     }
     pub fn get_6_friends_ids(&self) -> Vec<i32> {
         use crate::schema::friends::dsl::friends;
@@ -1478,12 +1505,11 @@ impl User {
             .filter(schema::friends::user_id.eq(self.id))
             .order(schema::friends::visited.desc())
             .limit(6)
-            .load::<Friend>(&_connection)
+            .select(schema::friends::target_user_id)
+            .load::<i32>(&_connection)
             .expect("E.");
-        for _item in _friends.iter() {
-            stack.push(_item.target_user_id);
-        };
-        return stack;
+
+        return _friends;
     }
     pub fn get_friend_and_friend_of_friend_ids(&self) -> Vec<i32> {
         use crate::schema::friends::dsl::friends;
@@ -1493,20 +1519,22 @@ impl User {
 
         let user_friends = friends
             .filter(schema::friends::user_id.eq(self.id))
-            .load::<Friend>(&_connection)
+            .select(schema::friends::target_user_id)
+            .load::<i32>(&_connection)
             .expect("E.");
 
         for _item in user_friends.iter() {
-            stack.push(_item.target_user_id);
+            stack.push(_item);
         };
         for friend in self.get_friends(500, 0).iter() {
             let user_friend_friends = friends
                 .filter(schema::friends::user_id.eq(friend.id))
-                .load::<Friend>(&_connection)
+                .select(schema::friends::target_user_id)
+                .load::<i32>(&_connection)
                 .expect("E.");
             for f in user_friend_friends.iter() {
-                if stack.iter().any(|&i| i!=f.target_user_id) {
-                    stack.push(f.target_user_id);
+                if stack.iter().any(|&i| i!=f) {
+                    stack.push(f);
                 }
             }
         }

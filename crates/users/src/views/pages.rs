@@ -15,6 +15,6 @@ pub fn pages_routes(config: &mut web::ServiceConfig) {
     config.route("/", web::get().to(index_page));
 }
 
-pub async fn index_page(req: HttpRequest) -> impl Responder {
+pub async fn index_page() -> impl Responder {
     HttpResponse::Ok().body("hello, I users server.")
 }
