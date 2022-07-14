@@ -1731,7 +1731,7 @@ impl User {
     pub fn get_online_friends_count(&self) -> usize {
         return self.get_online_friends(500, 0).len();
     }
-    pub fn get_6_online_friends(&self) -> Vec<User> {
+    pub fn get_6_online_friends(&self) -> Vec<CardUserJson> {
         use crate::schema::{
             users::dsl::users,
             friends::dsl::friends,
@@ -1920,7 +1920,7 @@ impl User {
                 .expect("E.");
         }
         let mut json = Vec::new();
-        for user in friends {
+        for user in users_list {
             json.push (CardUserJson {
                 id:         user.id,
                 first_name: user.first_name.clone(),
@@ -1943,7 +1943,7 @@ impl User {
             .expect("E.");
 
         let mut json = Vec::new();
-        for user in friends {
+        for user in _users {
             json.push (CardUserJson {
                 id:         user.id,
                 first_name: user.first_name.clone(),
@@ -2162,6 +2162,7 @@ impl User {
 
     pub fn get_ids_for_main_news(&self) -> (Vec<i32>, Vec<i32>) {
         use crate::schema::news_user_communities::dsl::news_user_communities;
+        use crate::models::FeaturedUserCommunitie;
 
         let _connection = establish_connection();
         let news = news_user_communities
@@ -2184,6 +2185,7 @@ impl User {
     }
     pub fn get_ids_for_featured_news(&self) -> (Vec<i32>, Vec<i32>) {
         use crate::schema::featured_user_communities::dsl::featured_user_communities;
+        use crate::models::FeaturedUserCommunitie;
 
         let _connection = establish_connection();
         let news = featured_user_communities
