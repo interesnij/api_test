@@ -13,7 +13,7 @@ use crate::utils::{
     CardPostJson,
     ReactionBlockJson,
     PostDetailJson,
-    CardRepostPostJson,
+    CardUserJson,
     CommentsSmallJson,
 };
 use actix_web::web::Json;
@@ -177,7 +177,7 @@ impl Post {
             let mut reposts_json = Vec::new();
             for r in self.window_reposts().iter() {
                 reposts_json.push (
-                    CardRepostPostJson {
+                    CardUserJson {
                         owner_name:  r.owner_name.clone(),
                         owner_link:  r.owner_name.clone(),
                         owner_image: r.owner_image.clone(),
@@ -204,7 +204,7 @@ impl Post {
             let mut reposts_json = Vec::new();
             for r in self.reposts(limit, offset).iter() {
                 reposts_json.push (
-                    CardRepostPostJson {
+                    CardUserJson {
                         owner_name:  r.owner_name.clone(),
                         owner_link:  r.owner_name.clone(),
                         owner_image: r.owner_image.clone(),

@@ -10,6 +10,8 @@ use crate::utils::{
     get_post_list,
     PostListDetailJson,
     PostListPageJson,
+    UserListJson,
+    CardUserJson,
 };
 use actix_web::web::Json;
 use crate::models::{
@@ -530,14 +532,35 @@ impl PostList {
 
         return items;
     }
-    //pub fn get_can_see_el_exclude_users(&self) -> Vec<User> {
-    //    use crate::utils::get_users_from_ids;
-    //    return get_users_from_ids(self.get_can_see_el_exclude_users_ids());
-    //}
-    //pub fn get_can_see_el_include_users(&self) -> Vec<User> {
-    //    use crate::utils::get_users_from_ids;
-    //    return get_users_from_ids(self.get_can_see_el_include_users_ids());
-    //}
+    pub fn get_can_see_el_exclude_users(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
+        use crate::schema::post_list_perms::dsl::post_list_perms;
+        use crate::schema::models::PostListPerm;
+
+        let _connection = establish_connection();
+        let items = post_list_perms
+            .filter(schema::post_list_perms::post_list_id.eq(self.id))
+            .filter(schema::post_list_perms::can_see_item.eq("b"))
+            .limit(limit)
+            .offset(offset)
+            .load::<PostListPerm>(&_connection)
+            .expect("E");
+
+        let mut json = Vec::new();
+        for i in items.iter() {
+            json.push {
+                CardUserJson {
+                    owner_name: i.owner_name,
+                    owner_link: i.owner_link,
+                    owner_image: i.owner_image,
+                }
+            }
+        }
+        return json;
+    }
+    pub fn get_can_see_el_include_users(&self) -> Vec<User> {
+        use crate::utils::get_users_from_ids;
+        return get_users_from_ids(self.get_can_see_el_include_users_ids());
+    }
 
     pub fn get_can_see_comment_exclude_users_ids(&self) -> Vec<i32> {
         use crate::schema::post_list_perms::dsl::post_list_perms;

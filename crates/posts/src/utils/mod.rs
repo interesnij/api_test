@@ -28,15 +28,21 @@ pub struct SParams {
     pub q: String,
 }
 
-//////////// Сериализаторы списков записей
 
 #[derive(Serialize)]
-// это карточка того, кто репостнул
-pub struct CardRepostPostJson {
+// это объекты пользователей
+pub struct UserListJson {
+    pub users:     Vec<CardUserJson>,
+    pub next_page: i32,
+}
+#[derive(Serialize)]
+// это карточка пользователя
+pub struct CardUserJson {
     pub owner_name:      String,
     pub owner_link:      String,
     pub owner_image:     Option<String>,
 }
+//////////// Сериализаторы списков записей
 
 #[derive(Serialize)]
 // это для пагинации
@@ -91,7 +97,7 @@ pub struct RepostsPostListJson {
     pub status:          i32,
     pub message_reposts: String,
     pub copy_count:      i32,
-    pub posts:           Vec<CardRepostPostJson>,
+    pub posts:           Vec<CardUserJson>,
 }
 ////////////////////////
 
@@ -168,7 +174,7 @@ pub struct RepostsPostJson {
     pub status:          i32,
     pub message_reposts: String,
     pub copy_count:      String,
-    pub posts:           Vec<CardRepostPostJson>,
+    pub posts:           Vec<CardUserJson>,
 }
 
 #[derive(Serialize)]
