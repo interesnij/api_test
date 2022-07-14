@@ -990,10 +990,8 @@ impl PostList {
         create_el_users:       Option<Vec<i32>>,
         create_comment_users:  Option<Vec<i32>>,
         copy_el_users:         Option<Vec<i32>>,
-        reactions:             Option<String>,
-        owner_name:            String,
-        owner_link:            String,
-        owner_image:           Option<String>) -> PostList {
+        reactions:             Option<String>
+    ) -> PostList {
         use crate::models::{
             NewCommunityPostListPosition,
             NewUserPostListPosition,
@@ -1799,7 +1797,7 @@ impl PostList {
         };
         let community_collections = community_post_list_collections
             .filter(schema::community_post_list_collections::community_id.eq(community_pk))
-            .select(schema::schema::community_post_list_collections::post_list_id)
+            .select(schema::community_post_list_collections::post_list_id)
             .load::<i32>(&_connection)
             .expect("E.");
         for _item in community_collections.iter() {
