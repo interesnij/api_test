@@ -851,7 +851,7 @@ impl PostList {
         let _connection = establish_connection();
         let items = post_list_perms
             .filter(schema::post_list_perms::post_list_id.eq(self.id))
-            .filter(schema::post_list_perms::can_create_item.eq("a"))
+            .filter(schema::post_list_perms::create_item.eq("a"))
             .limit(limit)
             .offset(offset)
             .load::<PostListPerm>(&_connection)
@@ -925,7 +925,7 @@ impl PostList {
         let _connection = establish_connection();
         let items = post_list_perms
             .filter(schema::post_list_perms::post_list_id.eq(self.id))
-            .filter(schema::post_list_perms::comment_item.eq("b"))
+            .filter(schema::post_list_perms::create_comment.eq("b"))
             .limit(limit)
             .offset(offset)
             .load::<PostListPerm>(&_connection)
@@ -972,7 +972,7 @@ impl PostList {
         let _connection = establish_connection();
         let items = post_list_perms
             .filter(schema::post_list_perms::post_list_id.eq(self.id))
-            .filter(schema::post_list_perms::can_create_comment.eq("a"))
+            .filter(schema::post_list_perms::create_comment.eq("a"))
             .limit(limit)
             .offset(offset)
             .load::<PostListPerm>(&_connection)
