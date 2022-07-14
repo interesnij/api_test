@@ -1,6 +1,6 @@
 use diesel::prelude::*;
 use crate::schema;
-
+use std::collections::HashMap;
 use serde::{Serialize, Deserialize};
 use crate::models::{
     PostList,
@@ -128,6 +128,12 @@ pub struct CardPostJson {
     pub parent:          Option<CardParentPostJson>,     // пост родитель
     pub reposts:         Option<RepostsPostJson>,        // кто репостил пост (6 объектов)
     pub reactions_list:  Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
+    pub hash_test:       Option<HashMap>,
+}
+
+#[derive(Serialize)]
+pub struct HashTest {
+
 }
 
 #[derive(Serialize)]

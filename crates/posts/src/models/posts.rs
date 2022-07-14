@@ -308,6 +308,7 @@ impl Post {
                 parent:          self.get_parent_post_json(),
                 reposts:         self.get_6_reposts_post_json(),
                 reactions_list:  self.get_reactions_json(user_id, reactions_list),
+                hash_test:       None,
             };
     }
 
