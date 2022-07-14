@@ -578,10 +578,53 @@ impl PostList {
         }
         return json;
     }
-    //pub fn get_can_see_el_include_users(&self) -> Vec<User> {
-    //    use crate::utils::get_users_from_ids;
-    //    return get_users_from_ids(self.get_can_see_el_include_users_ids());
-    //}
+
+    pub fn get_can_see_el_include_json(&self, page: i32) -> Json<UserListJson> {
+        let mut next_page_number = 0;
+        let users: Vec<CardUserJson>;
+        let count = self.get_can_see_el_include_users_ids().len();
+
+        if page > 1 {
+            let step = (page - 1) * 20;
+            users = self.get_can_see_el_include(20, step.into());
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+        }
+        else {
+            users = self.get_can_see_el_include(20, 0);
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+        }
+        return Json(UserListJson {
+            users:     users,
+            next_page: next_page_number,
+        });
+    }
+    pub fn get_can_see_el_include(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
+        use crate::schema::post_list_perms::dsl::post_list_perms;
+        use crate::models::PostListPerm;
+
+        let _connection = establish_connection();
+        let items = post_list_perms
+            .filter(schema::post_list_perms::post_list_id.eq(self.id))
+            .filter(schema::post_list_perms::can_see_item.eq("a"))
+            .limit(limit)
+            .offset(offset)
+            .load::<PostListPerm>(&_connection)
+            .expect("E");
+
+        let mut json = Vec::new();
+        for i in items.iter() {
+            json.push (CardUserJson {
+                owner_name: i.owner_name.clone(),
+                owner_link: i.owner_link.clone(),
+                owner_image: i.owner_image.clone(),
+            })
+        }
+        return json;
+    }
 
     pub fn get_can_see_comment_exclude_users_ids(&self) -> Vec<i32> {
         use crate::schema::post_list_perms::dsl::post_list_perms;
