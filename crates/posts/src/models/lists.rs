@@ -557,10 +557,10 @@ impl PostList {
         }
         return json;
     }
-    pub fn get_can_see_el_include_users(&self) -> Vec<User> {
-        use crate::utils::get_users_from_ids;
-        return get_users_from_ids(self.get_can_see_el_include_users_ids());
-    }
+    //pub fn get_can_see_el_include_users(&self) -> Vec<User> {
+    //    use crate::utils::get_users_from_ids;
+    //    return get_users_from_ids(self.get_can_see_el_include_users_ids());
+    //}
 
     pub fn get_can_see_comment_exclude_users_ids(&self) -> Vec<i32> {
         use crate::schema::post_list_perms::dsl::post_list_perms;
