@@ -3554,7 +3554,7 @@ impl User {
                             sleep: None,
                             owner_name: friend.first_name.to_owned() + &" ".to_string() + &friend.last_name.to_string(),
                             owner_link: friend.link.clone(),
-                            owner_image: friend.image,
+                            owner_image: friend.image.clone(),
                         };
                         diesel::insert_into(schema::featured_user_communities::table)
                             .values(&new_featured)
