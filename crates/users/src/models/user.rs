@@ -1809,7 +1809,7 @@ impl User {
         };
 
         let _connection = establish_connection();
-        let followers =  follows
+        let followers = follows
             .filter(schema::follows::followed_user.eq(self.id))
             .order(schema::follows::visited.desc())
             .limit(6)
@@ -1817,7 +1817,7 @@ impl User {
             .load::<i32>(&_connection)
             .expect("E.");
         let _users = users
-            .filter(schema::users::id.eq_any(stack))
+            .filter(schema::users::id.eq_any(followers))
             .filter(schema::users::types.lt(11))
             .load::<User>(&_connection)
             .expect("E.");
