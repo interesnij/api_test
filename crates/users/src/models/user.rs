@@ -771,7 +771,6 @@ impl User {
     }
     pub fn get_featured_communities_ids(&self) -> Vec<i32> {
         use crate::schema::featured_user_communities::dsl::featured_user_communities;
-        use crate::models::FeaturedUserCommunitie;
 
         let _connection = establish_connection();
         let mut stack = Vec::new();
@@ -789,7 +788,6 @@ impl User {
     }
     pub fn get_6_featured_communities_ids(&self) -> Vec<i32> {
         use crate::schema::featured_user_communities::dsl::featured_user_communities;
-        use crate::models::FeaturedUserCommunitie;
 
         let _connection = establish_connection();
         let mut stack = Vec::new();
@@ -1536,7 +1534,6 @@ impl User {
         use crate::schema::friends::dsl::friends;
 
         let _connection = establish_connection();
-        let mut stack: Vec<i32> = Vec::new();
         let _friends = friends
             .filter(schema::friends::user_id.eq(self.id))
             .select(schema::friends::target_user_id)
@@ -1548,7 +1545,6 @@ impl User {
         use crate::schema::friends::dsl::friends;
 
         let _connection = establish_connection();
-        let mut stack: Vec<i32> = Vec::new();
         let _friends = friends
             .filter(schema::friends::user_id.eq(self.id))
             .order(schema::friends::visited.desc())
@@ -2700,6 +2696,26 @@ impl User {
             .nth(0)
             .unwrap();
     }
+    pub fn get_private_model_json(&self) -> Json<UserPrivateJson> {
+        let private = self.get_private_model();
+        let json = UserPrivateJson {
+            can_see_all:       private.can_see_all,
+            can_see_community: private.can_see_community,
+            can_see_info:      private.can_see_info,
+            can_see_friend:    private.can_see_friend,
+            can_send_message:  private.can_send_message,
+            can_add_in_chat:   private.can_add_in_chat,
+            can_see_post:      private.can_see_post,
+            can_see_photo:     private.can_see_photo,
+            can_see_good:      private.can_see_good,
+            can_see_video:     private.can_see_video,
+            can_see_music:     private.can_see_music,
+            can_see_planner:   private.can_see_planner,
+            can_see_doc:       private.can_see_doc,
+            can_see_survey:    private.can_see_survey,
+        };
+        return Json(json);
+    }
     pub fn is_user_can_see_info(&self, user_id: i32) -> bool {
         if self.id == user_id {
             return true;
@@ -3241,14 +3257,11 @@ impl User {
                 users_ids.push(pk);
             }
         }
-        let _friends = friends
+        let friends_stack = friends
             .filter(schema::friends::target_user_id.eq_any(&users_ids))
-            .load::<Friend>(&_connection)
+            .select(schema::friends::target_user_id)
+            .load::<i32>(&_connection)
             .expect("E");
-        let mut friends_stack = Vec::new();
-        for _item in _friends.iter() {
-            friends_stack.push(_item.target_user_id);
-        };
         diesel::delete(friends_visible_perms.filter(schema::friends_visible_perms::user_id.eq_any(friends_stack))).execute(&_connection).expect("E");
 
         if types == "can_see_community".to_string() {
@@ -3898,14 +3911,10 @@ impl User {
             .filter(schema::notify_user_communities::user_id.eq(self.id))
             .filter(schema::notify_user_communities::mute.eq(false))
             .filter(schema::notify_user_communities::sleep.lt(chrono::Local::now().naive_utc()))
-            .load::<NotifyUserCommunitie>(&_connection)
+            .select(schema::notify_user_communities::owner)
+            .load::<i32>(&_connection)
             .expect("E");
-
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.owner);
-        };
-        return stack;
+        return items;
     }
 
     pub fn get_gender_a(&self) -> String {
