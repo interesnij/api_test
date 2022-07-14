@@ -1,10 +1,10 @@
 mod profile;
-mod settings;
+//mod settings;
 mod lists;
 
 pub use self::{
     profile::*,
-    settings::*,
+//    settings::*,
     lists::*,
 };
 
