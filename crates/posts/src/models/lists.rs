@@ -353,11 +353,11 @@ impl PostList {
         use crate::schema::post_list_reposts::dsl::post_list_reposts;
 
         let _connection = establish_connection();
-
         let count = post_list_reposts
             .filter(schema::post_list_reposts::post_list_id.eq(self.id))
             .filter(schema::post_list_reposts::message_id.is_not_null())
-            .load::<PostListRepost>(&_connection)
+            .select(schema::post_list_reposts::id)
+            .load::<i32>(&_connection)
             .expect("E.")
             .len();
 
@@ -377,12 +377,13 @@ impl PostList {
         let item_reposts = post_list_reposts
             .filter(schema::post_list_reposts::post_list_id.eq(self.id))
             .filter(schema::post_list_reposts::post_id.is_not_null())
-            .load::<PostListRepost>(&_connection)
+            .select(schema::post_list_reposts::post_id.nullable())
+            .load::<Option<i32>>(&_connection)
             .expect("E");
 
         let mut stack = Vec::new();
         for _item in item_reposts.iter() {
-            stack.push(_item.post_id.unwrap());
+            stack.push(_item.unwrap());
         };
         return posts
             .filter(schema::posts::id.eq_any(stack))
@@ -400,12 +401,13 @@ impl PostList {
             .filter(schema::post_list_reposts::post_list_id.eq(self.id))
             .filter(schema::post_list_reposts::post_id.is_not_null())
             .limit(6)
-            .load::<PostListRepost>(&_connection)
+            .select(schema::post_list_reposts::post_id.nullable())
+            .load::<Option<i32>>(&_connection)
             .expect("E");
 
         let mut stack = Vec::new();
         for _item in item_reposts.iter() {
-            stack.push(_item.post_id.unwrap());
+            stack.push(_item.unwrap());
         };
         return posts
             .filter(schema::posts::id.eq_any(stack))
@@ -429,14 +431,10 @@ impl PostList {
         let _connection = establish_connection();
         let ids = user_post_list_collections
             .filter(schema::user_post_list_collections::post_list_id.eq(self.id))
-            .load::<UserPostListCollection>(&_connection)
+            .select(schema::user_post_list_collections::user_id)
+            .load::<i32>(&_connection)
             .expect("E.");
-
-        let mut stack = Vec::new();
-        for _item in ids.iter() {
-            stack.push(_item.user_id);
-        };
-        return stack;
+        return ids;
     }
     pub fn get_communities_ids(&self) -> Vec<i32> {
         use crate::schema::community_post_list_collections::dsl::community_post_list_collections;
@@ -444,14 +442,10 @@ impl PostList {
         let _connection = establish_connection();
         let ids = community_post_list_collections
             .filter(schema::community_post_list_collections::post_list_id.eq(self.id))
-            .load::<CommunityPostListCollection>(&_connection)
+            .select(schema::community_post_list_collections::community_id)
+            .load::<i32>(&_connection)
             .expect("E.");
-
-        let mut stack = Vec::new();
-        for _item in ids.iter() {
-            stack.push(_item.community_id);
-        };
-        return stack;
+        return ids;
     }
     pub fn is_user_collection_list(&self, user_id: i32) -> bool {
         return self.get_users_ids().iter().any(|&i| i==user_id);
@@ -517,14 +511,11 @@ impl PostList {
         let items = post_list_perms
             .filter(schema::post_list_perms::post_list_id.eq(self.id))
             .filter(schema::post_list_perms::can_see_item.eq("b"))
-            .load::<PostListPerm>(&_connection)
+            .select(schema::post_list_perms::user_id)
+            .load::<i32>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        return stack;
+        return items;
     }
     pub fn get_can_see_el_include_users_ids(&self) -> Vec<i32> {
         use crate::schema::post_list_perms::dsl::post_list_perms;
@@ -533,14 +524,11 @@ impl PostList {
         let items = post_list_perms
             .filter(schema::post_list_perms::post_list_id.eq(self.id))
             .filter(schema::post_list_perms::can_see_item.eq("a"))
-            .load::<PostListPerm>(&_connection)
+            .select(schema::post_list_perms::user_id)
+            .load::<i32>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        return stack;
+        return items;
     }
     //pub fn get_can_see_el_exclude_users(&self) -> Vec<User> {
     //    use crate::utils::get_users_from_ids;
@@ -558,14 +546,11 @@ impl PostList {
         let items = post_list_perms
             .filter(schema::post_list_perms::post_list_id.eq(self.id))
             .filter(schema::post_list_perms::can_see_comment.eq("b"))
-            .load::<PostListPerm>(&_connection)
+            .select(schema::post_list_perms::user_id)
+            .load::<i32>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        return stack;
+        return items;
     }
     pub fn get_can_see_comment_include_users_ids(&self) -> Vec<i32> {
         use crate::schema::post_list_perms::dsl::post_list_perms;
@@ -574,14 +559,11 @@ impl PostList {
         let items = post_list_perms
             .filter(schema::post_list_perms::post_list_id.eq(self.id))
             .filter(schema::post_list_perms::can_see_comment.eq("a"))
-            .load::<PostListPerm>(&_connection)
+            .select(schema::post_list_perms::user_id)
+            .load::<i32>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        return stack;
+        return items;
     }
     //pub fn get_can_see_comment_exclude_users(&self) -> Vec<User> {
     //    use crate::utils::get_users_from_ids;
@@ -599,14 +581,11 @@ impl PostList {
         let items = post_list_perms
             .filter(schema::post_list_perms::post_list_id.eq(self.id))
             .filter(schema::post_list_perms::create_item.eq("b"))
-            .load::<PostListPerm>(&_connection)
+            .select(schema::post_list_perms::user_id)
+            .load::<i32>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        return stack;
+        return items;
     }
     pub fn get_create_el_include_users_ids(&self) -> Vec<i32> {
         use crate::schema::post_list_perms::dsl::post_list_perms;
@@ -615,14 +594,11 @@ impl PostList {
         let items = post_list_perms
             .filter(schema::post_list_perms::post_list_id.eq(self.id))
             .filter(schema::post_list_perms::create_item.eq("a"))
-            .load::<PostListPerm>(&_connection)
+            .select(schema::post_list_perms::user_id)
+            .load::<i32>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        return stack;
+        return items;
     }
     //pub fn get_create_el_exclude_users(&self) -> Vec<User> {
     //    use crate::utils::get_users_from_ids;
@@ -640,14 +616,11 @@ impl PostList {
         let items = post_list_perms
             .filter(schema::post_list_perms::post_list_id.eq(self.id))
             .filter(schema::post_list_perms::create_comment.eq("b"))
-            .load::<PostListPerm>(&_connection)
+            .select(schema::post_list_perms::user_id)
+            .load::<i32>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        return stack;
+        return items;
     }
     pub fn get_create_comment_include_users_ids(&self) -> Vec<i32> {
         use crate::schema::post_list_perms::dsl::post_list_perms;
@@ -656,14 +629,11 @@ impl PostList {
         let items = post_list_perms
             .filter(schema::post_list_perms::post_list_id.eq(self.id))
             .filter(schema::post_list_perms::create_comment.eq("a"))
-            .load::<PostListPerm>(&_connection)
+            .select(schema::post_list_perms::user_id)
+            .load::<i32>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        return stack;
+        return items;
     }
     //pub fn get_create_comment_exclude_users(&self) -> Vec<User> {
     //    use crate::utils::get_users_from_ids;
@@ -681,14 +651,11 @@ impl PostList {
         let items = post_list_perms
             .filter(schema::post_list_perms::post_list_id.eq(self.id))
             .filter(schema::post_list_perms::can_copy.eq("b"))
-            .load::<PostListPerm>(&_connection)
+            .select(schema::post_list_perms::user_id)
+            .load::<i32>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        return stack;
+        return items;
     }
     pub fn get_copy_el_include_users_ids(&self) -> Vec<i32> {
         use crate::schema::post_list_perms::dsl::post_list_perms;
@@ -697,14 +664,11 @@ impl PostList {
         let items = post_list_perms
             .filter(schema::post_list_perms::post_list_id.eq(self.id))
             .filter(schema::post_list_perms::can_copy.eq("a"))
-            .load::<PostListPerm>(&_connection)
+            .select(schema::post_list_perms::user_id)
+            .load::<i32>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        return stack;
+        return items;
     }
     //pub fn get_copy_el_exclude_users(&self) -> Vec<User> {
     //    use crate::utils::get_users_from_ids;
@@ -884,6 +848,7 @@ impl PostList {
         let _post_list_positions = community_post_list_positions
             .filter(schema::community_post_list_positions::community_id.eq(community_id))
             .filter(schema::community_post_list_positions::types.eq("a"))
+            .select(schema::community_post_list_positions::list_id)
             .limit(1)
             .load::<CommunityPostListPosition>(&_connection)
             .expect("E.");
@@ -891,8 +856,7 @@ impl PostList {
             return _post_list_positions
             .into_iter()
             .nth(0)
-            .unwrap()
-            .list_id;
+            .unwrap();
         }
         else {
             return PostList::get_community_post_list(community_id).id;
@@ -1026,7 +990,10 @@ impl PostList {
         create_el_users:       Option<Vec<i32>>,
         create_comment_users:  Option<Vec<i32>>,
         copy_el_users:         Option<Vec<i32>>,
-        reactions:             Option<String>) -> PostList {
+        reactions:             Option<String>,
+        owner_name:            String,
+        owner_link:            String,
+        owner_image:           Option<String>) -> PostList {
         use crate::models::{
             NewCommunityPostListPosition,
             NewUserPostListPosition,
@@ -1105,6 +1072,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  None,
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_exclude)
@@ -1124,6 +1094,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  None,
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_include)
@@ -1144,6 +1117,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  None,
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_exclude)
@@ -1163,6 +1139,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  None,
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_include)
@@ -1183,6 +1162,9 @@ impl PostList {
                         create_item:     Some("b".to_string()),
                         create_comment:  None,
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_exclude)
@@ -1202,6 +1184,9 @@ impl PostList {
                         create_item:     Some("a".to_string()),
                         create_comment:  None,
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_include)
@@ -1222,6 +1207,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  Some("b".to_string()),
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_exclude)
@@ -1241,6 +1229,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  Some("a".to_string()),
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_include)
@@ -1261,6 +1252,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  None,
                         can_copy:        Some("b".to_string()),
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_exclude)
@@ -1280,6 +1274,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  None,
                         can_copy:        Some("a".to_string()),
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_include)
@@ -1292,20 +1289,24 @@ impl PostList {
     }
     pub fn edit_list (
         &self,
-        name: String,
-        description: Option<String>,
-        image: Option<String>,
-        can_see_el: String,
-        can_see_comment: String,
-        create_el: String,
-        create_comment: String,
-        copy_el: String,
-        can_see_el_users: Option<Vec<i32>>,
+        name:                  String,
+        description:           Option<String>,
+        image:                 Option<String>,
+        can_see_el:            String,
+        can_see_comment:       String,
+        create_el:             String,
+        create_comment:        String,
+        copy_el:               String,
+        can_see_el_users:      Option<Vec<i32>>,
         can_see_comment_users: Option<Vec<i32>>,
-        create_el_users: Option<Vec<i32>>,
-        create_comment_users: Option<Vec<i32>>,
-        copy_el_users: Option<Vec<i32>>,
-        reactions: Option<String>) -> &PostList {
+        create_el_users:       Option<Vec<i32>>,
+        create_comment_users:  Option<Vec<i32>>,
+        copy_el_users:         Option<Vec<i32>>,
+        reactions:             Option<String>,
+        owner_name:            String,
+        owner_link:            String,
+        owner_image:           Option<String>
+    ) -> &PostList {
 
         use crate::schema::post_list_perms::dsl::post_list_perms;
 
@@ -1360,6 +1361,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  None,
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_exclude)
@@ -1379,6 +1383,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  None,
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_include)
@@ -1399,6 +1406,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  None,
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_exclude)
@@ -1418,6 +1428,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  None,
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_include)
@@ -1438,6 +1451,9 @@ impl PostList {
                         create_item:     Some("b".to_string()),
                         create_comment:  None,
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_exclude)
@@ -1457,6 +1473,9 @@ impl PostList {
                         create_item:     Some("a".to_string()),
                         create_comment:  None,
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_include)
@@ -1477,6 +1496,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  Some("b".to_string()),
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_exclude)
@@ -1496,6 +1518,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  Some("a".to_string()),
                         can_copy:        None,
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_include)
@@ -1516,6 +1541,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  None,
                         can_copy:        Some("b".to_string()),
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_exclude)
@@ -1535,6 +1563,9 @@ impl PostList {
                         create_item:     None,
                         create_comment:  None,
                         can_copy:        Some("a".to_string()),
+                        owner_name:      owner_name.clone(),
+                        owner_link:      owner_link.clone(),
+                        owner_image:     owner_image.clone(),
                     };
                     diesel::insert_into(schema::post_list_perms::table)
                         .values(&_new_include)
@@ -1558,11 +1589,11 @@ impl PostList {
             .nth(0)
             .unwrap();
     }
-    pub fn add_in_community_collections(&self, community_id: i32) -> bool {
+    pub fn add_in_community_collections(&self, community_id: i32) -> () {
         use crate::models::NewCommunityPostListPosition;
 
         if !self.get_communities_ids().iter().any(|&i| i==community_id) && self.community_id.is_some() && self.community_id.unwrap() == community_id {
-            return false;
+            return;
         }
         let _connection = establish_connection();
         let new_item = NewCommunityPostListCollection {
@@ -1584,14 +1615,13 @@ impl PostList {
             .values(&new_pos)
             .get_result::<CommunityPostListPosition>(&_connection)
             .expect("Error.");
-        return true;
     }
-    pub fn remove_in_community_collections(&self, community_id: i32) -> bool {
+    pub fn remove_in_community_collections(&self, community_id: i32) -> () {
         use crate::schema::community_post_list_collections::dsl::community_post_list_collections;
         use crate::schema::community_post_list_positions::dsl::community_post_list_positions;
 
         if self.get_communities_ids().iter().any(|&i| i==community_id) {
-            return false;
+            return;
         }
         let _connection = establish_connection();
         diesel::delete(community_post_list_collections
@@ -1606,14 +1636,13 @@ impl PostList {
          )
          .execute(&_connection)
          .expect("E");
-        return true;
     }
 
-    pub fn add_in_user_collections(&self, user_id: i32) -> bool {
+    pub fn add_in_user_collections(&self, user_id: i32) -> () {
         use crate::models::NewUserPostListPosition;
 
         if !self.get_users_ids().iter().any(|&i| i==user_id) && self.user_id == user_id {
-            return false;
+            return;
         }
         let _connection = establish_connection();
         let new_item = NewUserPostListCollection {
@@ -1635,14 +1664,13 @@ impl PostList {
             .values(&new_pos)
             .get_result::<UserPostListPosition>(&_connection)
             .expect("Error.");
-        return true;
     }
-    pub fn remove_in_user_collections(&self, user_id: i32) -> bool {
+    pub fn remove_in_user_collections(&self, user_id: i32) -> () {
         use crate::schema::user_post_list_collections::dsl::user_post_list_collections;
         use crate::schema::user_post_list_positions::dsl::user_post_list_positions;
 
         if self.get_users_ids().iter().any(|&i| i==user_id) {
-            return false;
+            return;
         }
         let _connection = establish_connection();
         diesel::delete(user_post_list_collections
@@ -1688,17 +1716,13 @@ impl PostList {
         use crate::schema::posts::dsl::posts;
 
         let _connection = establish_connection();
-        let fix_list = posts
+        let fix_list_ids = posts
             .filter(schema::posts::post_list_id.eq(self.id))
             .filter(schema::posts::types.lt("b"))
-            .load::<Post>(&_connection)
+            .select(schema::posts::id)
+            .load::<i32>(&_connection)
             .expect("E.");
-
-        let mut stack = Vec::new();
-        for _item in fix_list.iter() {
-            stack.push(_item.id);
-        };
-        return stack;
+        return fix_list_ids;
     }
     pub fn get_user_lists(user_pk: i32) -> Vec<PostList> {
         use crate::schema::user_post_list_collections::dsl::user_post_list_collections;
@@ -1709,15 +1733,12 @@ impl PostList {
         let position_lists = user_post_list_positions
             .filter(schema::user_post_list_positions::user_id.eq(user_pk))
             .filter(schema::user_post_list_positions::types.eq("a"))
-            .load::<UserPostListPosition>(&_connection)
+            .select(schema::user_post_list_positions::list_id)
+            .load::<i32>(&_connection)
             .expect("E.");
         if position_lists.len() > 0 {
-            let mut stack = Vec::new();
-            for _item in position_lists.iter() {
-                stack.push(_item.list_id);
-            };
             return post_lists
-                .filter(schema::post_lists::id.eq_any(stack))
+                .filter(schema::post_lists::id.eq_any(position_lists))
                 .filter(schema::post_lists::types.lt(10))
                 .load::<PostList>(&_connection)
                 .expect("E.");
@@ -1727,17 +1748,19 @@ impl PostList {
         let user_lists = post_lists
             .filter(schema::post_lists::user_id.eq(user_pk))
             .filter(schema::post_lists::types.lt(10))
-            .load::<PostList>(&_connection)
+            .select(schema::post_lists::id)
+            .load::<i32>(&_connection)
             .expect("E.");
         for _item in user_lists.iter() {
-            stack.push(_item.id);
+            stack.push(_item);
         };
         let user_collections = user_post_list_collections
             .filter(schema::user_post_list_collections::user_id.eq(user_pk))
-            .load::<UserPostListCollection>(&_connection)
+            .select(schema::user_post_list_collections::post_list_id)
+            .load::<i32>(&_connection)
             .expect("E.");
         for _item in user_collections.iter() {
-            stack.push(_item.post_list_id);
+            stack.push(_item);
         };
         return post_lists
             .filter(schema::post_lists::id.eq_any(stack))
@@ -1754,15 +1777,12 @@ impl PostList {
         let position_lists = community_post_list_positions
             .filter(schema::community_post_list_positions::community_id.eq(community_pk))
             .filter(schema::community_post_list_positions::types.eq("a"))
-            .load::<CommunityPostListPosition>(&_connection)
+            .select(schema::community_post_list_positions::list_id)
+            .load::<i32>(&_connection)
             .expect("E.");
         if position_lists.len() > 0 {
-            let mut stack = Vec::new();
-            for _item in position_lists.iter() {
-                stack.push(_item.list_id);
-            };
             return post_lists
-                .filter(schema::post_lists::id.eq_any(stack))
+                .filter(schema::post_lists::id.eq_any(position_lists))
                 .filter(schema::post_lists::types.lt(10))
                 .load::<PostList>(&_connection)
                 .expect("E.");
@@ -1772,17 +1792,19 @@ impl PostList {
         let community_lists = post_lists
             .filter(schema::post_lists::community_id.eq(community_pk))
             .filter(schema::post_lists::types.lt(10))
-            .load::<PostList>(&_connection)
+            .select(schema::post_lists::id)
+            .load::<i32>(&_connection)
             .expect("E.");
         for _item in community_lists.iter() {
-            stack.push(_item.id);
+            stack.push(_item);
         };
         let community_collections = community_post_list_collections
             .filter(schema::community_post_list_collections::community_id.eq(community_pk))
-            .load::<CommunityPostListCollection>(&_connection)
+            .select(schema::schema::community_post_list_collections::post_list_id)
+            .load::<i32>(&_connection)
             .expect("E.");
         for _item in community_collections.iter() {
-            stack.push(_item.post_list_id);
+            stack.push(_item);
         };
         return post_lists
             .filter(schema::post_lists::id.eq_any(stack))

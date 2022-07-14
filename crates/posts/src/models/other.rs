@@ -100,6 +100,9 @@ pub struct PostListPerm {
     pub create_item:     Option<String>,
     pub create_comment:  Option<String>,
     pub can_copy:        Option<String>,
+    pub owner_name:      String,
+    pub owner_link:      String,
+    pub owner_image:     Option<String>,
 }
 #[derive(Deserialize, Insertable)]
 #[table_name="post_list_perms"]
@@ -111,6 +114,9 @@ pub struct NewPostListPerm {
     pub create_item:     Option<String>,
     pub create_comment:  Option<String>,
     pub can_copy:        Option<String>,
+    pub owner_name:      String,
+    pub owner_link:      String,
+    pub owner_image:     Option<String>,
 }
 
 
@@ -141,7 +147,7 @@ pub struct NewPostVote {
 /////// PostCommentVote //////
 #[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
 pub struct PostCommentVote {
-    pub id:              i32, 
+    pub id:              i32,
     pub vote:            i16,
     pub user_id:         i32,
     pub post_comment_id: i32,

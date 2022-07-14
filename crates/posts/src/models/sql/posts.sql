@@ -125,21 +125,13 @@ CREATE TABLE post_list_perms (
     can_see_comment "char",
     create_item     "char",
     create_comment  "char",
-    can_copy        "char"
+    can_copy        "char",
+    owner_name      VARCHAR(200) NOT NULL,
+    owner_link      VARCHAR(200) NOT NULL,
+    owner_image     VARCHAR(500)
 );
 CREATE UNIQUE INDEX post_list_perms_unq ON post_list_perms (user_id, post_list_id);
 
-
--- удалить
-CREATE TABLE posts_perms (
-  id                   SERIAL PRIMARY KEY,
-  user_id              INT NOT NULL,
-  can_see_post         "char",
-  can_see_post_comment "char",
-  can_copy_post        "char",
-  can_work_post        "char"
-);
-CREATE UNIQUE INDEX posts_perms_unq ON posts_perms (user_id, id);
 -------
 
 CREATE TABLE post_reactions (
