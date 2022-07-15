@@ -64,6 +64,7 @@ fn switch(routes: &Route) -> Html {
         },
         Route::NotFound => html! {
              <NotFound />
+        ,
     }
 }
 
