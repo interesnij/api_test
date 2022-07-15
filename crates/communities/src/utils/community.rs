@@ -14,7 +14,7 @@ pub struct CommunitySubcategoryJson {
     pub id:          i32,
     pub name:        String,
     pub avatar:      Option<String>,
-
+}
 ////////
 #[derive(Serialize)]
 pub struct CommunityDetailJson {
