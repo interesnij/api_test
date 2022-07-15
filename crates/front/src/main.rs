@@ -48,3 +48,7 @@ fn app() -> Html {
         </BrowserRouter>
     }
 }
+
+fn main() {
+    yew::start_app::<Main>();
+}
