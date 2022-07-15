@@ -1597,19 +1597,24 @@ impl Community {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
         let count = self.count_members();
+        let step: i32;
 
         if page > 1 {
-            let step = (page - 1) * 20;
+            step = (page - 1) * 20;
             users = self.get_administrators(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            //if count > (page * 20).try_into().unwrap() {
+            //    next_page_number = page + 1;
+            //}
         }
         else {
             users = self.get_administrators(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            //if count > 20.try_into().unwrap() {
+            //    next_page_number = 2;
+            //}
+            step = 20;
+        }
+        if self.get_administrators(1, (step + 1).into()).len() > 0 {
+            next_page_number = page + 1;
         }
         return Json(UsersJson {
             users: users,
