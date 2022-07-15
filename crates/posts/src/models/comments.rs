@@ -177,6 +177,7 @@ impl PostComment {
             types:          self.get_code(),
             replies:        self.replies,
             reactions_list: self.get_reactions_json(user_id, reactions_list.clone()),
+            items:          None,
         };
         return card;
     }
@@ -191,6 +192,7 @@ impl PostComment {
             reactions:      self.reactions,
             types:          self.get_code(),
             reactions_list: self.get_reactions_json(user_id, reactions_list.clone()),
+            items:          None,
         };
         return card;
     }

@@ -139,7 +139,6 @@ pub struct PostDetailJson {
     pub owner_name:               String,
     pub owner_link:               String,
     pub owner_image:              Option<String>,
-    pub attach:                   Option<String>,
     pub comment_enabled:          bool,
     pub created:                  String,
     pub comment:                  i32,
@@ -156,6 +155,7 @@ pub struct PostDetailJson {
     pub is_user_can_see_comments: bool,
     pub is_user_can_create_el:    bool,
     pub comments:                 CommentsSmallJson,
+    pub items:                    Option<()>,
 }
 
 #[derive(Serialize)]
@@ -166,8 +166,8 @@ pub struct CardParentPostJson {
     pub owner_name:  String,
     pub owner_link:  String,
     pub owner_image: Option<String>,
-    pub attach:      Option<String>,
     pub created:     String,
+    pub items:       Option<()>,
 }
 #[derive(Serialize)]
 // это инфо о тех, кто репостил, и цифры
@@ -234,12 +234,12 @@ pub struct CardCommentJson {
     pub owner_name:     String,
     pub owner_link:     String,
     pub owner_image:    Option<String>,
-    pub attach:         Option<String>,
     pub created:        String,
     pub reactions:      i32,
     pub types:          String, // например cpo1
     pub replies:        i32,    // кол-во ответов
     pub reactions_list: Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
+    pub items:          Option<()>,
 }
 #[derive(Serialize)]
 // это ответ на коммент
@@ -248,11 +248,11 @@ pub struct CardReplyJson {
     pub owner_name:     String,
     pub owner_link:     String,
     pub owner_image:    Option<String>,
-    pub attach:         Option<String>,
     pub created:        String,
     pub reactions:      i32,
     pub types:          String, // например cpo1 - ответ
     pub reactions_list: Option<Vec<ReactionBlockJson>>, // блок реакции (6 объектов)
+    pub items:          Option<()>,
 }
 
 #[derive(Serialize)]

@@ -154,13 +154,14 @@ impl Post {
         if self.parent_id.is_some() {
             let _parent = self.get_parent();
             parent = Some(CardParentPostJson {
-                id:              _parent.id,
-                content:         _parent.content.clone(),
-                owner_name:      _parent.owner_name.clone(),
-                owner_link:      _parent.owner_link.clone(),
-                owner_image:     _parent.owner_image.clone(),
-                attach:          _parent.attach.clone(),
-                created:         _parent.created.format("%d-%m-%Y в %H:%M").to_string(),
+                id:          _parent.id,
+                content:     _parent.content.clone(),
+                owner_name:  _parent.owner_name.clone(),
+                owner_link:  _parent.owner_link.clone(),
+                owner_image: _parent.owner_image.clone(),
+                attach:      _parent.attach.clone(),
+                created:     _parent.created.format("%d-%m-%Y в %H:%M").to_string(),
+                items:       None,
             })
         }
         else {
@@ -266,27 +267,28 @@ impl Post {
             }
         };
         return PostDetailJson {
-                content:         self.content.clone(),
-                owner_name:      self.owner_name.clone(),
-                owner_link:      self.owner_link.clone(),
-                owner_image:     self.owner_image.clone(),
-                attach:          self.attach.clone(),
-                comment_enabled: self.comment_enabled,
-                created:         self.created.format("%d-%m-%Y в %H:%M").to_string(),
-                comment:         self.comment,
-                view:            self.view,
-                repost:          self.repost,
-                is_signature:    self.is_signature,
-                reactions:       self.reactions,
-                types:           self.get_code(),
-                parent:          self.get_parent_post_json(),
-                reposts:         self.get_6_reposts_post_json(),
-                reactions_list:  self.get_reactions_json(user_id, reactions_list.clone()),
-                prev:            prev,
-                next:            next,
+                content:                  self.content.clone(),
+                owner_name:               self.owner_name.clone(),
+                owner_link:               self.owner_link.clone(),
+                owner_image:              self.owner_image.clone(),
+                attach:                   self.attach.clone(),
+                comment_enabled:          self.comment_enabled,
+                created:                  self.created.format("%d-%m-%Y в %H:%M").to_string(),
+                comment:                  self.comment,
+                view:                     self.view,
+                repost:                   self.repost,
+                is_signature:             self.is_signature,
+                reactions:                self.reactions,
+                types:                    self.get_code(),
+                parent:                   self.get_parent_post_json(),
+                reposts:                  self.get_6_reposts_post_json(),
+                reactions_list:           self.get_reactions_json(user_id, reactions_list.clone()),
+                prev:                     prev,
+                next:                     next,
                 is_user_can_see_comments: list.is_user_can_see_comment(user_id),
-                is_user_can_create_el: list.is_user_can_create_el(user_id),
-                comments: self.get_comments_post_json(user_id, reactions_list.clone(), page),
+                is_user_can_create_el:    list.is_user_can_create_el(user_id),
+                comments:                 self.get_comments_post_json(user_id, reactions_list.clone(), page),
+                items:                    None,
             };
     }
     pub fn get_post_json (&self, user_id: i32, reactions_list: Vec<i16>,) -> CardPostJson {
@@ -633,7 +635,7 @@ impl Post {
         return true;
     }
 
-    pub fn edit_post(
+    pub fn edit_post (
         &self,
         content: Option<String>,
         attach: Option<String>,
