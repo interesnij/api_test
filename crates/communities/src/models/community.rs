@@ -22,6 +22,8 @@ use crate::utils::{
     CommunityCategoryJson,
     UsersJson,
     CardUserJson,
+    CommunityInfoJson,
+    CommunityDetailJson,
 };
 
 /////// CommunityCategories //////
@@ -1542,7 +1544,7 @@ impl Community {
                 next_page_number = 2;
             }
         }
-        return Json(UsersListJson {
+        return Json(UsersJson {
             users: users,
             next_page: next_page_number,
         });
