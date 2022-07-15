@@ -1,49 +1,50 @@
+use yew_router::prelude::*;
 use yew::prelude::*;
+
 use reqwasm::http::Request;
 use serde::Deserialize;
 
 
-#[derive(Clone, PartialEq, Deserialize)]
-struct TestData {
-    name:        String,
-    description: String,
+#[derive(Clone, Routable, PartialEq)]
+enum Route {
+    #[at("/")]
+    Home,
+
+    #[at("/secure")]
+    Secure,
+
+    #[not_found]
+    #[at("/404")]
+    NotFound,
 }
 
-#[function_component(App)]
-fn app() -> Html {
-    let test = use_state(|| TestData {
-        name:        "a".to_string(),
-        description: "b".to_string(),
-    });
-    {
-        let test = test.clone();
-        use_effect_with_deps(move |_| {
-            let test = test.clone();
-            wasm_bindgen_futures::spawn_local(async move {
-                let fetched_test: TestData = Request::get("/api/v1/test/")
-                    .send()
-                    .await
-                    .unwrap()
-                    .json()
-                    .await
-                    .unwrap();
-                test.set(fetched_test);
-            });
-            || ()
-        }, ());
-    }
-
+#[function_component(Secure)]
+fn secure() -> Html {
+    let history = use_history().unwrap();
+    let onclick = Callback::once(move |_| history.push(Route::Home));
     html! {
-        <>
-        <h1>{ "Первый тест" }</h1>
         <div>
-          <h3>{format!("{}", test.name)}</h3>
-          <p>{format!("{}", test.description)}</p>
+            <h1>{ "Secure" }</h1>
+            <button {onclick}>{ "Go Home" }</button>
         </div>
-    </>
     }
 }
 
-fn main() {
-    yew::start_app::<App>();
+fn switch(routes: &Route) -> Html {
+    match routes {
+        Route::Home => html! { <h1>{ "Home" }</h1> },
+        Route::Secure => html! {
+            <Secure />
+        },
+        Route::NotFound => html! { <h1>{ "404" }</h1> },
+    }
+}
+
+#[function_component(Main)]
+fn app() -> Html {
+    html! {
+        <BrowserRouter>
+            <Switch<Route> render={Switch::render(switch)} />
+        </BrowserRouter>
+    }
 }
