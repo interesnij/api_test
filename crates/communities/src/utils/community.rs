@@ -5,7 +5,7 @@ use serde::Serialize;
 #[derive(Serialize)]
 // универсальный сериализатор для списков пользователей
 pub struct UsersJson {
-    pub users:     Vec<CardOwnerJson>,
+    pub users:     Vec<CardUserJson>,
     pub next_page: i32,
 }
 #[derive(Serialize)]
