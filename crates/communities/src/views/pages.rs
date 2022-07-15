@@ -16,5 +16,5 @@ pub fn pages_routes(config: &mut web::ServiceConfig) {
 }
 
 pub async fn index_page(req: HttpRequest) -> impl Responder {
-    HttpResponse::Ok().body("<p class='background: #ccc;'>hello, I communities server.</p>")
+    HttpResponse::Ok().body("<div style='background: #ccc;position:absolute;top:0;left:0;right:0;bottom:0'><p>hello, I communities server.</p></div>")
 }
