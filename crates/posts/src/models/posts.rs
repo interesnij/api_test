@@ -159,7 +159,6 @@ impl Post {
                 owner_name:  _parent.owner_name.clone(),
                 owner_link:  _parent.owner_link.clone(),
                 owner_image: _parent.owner_image.clone(),
-                attach:      _parent.attach.clone(),
                 created:     _parent.created.format("%d-%m-%Y в %H:%M").to_string(),
                 items:       None,
             })
@@ -271,7 +270,6 @@ impl Post {
                 owner_name:               self.owner_name.clone(),
                 owner_link:               self.owner_link.clone(),
                 owner_image:              self.owner_image.clone(),
-                attach:                   self.attach.clone(),
                 comment_enabled:          self.comment_enabled,
                 created:                  self.created.format("%d-%m-%Y в %H:%M").to_string(),
                 comment:                  self.comment,
