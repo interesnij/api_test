@@ -1596,21 +1596,17 @@ impl Community {
     pub fn get_administrators_json(&self, page: i32) -> Json<UsersJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        //let count = self.count_members();
+
+        // это номер оффсета за пределами выборки, чтобы по нему
+        // проверять, есть ли элементы новой страницы
         let have_next: i32;
 
         if page > 1 {
             have_next = page * 20 + 1;
             users = self.get_administrators(20, ((page - 1) * 20).into());
-            //if count > (page * 20).try_into().unwrap() {
-            //    next_page_number = page + 1;
-            //}
         }
         else {
             users = self.get_administrators(20, 0);
-            //if count > 20.try_into().unwrap() {
-            //    next_page_number = 2;
-            //}
             have_next = 20;
         }
         if self.get_administrators(1, have_next.into()).len() > 0 {
