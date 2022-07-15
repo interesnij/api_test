@@ -43,13 +43,26 @@ fn home() -> Html {
 #[function_component(NotFound)]
 fn not_found() -> Html {
     let history = use_history().unwrap();
-    let onclick = Callback::once(move |_| history.push(Route::Home));
-    //let onclick = Callback::once(move |_| history.push(Route::Secure));
+    let go_home_button = {
+        let history = history.clone();
+        let onclick = Callback::once(move |_| history.push(Route::Home));
+        html! {
+            <button {onclick}>{"Home"}</button>
+        }
+    };
+
+    let go_secure_button = {
+        let history = history.clone();
+        let onclick = Callback::once(move |_| history.push(Route::Secure));
+        html! {
+            <button {onclick}>{"Secure"}</button>
+        }
+    };
     html! {
-        <div>
-            <h1>{ "404" }</h1>
-            <button {onclick}>{ "Go Home" }</button>
-        </div>
+        <>
+            {go_home_button}
+            {go_secure_button}
+        </>
     }
 }
 
