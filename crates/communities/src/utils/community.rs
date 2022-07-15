@@ -1,5 +1,22 @@
 use serde::Serialize;
 
+
+////////
+#[derive(Serialize)]
+// универсальный сериализатор для списков пользователей
+pub struct UsersJson {
+    pub users:     Vec<CardOwnerJson>,
+    pub next_page: i32,
+}
+#[derive(Serialize)]
+// это объект пользователя
+pub struct CardUserJson {
+    pub id:          i32,
+    pub owner_name:  String,
+    pub owner_link:  String,
+    pub owner_image: Option<String>,
+}
+
 ////////
 #[derive(Serialize)]
 pub struct CommunityCategoryJson {
@@ -28,22 +45,6 @@ pub struct CommunityDetailJson {
     pub image:       String,
     pub cover:       Option<String>,
     pub user_id:     i32,
-}
-
-////////
-#[derive(Serialize)]
-// универсальный сериализатор для списков пользователей
-pub struct OwnersJson {
-    pub users:     Vec<CardOwnerJson>,
-    pub next_page: i32,
-}
-#[derive(Serialize)]
-// это объект пользователя
-pub struct CardOwnerJson {
-    pub id:          i32,
-    pub owner_name:  String,
-    pub owner_link:  String,
-    pub owner_image: Option<String>,
 }
 
 ////////
