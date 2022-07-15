@@ -1601,7 +1601,7 @@ impl Community {
 
         if page > 1 {
             have_next = page * 20 + 1;
-            users = self.get_administrators(20, (page - 1) * 20);
+            users = self.get_administrators(20, ((page - 1) * 20).into());
             //if count > (page * 20).try_into().unwrap() {
             //    next_page_number = page + 1;
             //}
