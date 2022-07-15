@@ -1592,8 +1592,31 @@ impl Community {
         }
         return json;
     }
-    pub fn get_administrators(&self, limit: i64, offset: i64) -> Vec<i32> {
-        //use crate::utils::get_users_from_ids;
+
+    pub fn get_administrators_json(&self, page: i32) -> Json<UsersJson> {
+        let mut next_page_number = 0;
+        let users: Vec<CardUserJson>;
+        let count = self.count_members();
+
+        if page > 1 {
+            let step = (page - 1) * 20;
+            users = self.get_administrators(20, step.into());
+            if count > (page * 20).try_into().unwrap() {
+                next_page_number = page + 1;
+            }
+        }
+        else {
+            users = self.get_administrators(20, 0);
+            if count > 20.try_into().unwrap() {
+                next_page_number = 2;
+            }
+        }
+        return Json(UsersJson {
+            users: users,
+            next_page: next_page_number,
+        });
+    }
+    pub fn get_administrators(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::communities_memberships::dsl::communities_memberships;
 
         let _connection = establish_connection();
@@ -1605,15 +1628,18 @@ impl Community {
             .load::<CommunitiesMembership>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        //return get_users_from_ids(stack);
-        return stack;
+        let mut json = Vec::new();
+        for i in items.iter() {
+            json.push( CardUserJson {
+                id:          i.user_id,
+                owner_name:  i.owner_name.clone(),
+                owner_link:  i.owner_link.clone(),
+                owner_image: i.owner_image.clone(),
+            });
+        }
+        return json;
     }
-    pub fn get_editors(&self, limit: i64, offset: i64) -> Vec<i32> {
-        //use crate::utils::get_users_from_ids;
+    pub fn get_editors(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::communities_memberships::dsl::communities_memberships;
 
         let _connection = establish_connection();
@@ -1625,15 +1651,18 @@ impl Community {
             .load::<CommunitiesMembership>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        //return get_users_from_ids(stack);
-        return stack;
+        let mut json = Vec::new();
+        for i in items.iter() {
+            json.push( CardUserJson {
+                id:          i.user_id,
+                owner_name:  i.owner_name.clone(),
+                owner_link:  i.owner_link.clone(),
+                owner_image: i.owner_image.clone(),
+            });
+        }
+        return json;
     }
-    pub fn get_moderators(&self, limit: i64, offset: i64) -> Vec<i32> {
-        //use crate::utils::get_users_from_ids;
+    pub fn get_moderators(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::communities_memberships::dsl::communities_memberships;
 
         let _connection = establish_connection();
@@ -1645,15 +1674,18 @@ impl Community {
             .load::<CommunitiesMembership>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        //return get_users_from_ids(stack);
-        return stack;
+        let mut json = Vec::new();
+        for i in items.iter() {
+            json.push( CardUserJson {
+                id:          i.user_id,
+                owner_name:  i.owner_name.clone(),
+                owner_link:  i.owner_link.clone(),
+                owner_image: i.owner_image.clone(),
+            });
+        }
+        return json;
     }
-    pub fn get_advertisers(&self, limit: i64, offset: i64) -> Vec<i32> {
-        //use crate::utils::get_users_from_ids;
+    pub fn get_advertisers(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::communities_memberships::dsl::communities_memberships;
 
         let _connection = establish_connection();
@@ -1665,17 +1697,17 @@ impl Community {
             .load::<CommunitiesMembership>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in items.iter() {
-            stack.push(_item.user_id);
-        };
-        //return get_users_from_ids(stack);
-        return stack;
+        let mut json = Vec::new();
+        for i in items.iter() {
+            json.push( CardUserJson {
+                id:          i.user_id,
+                owner_name:  i.owner_name.clone(),
+                owner_link:  i.owner_link.clone(),
+                owner_image: i.owner_image.clone(),
+            });
+        }
+        return json;
     }
-    //pub fn get_staff_users(&self) -> Vec<User> {
-    //    use crate::utils::get_users_from_ids;
-    //    return get_users_from_ids(self.get_staff_users_ids());
-    //}
 
     pub fn get_private_model(&self) -> CommunityPrivate {
         use crate::schema::community_privates::dsl::community_privates;
