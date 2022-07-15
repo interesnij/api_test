@@ -41,7 +41,7 @@ impl CommunityCategory {
             .order(schema::community_categorys::position)
             .load::<CommunityCategory>(&_connection)
             .expect("E");
-        let json = Vec::new();
+        let mut json = Vec::new();
         for c in cats.iter() {
             json.push (CommunityCategoryJson {
                 id:     c.id,
@@ -125,7 +125,7 @@ impl CommunitySubcategory {
             .order(schema::community_subcategorys::position)
             .load::<CommunitySubcategory>(&_connection)
             .expect("E");
-        let json = Vec::new();
+        let mut json = Vec::new();
         for c in cats.iter() {
             json.push (CommunitySubcategoryJson {
                 id:     c.id,
