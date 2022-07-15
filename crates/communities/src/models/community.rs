@@ -328,7 +328,7 @@ impl Community {
              description: self.description.clone(),
              status:      self.status.clone(),
              types:       self.types,
-             perm:        self.perm,
+             perm:        self.perm.clone(),
              link:        self.get_slug(), // community.get_link()
              image:       self.get_bb_avatar(),
              cover:       self.cover.clone(),
