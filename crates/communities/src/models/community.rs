@@ -38,8 +38,7 @@ impl CommunityCategory {
         let cats = community_categorys
             .order(schema::community_categorys::position)
             .load::<CommunityCategory>(&_connection)
-            .expect("E")
-            .len();
+            .expect("E");
         let json = Vec::new();
         for c in cats.iter() {
             json.push (CommunityCategoryJson {
@@ -116,7 +115,7 @@ pub struct CommunitySubcategory {
 }
 
 impl CommunitySubcategory {
-    use crate::utils::CommunityCategoryJson;
+    use crate::utils::CommunitySubcategoryJson;
 
     pub fn get_categories_json() -> Json<Vec<CommunitySubcategoryJson>> {
         use crate::schema::community_subcategorys::dsl::community_subcategorys;
@@ -125,8 +124,7 @@ impl CommunitySubcategory {
         let cats = community_subcategorys
             .order(schema::community_subcategorys::position)
             .load::<CommunitySubcategory>(&_connection)
-            .expect("E")
-            .len();
+            .expect("E");
         let json = Vec::new();
         for c in cats.iter() {
             json.push (CommunitySubcategoryJson {
