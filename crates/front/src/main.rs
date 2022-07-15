@@ -48,7 +48,7 @@ fn not_found() -> Html {
     html! {
         <div>
             <h1>{ "404" }</h1>
-            <button {onclick_home}>{ "Go Secure" }</Home>
+            <button {onclick_home}>{ "Go Home" }</button>
             <button {onclick_secure}>{ "Go Secure" }</button>
         </div>
     }
