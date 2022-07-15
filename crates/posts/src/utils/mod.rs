@@ -116,7 +116,6 @@ pub struct CardPostJson {
     pub owner_name:      String,
     pub owner_link:      String,
     pub owner_image:     Option<String>,
-    pub attach:          Option<String>,
     pub comment_enabled: bool,
     pub created:         String,
     pub comment:         i32,
