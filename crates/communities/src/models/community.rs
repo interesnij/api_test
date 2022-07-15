@@ -21,7 +21,7 @@ use crate::utils::{
     CommunitySubcategoryJson,
     CommunityCategoryJson,
     UsersJson,
-    UserJson,
+    CardUserJson,
 };
 
 /////// CommunityCategories //////
