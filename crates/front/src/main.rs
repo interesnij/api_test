@@ -40,6 +40,19 @@ fn home() -> Html {
         </div>
     }
 }
+#[function_component(NotFound)]
+fn not_found() -> Html {
+    let history = use_history().unwrap();
+    let onclick_home = Callback::once(move |_| history.push(Route::Home));
+    let onclick_secure = Callback::once(move |_| history.push(Route::Secure));
+    html! {
+        <div>
+            <h1>{ "404" }</h1>
+            <button {onclick_home}>{ "Go Secure" }</Home>
+            <button {onclick_secure}>{ "Go Secure" }</button>
+        </div>
+    }
+}
 
 fn switch(routes: &Route) -> Html {
     match routes {
@@ -49,7 +62,8 @@ fn switch(routes: &Route) -> Html {
         Route::Secure => html! {
             <Secure />
         },
-        Route::NotFound => html! { <h1>{ "404" }</h1> },
+        Route::NotFound => html! {
+             <NotFound />
     }
 }
 
