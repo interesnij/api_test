@@ -296,7 +296,6 @@ impl Post {
                 owner_name:      self.owner_name.clone(),
                 owner_link:      self.owner_link.clone(),
                 owner_image:     self.owner_image.clone(),
-                attach:          self.attach.clone(),
                 comment_enabled: self.comment_enabled,
                 created:         self.created.format("%d-%m-%Y в %H:%M").to_string(),
                 comment:         self.comment,
