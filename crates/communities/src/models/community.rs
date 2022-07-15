@@ -17,7 +17,11 @@ use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
 use crate::utils::establish_connection;
 use actix_web::web::Json;
-use crate::utils::CardOwnerJson;
+use crate::utils::{
+    CardOwnerJson,
+    CommunitySubcategoryJson,
+    CommunityCategoryJson,
+};
 
 /////// CommunityCategories //////
 #[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
@@ -29,8 +33,6 @@ pub struct CommunityCategory {
 }
 
 impl CommunityCategory {
-    use crate::utils::CommunityCategoryJson;
-
     pub fn get_categories_json() -> Json<Vec<CommunityCategoryJson>> {
         use crate::schema::community_categorys::dsl::community_categorys;
 
@@ -115,8 +117,6 @@ pub struct CommunitySubcategory {
 }
 
 impl CommunitySubcategory {
-    use crate::utils::CommunitySubcategoryJson;
-
     pub fn get_categories_json() -> Json<Vec<CommunitySubcategoryJson>> {
         use crate::schema::community_subcategorys::dsl::community_subcategorys;
 
