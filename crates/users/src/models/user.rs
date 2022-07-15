@@ -3439,15 +3439,16 @@ impl User {
             return None;
         }
     }
-    pub fn add_new_subscriber(&self, user: &User) -> () {
-        use crate::models::{NewsUserCommunitie, NewNewsUserCommunitie};
+    pub fn add_new_user_subscriber(&self, user: &User) -> () {
+        use crate::models::NewNewsUserCommunitie;
         use crate::schema::news_user_communities::dsl::news_user_communities;
 
         let _connection = establish_connection();
         if news_user_communities
             .filter(schema::news_user_communities::owner.eq(self.id))
             .filter(schema::news_user_communities::user_id.eq(user.id))
-            .load::<NewsUserCommunitie>(&_connection)
+            .select(schema::news_user_communities::id)
+            .load::<i32>(&_connection)
             .expect("E").len() == 0 {
                 let _new = NewNewsUserCommunitie {
                     owner: self.id,
@@ -3490,21 +3491,19 @@ impl User {
         }
         return false;
     }
-    pub fn delete_new_subscriber(&self, user_id: i32) -> bool {
+    pub fn delete_new_subscriber(&self, new_id: i32) -> bool {
         use crate::models::NewsUserCommunitie;
         use crate::schema::news_user_communities::dsl::news_user_communities;
 
         let _connection = establish_connection();
         let _new = news_user_communities
-            .filter(schema::news_user_communities::owner.eq(self.id))
-            .filter(schema::news_user_communities::user_id.eq(user_id))
+            .filter(schema::news_user_communities::id.eq(new_id))
             .load::<NewsUserCommunitie>(&_connection)
             .expect("E");
         if _new.len() > 0 && _new[0].owner == self.id {
             diesel::delete(
                 news_user_communities
-                    .filter(schema::news_user_communities::owner.eq(self.id))
-                    .filter(schema::news_user_communities::user_id.eq(user_id))
+                    .filter(schema::news_user_communities::id.eq(new_id))
                 )
                 .execute(&_connection)
                 .expect("E");
@@ -3528,15 +3527,16 @@ impl User {
             }
     }
 
-    pub fn add_notification_subscriber(&self, user: &User) -> () {
-        use crate::models::{NotifyUserCommunitie, NewNotifyUserCommunitie};
+    pub fn add_notification_user_subscriber(&self, user: &User) -> () {
+        use crate::models::NewNotifyUserCommunitie;
         use crate::schema::notify_user_communities::dsl::notify_user_communities;
 
         let _connection = establish_connection();
         if notify_user_communities
             .filter(schema::notify_user_communities::owner.eq(self.id))
             .filter(schema::notify_user_communities::user_id.eq(user.id))
-            .load::<NotifyUserCommunitie>(&_connection)
+            .select(schema::notify_user_communities::id)
+            .load::<i32>(&_connection)
             .expect("E").len() == 0 {
                 let _new = NewNotifyUserCommunitie {
                     owner: self.id,
@@ -3571,14 +3571,13 @@ impl User {
                 .expect("Error.");
         }
     }
-    pub fn delete_notification_subscriber(&self, user_id: i32) -> () {
+    pub fn delete_notification_subscriber(&self, notify_id: i32) -> () {
         use crate::models::NotifyUserCommunitie;
         use crate::schema::notify_user_communities::dsl::notify_user_communities;
 
         let _connection = establish_connection();
         let _notify = notify_user_communities
-            .filter(schema::notify_user_communities::owner.eq(self.id))
-            .filter(schema::notify_user_communities::user_id.eq(user_id))
+            .filter(schema::notify_user_communities::id.eq(notify_id))
             .load::<NotifyUserCommunitie>(&_connection)
             .expect("E");
         if _notify.len() > 0 && _notify[0].owner == self.id {
@@ -3605,6 +3604,79 @@ impl User {
                 .expect("Error.");
             }
     }
+
+
+    pub fn add_new_community_subscriber (
+        &self,
+        community_id: i32,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> () {
+        use crate::models::NewNewsUserCommunitie;
+        use crate::schema::news_user_communities::dsl::news_user_communities;
+
+        let _connection = establish_connection();
+        if news_user_communities
+            .filter(schema::news_user_communities::owner.eq(self.id))
+            .filter(schema::news_user_communities::community_id.eq(community_id))
+            .select(schema::news_user_communities::id)
+            .load::<i32>(&_connection)
+            .expect("E").len() == 0 {
+                let _new = NewNewsUserCommunitie {
+                    owner: self.id,
+                    list_id: None,
+                    user_id: None,
+                    community_id: Some(community_id),
+                    mute: false,
+                    sleep: None,
+                    owner_name: owner_name.clone(),
+                    owner_link: owner_link.clone(),
+                    owner_image: owner_image.clone(),
+                };
+            diesel::insert_into(schema::news_user_communities::table)
+                .values(&_new)
+                .get_result::<NewsUserCommunitie>(&_connection)
+                .expect("Error.");
+        }
+    }
+
+    pub fn add_notification_community_subscriber (
+        &self,
+        community_id: i32,
+        owner_name: String,
+        owner_link: String,
+        owner_image: Option<String>,
+    ) -> () {
+        use crate::models::{NotifyUserCommunitie, NewNotifyUserCommunitie};
+        use crate::schema::notify_user_communities::dsl::notify_user_communities;
+
+        let _connection = establish_connection();
+        if notify_user_communities
+            .filter(schema::notify_user_communities::owner.eq(self.id))
+            .filter(schema::notify_user_communities::community_id.eq(community_id))
+            .select(schema::notify_user_communities::id)
+            .load::<i32>(&_connection)
+            .expect("E").len() == 0 {
+                let _new = NewNotifyUserCommunitie {
+                    owner: self.id,
+                    list_id: None,
+                    user_id: None,
+                    community_id: Some(community_id),
+                    mute: false,
+                    sleep: None,
+                    owner_name: owner_name.clone(),
+                    owner_link: owner_link.clone(),
+                    owner_image: owner_image.clone(),
+                };
+                diesel::insert_into(schema::notify_user_communities::table)
+                    .values(&_new)
+                    .get_result::<NotifyUserCommunitie>(&_connection)
+                    .expect("Error.");
+        }
+    }
+
+
     pub fn get_or_create_featured_objects(&self, user: User) -> () {
         use crate::models::{NewFeaturedUserCommunitie, FeaturedUserCommunitie};
         use crate::schema::featured_user_communities::dsl::featured_user_communities;
@@ -3676,7 +3748,7 @@ impl User {
             .expect("Error.");
         user.plus_follows(1);
         if user.is_user_can_see_all(self.id) == true {
-            self.add_new_subscriber(&user);
+            self.add_new_user_subscriber(&user);
             self.get_or_create_featured_objects(user);
         }
     }
@@ -3770,7 +3842,7 @@ impl User {
         self.plus_friends(1);
         self.minus_follows(1);
         if user.is_user_can_see_all(self.id) == false {
-            self.add_new_subscriber(&user);
+            self.add_new_user_subscriber(&user);
             self.get_or_create_featured_objects(user);
         }
     }

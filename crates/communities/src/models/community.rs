@@ -522,6 +522,12 @@ impl Community {
             .expect("E");
     }
 
+    // придется усложнить работу создания сообщества, в частности
+    // создание подписчика:
+    // 1. Сначала создаётся сообщество
+    // 2. Из формы название и ссылка нового сообщества присылается
+    // обратно для создания объекта стены и уведомлений, ведь
+    // создатель должен получать их как админ
     pub fn create_community (
         name: String,
         category_id: i32,
@@ -2444,9 +2450,9 @@ impl Community {
                     .expect("Error.");
             }
         }
-
         return true;
     }
+
 }
 
 
@@ -2483,6 +2489,18 @@ pub struct NewCommunitiesMembership {
     pub owner_image:      Option<String>,
 }
 impl CommunitiesMembership {
+    // придется усложнить работу создания подписчика:
+    // 1. Сначала создаётся подписчик
+    // 2. Затем на сервере пользователей создаются объекты стены и
+    // уведомлений, таблицы то источников находятся там.
+
+    //user.plus_communities(1);
+    //user.plus_community_visited(community.id);
+    //if is_administrator || is_editor || is_moderator {
+    //    add_notification_community_subscriber(user.id);
+    //}
+    //add_new_community_subscriber(user.id);
+
     pub fn create_membership (
         user_id: i32,
         community: &Community,
@@ -2514,13 +2532,7 @@ impl CommunitiesMembership {
             .get_result::<CommunitiesMembership>(&_connection)
             .expect("E.");
 
-        //if is_administrator || is_editor || is_moderator {
-        //    community.add_notify_subscriber(user.id);
-        //}
-        //community.add_new_subscriber(user.id);
         community.plus_members(1);
-        //user.plus_communities(1);
-        //user.plus_community_visited(community.id);
         return new_member;
     }
 }
