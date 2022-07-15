@@ -1596,12 +1596,12 @@ impl Community {
     pub fn get_administrators_json(&self, page: i32) -> Json<UsersJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.count_members();
-        let step: i32;
+        //let count = self.count_members();
+        let have_next: i32;
 
         if page > 1 {
-            step = (page - 1) * 20;
-            users = self.get_administrators(20, step.into());
+            have_next = page * 20 + 1;
+            users = self.get_administrators(20, (page - 1) * 20);
             //if count > (page * 20).try_into().unwrap() {
             //    next_page_number = page + 1;
             //}
@@ -1611,9 +1611,9 @@ impl Community {
             //if count > 20.try_into().unwrap() {
             //    next_page_number = 2;
             //}
-            step = 20;
+            have_next = 20;
         }
-        if self.get_administrators(1, (step + 1).into()).len() > 0 {
+        if self.get_administrators(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
         }
         return Json(UsersJson {
