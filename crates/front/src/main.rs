@@ -29,10 +29,23 @@ fn secure() -> Html {
         </div>
     }
 }
+#[function_component(Home)]
+fn home() -> Html {
+    let history = use_history().unwrap();
+    let onclick = Callback::once(move |_| history.push(Route::Secure));
+    html! {
+        <div>
+            <h1>{ "Home" }</h1>
+            <button {onclick}>{ "Go Secure" }</button>
+        </div>
+    }
+}
 
 fn switch(routes: &Route) -> Html {
     match routes {
-        Route::Home => html! { <h1>{ "Home" }</h1> },
+        Route::Home => html! {
+             <Home />
+         },
         Route::Secure => html! {
             <Secure />
         },
