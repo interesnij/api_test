@@ -1,12 +1,11 @@
 use serde::Serialize;
 
-
 ////////
 #[derive(Serialize)]
 pub struct CommunityCategoryJson {
     pub id:     i32,
     pub name:   String,
-    pub avatar: String,
+    pub avatar: Option<String>,
 }
 
 ////////
@@ -14,9 +13,7 @@ pub struct CommunityCategoryJson {
 pub struct CommunitySubcategoryJson {
     pub id:          i32,
     pub name:        String,
-    pub category_id: i32,
-    pub avatar:      String,
-}
+    pub avatar:      Option<String>,
 
 ////////
 #[derive(Serialize)]

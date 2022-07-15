@@ -17,9 +17,7 @@ use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
 use crate::utils::establish_connection;
 use actix_web::web::Json;
-use crate::utils::{
-    CardOwnerJson,
-};
+use crate::utils::CardOwnerJson;
 
 /////// CommunityCategories //////
 #[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]
@@ -31,6 +29,27 @@ pub struct CommunityCategory {
 }
 
 impl CommunityCategory {
+    use crate::utils::CommunityCategoryJson;
+
+    pub fn get_categories_json() -> Json<Vec<CommunityCategoryJson>> {
+        use crate::schema::community_categorys::dsl::community_categorys;
+
+        let _connection = establish_connection();
+        let cats = community_categorys
+            .order(schema::community_categorys::position)
+            .load::<CommunityCategory>(&_connection)
+            .expect("E")
+            .len();
+        let json = Vec::new();
+        for c in cats.iter() {
+            json.push (CommunityCategoryJson {
+                id:     c.id,
+                name:   c.name.clone(),
+                avatar: c.avatar.clone(),
+            });
+        }
+        return json;
+    }
     pub fn create_category(name: String, avatar: Option<String>,
         position: i16) -> CommunityCategory {
 
@@ -97,6 +116,27 @@ pub struct CommunitySubcategory {
 }
 
 impl CommunitySubcategory {
+    use crate::utils::CommunityCategoryJson;
+
+    pub fn get_categories_json() -> Json<Vec<CommunitySubcategoryJson>> {
+        use crate::schema::community_subcategorys::dsl::community_subcategorys;
+
+        let _connection = establish_connection();
+        let cats = community_subcategorys
+            .order(schema::community_subcategorys::position)
+            .load::<CommunitySubcategory>(&_connection)
+            .expect("E")
+            .len();
+        let json = Vec::new();
+        for c in cats.iter() {
+            json.push (CommunitySubcategoryJson {
+                id:     c.id,
+                name:   c.name.clone(),
+                avatar: c.avatar.clone(),
+            });
+        }
+        return json;
+    }
     pub fn edit_subcategory(&self, name: String, category_id: i32,
         avatar: Option<String>, position: i16) -> &CommunitySubcategory {
         let _connection = establish_connection();
