@@ -1571,7 +1571,7 @@ impl Community {
         }
         return json;
     }
-    pub fn get_6_members(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
+    pub fn get_6_members(&self) -> Vec<CardUserJson> {
         use crate::schema::communities_memberships::dsl::communities_memberships;
 
         let _connection = establish_connection();
@@ -1593,23 +1593,23 @@ impl Community {
         return json;
     }
 
-    pub fn get_administrators_json(&self, page: i32) -> Json<UsersJson> {
+    pub fn get_administrators_json(&self, page: i32, limit: i32) -> Json<UsersJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
 
         // это номер оффсета за пределами выборки, чтобы по нему
         // проверять, есть ли элементы новой страницы
-        let have_next: i32;
+        let have_next: i64;
 
         if page > 1 {
-            have_next = page * 20 + 1;
-            users = self.get_administrators(20, ((page - 1) * 20).into());
+            have_next = page * limit + 1;
+            users = self.get_administrators(limit, ((page - 1) * limit).into());
         }
         else {
-            users = self.get_administrators(20, 0);
-            have_next = 20;
+            users = self.get_administrators(limit, 0);
+            have_next = limit + 1;
         }
-        if self.get_administrators(1, have_next.into()).len() > 0 {
+        if self.get_administrators(1, have_next).len() > 0 {
             next_page_number = page + 1;
         }
         return Json(UsersJson {
