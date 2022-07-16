@@ -3,9 +3,10 @@ use actix_web::{
     web,
     web::Json,
 };
-use crate::models::GetSessionFields;
+use crate::models::{User, GetSessionFields};
 use serde::{Serialize, Deserialize};
-use crate::diesel::RunQueryDsl;
+use crate::diesel::{QueryDsl, RunQueryDsl};
+use crate::utils::establish_connection;
 
 
 pub fn progs_routes(config: &mut web::ServiceConfig) {
