@@ -111,7 +111,7 @@ impl Post {
         use crate::schema::post_comments::dsl::post_comments;
 
         let _connection = establish_connection();
-        let json = Vec::new();
+        let mut json = Vec::new();
         let items = post_comments
             .filter(schema::post_comments::post_id.eq(self.id))
             .filter(schema::post_comments::types.eq_any(vec!["a","b"]))
@@ -129,7 +129,7 @@ impl Post {
                 owner_image:    c.owner_image.clone(),
                 created:        c.created.format("%d-%m-%Y в %H:%M").to_string(),
                 reactions:      c.reactions,
-                types:          c.types, // например cpo1
+                types:          c.types.clone(), // например cpo1
                 replies:        c.replies,    // кол-во ответов
                 reactions_list: c.get_reactions_json(user_id, reactions_list.clone()),
                 items:          None,
