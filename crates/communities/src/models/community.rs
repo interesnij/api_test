@@ -1172,8 +1172,9 @@ impl Community {
         let mut json = Vec::new();
         for i in items.iter() {
             json.push (CardUserJson {
-                owner_name: i.owner_name.clone(),
-                owner_link: i.owner_link.clone(),
+                id:          i.id,
+                owner_name:  i.owner_name.clone(),
+                owner_link:  i.owner_link.clone(),
                 owner_image: i.owner_image.clone(),
             })
         }
@@ -1195,8 +1196,9 @@ impl Community {
         let mut json = Vec::new();
         for i in items.iter() {
             json.push (CardUserJson {
-                owner_name: i.owner_name.clone(),
-                owner_link: i.owner_link.clone(),
+                id:          i.id,
+                owner_name:  i.owner_name.clone(),
+                owner_link:  i.owner_link.clone(),
                 owner_image: i.owner_image.clone(),
             })
         }
