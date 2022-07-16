@@ -265,11 +265,11 @@ impl PostList {
 
         if page > 1 {
             have_next = page * limit + 1;
-            posts = list.get_paginate_items(limit, step.into());
+            posts = list.get_paginate_items(limit.into(), step.into());
         }
         else {
             have_next = limit + 1;
-            posts = list.get_paginate_items(limit, 0);
+            posts = list.get_paginate_items(limit.into(), 0);
         }
         if self.get_paginate_items(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
@@ -538,11 +538,11 @@ impl PostList {
 
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_see_el_exclude(limit, step.into());
+            users = self.get_can_see_el_exclude(limit.into(), step.into());
         }
         else {
             have_next = limit + 1;
-            users = self.get_can_see_el_exclude(limit, 0);
+            users = self.get_can_see_el_exclude(limit.into(), 0);
         }
         if self.get_can_see_el_exclude(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
@@ -584,11 +584,11 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_see_el_include(limit, step.into());
+            users = self.get_can_see_el_include(limit.into(), step.into());
         }
         else {
             have_next = limit + 1;
-            users = self.get_can_see_el_include(limit, 0);
+            users = self.get_can_see_el_include(limit.into(), 0);
         }
         if self.get_can_see_el_include(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
@@ -656,11 +656,11 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_see_coment_exclude(limit, step.into());
+            users = self.get_can_see_coment_exclude(limit.into(), step.into());
         }
         else {
             have_next = limit + 1;
-            users = self.get_can_see_coment_exclude(limit, 0);
+            users = self.get_can_see_coment_exclude(limit.into(), 0);
         }
         if self.get_can_see_coment_exclude(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
@@ -701,11 +701,11 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_see_coment_include(limit, step.into());
+            users = self.get_can_see_coment_include(limit.into(), step.into());
         }
         else {
             have_next = limit + 1;
-            users = self.get_can_see_coment_include(limit, 0);
+            users = self.get_can_see_coment_include(limit.into(), 0);
         }
         if self.get_can_see_coment_include(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
@@ -773,11 +773,11 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_create_el_exclude(limit, step.into());
+            users = self.get_can_create_el_exclude(limit.into(), step.into());
         }
         else {
             have_next = limit + 1;
-            users = self.get_can_create_el_exclude(limit, 0);
+            users = self.get_can_create_el_exclude(limit.into(), 0);
         }
         if self.get_can_create_el_exclude(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
@@ -818,11 +818,11 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_create_el_include(limit, step.into());
+            users = self.get_can_create_el_include(limit.into(), step.into());
         }
         else {
             have_next = limit + 1;
-            users = self.get_can_create_el_include(limit, 0);
+            users = self.get_can_create_el_include(limit.into(), 0);
         }
         if self.get_can_create_el_include(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
@@ -890,11 +890,11 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_create_comment_exclude(limit, step.into());
+            users = self.get_can_create_comment_exclude(limit.into(), step.into());
         }
         else {
             have_next = limit + 1;
-            users = self.get_can_create_comment_exclude(limit, 0);
+            users = self.get_can_create_comment_exclude(limit.into(), 0);
         }
         if self.get_can_create_comment_exclude(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
@@ -935,11 +935,11 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_create_comment_include(limit, step.into());
+            users = self.get_can_create_comment_include(limit.into(), step.into());
         }
         else {
             have_next = limit + 1;
-            users = self.get_can_create_comment_include(limit, 0);
+            users = self.get_can_create_comment_include(limit.into(), 0);
         }
         if self.get_can_create_comment_include(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
@@ -1007,11 +1007,11 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_copy_el_exclude(limit, step.into());
+            users = self.get_copy_el_exclude(limit.into(), step.into());
         }
         else {
             have_next = limit + 1;
-            users = self.get_copy_el_exclude(limit, 0);
+            users = self.get_copy_el_exclude(limit.into(), 0);
         }
         if self.get_copy_el_exclude(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
@@ -1052,11 +1052,11 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_copy_el_include(limit, step.into());
+            users = self.get_copy_el_include(limit.into(), step.into());
         }
         else {
             have_next = limit + 1;
-            users = self.get_copy_el_include(limit, 0);
+            users = self.get_copy_el_include(limit.into(), 0);
         }
         if self.get_copy_el_include(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
