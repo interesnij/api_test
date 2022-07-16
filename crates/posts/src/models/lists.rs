@@ -143,7 +143,7 @@ impl PostList {
 
         if page > 1 {
             have_next = page * limit + 1;
-            lists = PostList::get_user_post_lists(user_id, limit, step.into());
+            lists = PostList::get_user_post_lists(user_id, limit, have_next.into());
         }
         else {
             have_next = limit + 1;
@@ -190,7 +190,7 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            lists = PostList::get_community_post_lists(community_id, limit, step.into());
+            lists = PostList::get_community_post_lists(community_id, limit, have_next.into());
         }
         else {
             have_next = limit + 1;
@@ -265,7 +265,7 @@ impl PostList {
 
         if page > 1 {
             have_next = page * limit + 1;
-            posts = list.get_paginate_items(limit.into(), step.into());
+            posts = list.get_paginate_items(limit.into(), have_next.into());
         }
         else {
             have_next = limit + 1;
@@ -538,7 +538,7 @@ impl PostList {
 
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_see_el_exclude(limit.into(), step.into());
+            users = self.get_can_see_el_exclude(limit.into(), have_next.into());
         }
         else {
             have_next = limit + 1;
@@ -584,7 +584,7 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_see_el_include(limit.into(), step.into());
+            users = self.get_can_see_el_include(limit.into(), have_next.into());
         }
         else {
             have_next = limit + 1;
@@ -656,7 +656,7 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_see_coment_exclude(limit.into(), step.into());
+            users = self.get_can_see_coment_exclude(limit.into(), have_next.into());
         }
         else {
             have_next = limit + 1;
@@ -701,7 +701,7 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_see_coment_include(limit.into(), step.into());
+            users = self.get_can_see_coment_include(limit.into(), have_next.into());
         }
         else {
             have_next = limit + 1;
@@ -773,7 +773,7 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_create_el_exclude(limit.into(), step.into());
+            users = self.get_can_create_el_exclude(limit.into(), have_next.into());
         }
         else {
             have_next = limit + 1;
@@ -818,7 +818,7 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_create_el_include(limit.into(), step.into());
+            users = self.get_can_create_el_include(limit.into(), have_next.into());
         }
         else {
             have_next = limit + 1;
@@ -890,7 +890,7 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_create_comment_exclude(limit.into(), step.into());
+            users = self.get_can_create_comment_exclude(limit.into(), have_next.into());
         }
         else {
             have_next = limit + 1;
@@ -935,7 +935,7 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_create_comment_include(limit.into(), step.into());
+            users = self.get_can_create_comment_include(limit.into(), have_next.into());
         }
         else {
             have_next = limit + 1;
@@ -1001,13 +1001,13 @@ impl PostList {
         return items;
     }
 
-    pub fn get_copy_el_exclude_json(&self, page: i3, limit: i32) -> Json<UserListJson> {
+    pub fn get_copy_el_exclude_json(&self, page: i32, limit: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_copy_el_exclude(limit.into(), step.into());
+            users = self.get_copy_el_exclude(limit.into(), have_next.into());
         }
         else {
             have_next = limit + 1;
@@ -1052,7 +1052,7 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_copy_el_include(limit.into(), step.into());
+            users = self.get_copy_el_include(limit.into(), have_next.into());
         }
         else {
             have_next = limit + 1;
