@@ -688,24 +688,23 @@ impl User {
         }
         return stack;
     }
-    pub fn get_featured_friends_json(&self, page: i32) -> Json<UniversalUserCommunityKeysJson> {
+    pub fn get_featured_friends_json(&self, page: i32, limit: i32) -> Json<UniversalUserCommunityKeysJson> {
         let mut next_page_number = 0;
         let keys: Vec<UniversalUserCommunityKeyJson>;
-        let count = self.get_featured_friends_count();
+        let have_next: i32;
 
         if page > 1 {
-            let step = (page - 1) * 20;
-            keys = self.get_featured_friends(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            keys = self.get_featured_friends(limit.into(), step.into());
         }
         else {
-            keys = self.get_featured_friends(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = page * limit + 1;
+            keys = self.get_featured_friends(limit.into(), 0);
         }
+        if self.get_featured_friends(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UniversalUserCommunityKeysJson {
             keys: keys,
             next_page: next_page_number,
@@ -1259,24 +1258,23 @@ impl User {
         );
     }
 
-    pub fn get_blocked_users_json(&self, page: i32) -> Json<UsersListJson> {
+    pub fn get_blocked_users_json(&self, page: i32, limit: i32) -> Json<UsersListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.count_blacklist();
+        let have_next: i32;
 
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_blocked_users(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_blocked_users(limit.into(), ((page - 1) * limit).into());
         }
         else {
-            users = self.get_blocked_users(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            users = self.get_blocked_users(limit.into(), 0);
+            have_next = limit + 1;
         }
+        if self.get_blocked_users(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UsersListJson {
             description: "Черный спсок".to_string(),
             users: users,
@@ -1585,24 +1583,23 @@ impl User {
         return stack;
     }
 
-    pub fn get_friends_json(&self, page: i32) -> Json<UsersListJson> {
+    pub fn get_friends_json(&self, page: i32, limit: i32) -> Json<UsersListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.count_friends();
+        let have_next: i32;
 
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_friends(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_friends(limit.into(), ((page - 1) * limit).into());
         }
         else {
-            users = self.get_friends(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            users = self.get_friends(limit.into(), 0);
+            have_next = limit + 1;
         }
+        if self.get_friends(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UsersListJson {
             description: "Друзья".to_string(),
             users: users,
@@ -1665,24 +1662,23 @@ impl User {
         return json;
     }
 
-    pub fn get_online_users_json(&self, page: i32) -> Json<UsersListJson> {
+    pub fn get_online_users_json(&self, page: i32, limit: i32) -> Json<UsersListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_online_friends_count();
+        let have_next: i32;
 
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_online_friends(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_online_friends(limit.into(), ((page - 1) * limit).into());
         }
         else {
-            users = self.get_online_friends(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            users = self.get_online_friends(limit.into(), 0);
+            have_next = limit + 1;
         }
+        if self.get_online_friends(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UsersListJson {
             description: "Друзья в сети".to_string(),
             users: users,
@@ -1762,24 +1758,23 @@ impl User {
         return json;
     }
 
-    pub fn get_followers_json(&self, page: i32) -> Json<UsersListJson> {
+    pub fn get_followers_json(&self, page: i32, limit: i32) -> Json<UsersListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.count_followers();
+        let have_next: i32;
 
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_followers(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_followers(limit.into(), ((page - 1) * limit).into());
         }
         else {
-            users = self.get_followers(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            users = self.get_followers(limit.into(), 0);
+            have_next = limit + 1;
         }
+        if self.get_followers(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UsersListJson {
             description: "Подписчики".to_string(),
             users: users,
@@ -1870,24 +1865,23 @@ impl User {
         }
     }
 
-    pub fn get_users_json(&self, page: i32) -> Json<UsersListJson> {
+    pub fn get_users_json(&self, page: i32, limit: i32) -> Json<UsersListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_all_users_count();
+        let have_next: i32;
 
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_users(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_users(limit.into(), ((page - 1) * limit).into());
         }
         else {
-            users = self.get_users(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            users = self.get_users(limit.into(), 0);
+            have_next = limit + 1;
         }
+        if self.get_users(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UsersListJson {
             description: "Пользователи".to_string(),
             users: users,
@@ -1950,10 +1944,22 @@ impl User {
         }
         return json;
     }
-    pub fn get_anon_users_json(page: i32) -> Json<UsersListJson> {
+    pub fn get_anon_users_json(page: i32, limit: i32) -> Json<UsersListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = User::get_anon_users_count();
+        let have_next: i32;
+
+        if page > 1 {
+            have_next = page * limit + 1;
+            users = User::get_anon_users(limit.into(), ((page - 1) * limit).into());
+        }
+        else {
+            users = User::get_anon_users(limit.into(), 0);
+            have_next = limit + 1;
+        }
+        if User::get_anon_users(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
 
         if page > 1 {
             let step = (page - 1) * 20;
@@ -1986,24 +1992,23 @@ impl User {
             .len();
     }
 
-    pub fn get_followings_json(&self, page: i32) -> Json<UsersListJson> {
+    pub fn get_followings_json(&self, page: i32, limit: i32) -> Json<UsersListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.count_following();
+        let have_next: i32;
 
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_followings(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_followings(limit.into(), ((page - 1) * limit).into());
         }
         else {
-            users = self.get_followings(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            users = self.get_followings(limit.into(), 0);
+            have_next = limit + 1;
         }
+        if self.get_followings(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UsersListJson {
             description: "Отправленне заявки".to_string(),
             users: users,
@@ -2043,24 +2048,23 @@ impl User {
         return json;
     }
 
-    pub fn get_common_friends_of_user_json(&self, user: &User, page: i32) -> Json<UsersListJson> {
+    pub fn get_common_friends_of_user_json(&self, user: &User, page: i32, limit: i32) -> Json<UsersListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.count_common_friends_of_user(user);
+        let have_next: i32;
 
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_common_friends_of_user(&user, 20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_common_friends_of_user(&user, limit.into(), ((page - 1) * limit).into());
         }
         else {
-            users = self.get_common_friends_of_user(&user, 20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            users = self.get_common_friends_of_user(&user, limit.into(), 0);
+            have_next = limit + 1;
         }
+        if self.get_common_friends_of_user(&user, 1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UsersListJson {
             description: "Общие друзья".to_string(),
             users:       users,

@@ -19,24 +19,23 @@ use crate::utils::{
 };
 
 
-pub fn get_blocked_users_json(&self, page: i32) -> Json<UsersListJson> {
+pub fn get_blocked_users_json(&self, page: i32, limit: i32) -> Json<UsersListJson> {
     let mut next_page_number = 0;
     let users: Vec<CardUserJson>;
-    let count = self.count_blacklist();
+    let have_next: i32;
 
     if page > 1 {
-        let step = (page - 1) * 20;
-        users = self.get_blocked_users(20, step.into());
-        if count > (page * 20).try_into().unwrap() {
-            next_page_number = page + 1;
-        }
+        have_next = page * limit + 1;
+        users = self.get_blocked_users(limit.into(), ((page - 1) * limit).into());
     }
     else {
-        users = self.get_blocked_users(20, 0);
-        if count > 20.try_into().unwrap() {
-            next_page_number = 2;
-        }
+        users = self.get_blocked_users(limit.into(), 0);
+        have_next = limit + 1;
     }
+    if self.get_blocked_users(1, have_next.into()).len() > 0 {
+        next_page_number = page + 1;
+    }
+
     return Json(UsersListJson {
         description: "Черный спсок".to_string(),
         users: users,
