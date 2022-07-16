@@ -3,21 +3,21 @@ use serde::{Serialize, Deserialize};
 use crate::utils::{
     establish_connection,
     UserDetailJson,
-    LocationsJson,
+    //LocationsJson,
     LocationJson,
     ProfileJson,
-    IpsJson,
-    ListsUserCommunitiesJson,
+    //IpsJson,
+    //ListsUserCommunitiesJson,
     UniversalUserCommunityKeysJson,
     UniversalUserCommunityKeyJson,
     DesignSettingsJson,
     UserPrivateJson,
-    UserProfileNotificationJson,
+    //UserProfileNotificationJson,
     UserPopulateStickerJson,
     UserPopulateSmileJson,
-    FriendsVisiblePermJson,
-    PhoneCodeJson,
-    UserWorkPermJson,
+    //FriendsVisiblePermJson,
+    //PhoneCodeJson,
+    //UserWorkPermJson,
     UsersListJson,
     CardUserJson,
 };
@@ -29,9 +29,9 @@ use crate::models::{
 };
 use crate::schema::{
     users,
-    follows,
-    friends,
-    friends_visible_perms,
+    //follows,
+    //friends,
+    //friends_visible_perms,
 };
 use actix_web::web::Json;
 

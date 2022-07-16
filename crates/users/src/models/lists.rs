@@ -1,4 +1,4 @@
-use crate::schema;
+//use crate::schema;
 use crate::schema::{
     follows,
     friends,
@@ -28,8 +28,8 @@ use crate::schema::{
 };
 use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
-use crate::utils::establish_connection;
-use actix_web::web::Json;
+//use crate::utils::establish_connection;
+//use actix_web::web::Json;
 
 /////// Follow //////
 #[derive(Debug, Queryable, Serialize, Deserialize, Identifiable)]

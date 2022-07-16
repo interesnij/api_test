@@ -1,4 +1,4 @@
-use crate::schema;
+//use crate::schema;
 use crate::schema::{
     phone_codes,
     //friends_work_perms,
@@ -6,7 +6,7 @@ use crate::schema::{
 };
 use diesel::{Queryable, Insertable};
 use serde::{Serialize, Deserialize};
-use crate::utils::establish_connection;
+//use crate::utils::establish_connection;
 
 /////// PhoneCode //////
 #[derive(Debug, Queryable, Serialize, Identifiable)]
