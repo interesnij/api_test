@@ -20,6 +20,7 @@ use crate::errors::AuthError;
 use actix_multipart::{Field, Multipart};
 use std::borrow::BorrowMut;
 use futures_util::stream::StreamExt as _;
+use futures::StreamExt;
 
 
 pub fn auth_routes(config: &mut web::ServiceConfig) {
@@ -49,8 +50,8 @@ fn find_user(data: LoginUser2) -> Result<SessionUser, AuthError> {
     let _find_user_url = get_user_server_ip() + &"/users/get_user_session/".to_string() + &data.phone +  &"/".to_string();
     let _request = reqwest::get(_find_user_url).await.expect("E.");
     let new_request = _request.text().await.unwrap();
-    let user200: UserLoc = serde_json::from_str(&new_request).unwrap();
-    let user = NewUserLocation {
+    let user200: GetSessionFields = serde_json::from_str(&new_request).unwrap();
+    let user = GetSessionFields {
         id: user200.id,
         phone: user.phone.clone(),
         password: user.password.clone(),
@@ -219,61 +220,11 @@ pub async fn process_signup(session: Session, req: HttpRequest) -> impl Responde
         //let count = User::count_users() + 1;
         let count = 1;
         let link = "/id".to_string() + &count.to_string() + &"/".to_string();
-        let form_user = NewUser {
-            first_name:    params_2.first_name.clone(),
-            last_name:     params_2.last_name.clone(),
-            phone:         params_2.phone.clone(),
-            types:         1,
-            gender:        get_gender.to_string(),
-            device:        get_device.to_string(),
-            language:      get_language.to_string(),
-            perm:          get_perm,
-            level:         100,
-            password:      hash_password(&params_2.password.clone()),
-            link:          link,
-            birthday:      NaiveDate::parse_from_str(&params_2.birthday.clone(), "%Y-%m-%d").unwrap(),
-            last_activity: chrono::Local::now().naive_utc(),
-        };
-
-        let _new_user = diesel::insert_into(schema::users::table)
-            .values(&form_user)
-            .get_result::<User>(&_connection)
-            .expect("Error saving user.");
 
         let _session_user = SessionUser {
             id: _new_user.id,
             phone: _new_user.phone,
         };
-
-        // записываем местоположение нового пользователя
-        let _geo_url = "http://api.sypexgeo.net/J5O6d/json/".to_owned() + &ipaddr;
-        let _geo_request = reqwest::get(_geo_url).await.expect("E.");
-        let new_request = _geo_request.text().await.unwrap();
-        let location200: UserLoc = serde_json::from_str(&new_request).unwrap();
-        let _user_location = NewUserLocation {
-            user_id: _new_user.id,
-            city_ru: Some(location200.city.name_ru),
-            city_en: Some(location200.city.name_en),
-            region_ru: Some(location200.region.name_ru),
-            region_en: Some(location200.region.name_en),
-            country_ru: Some(location200.country.name_ru),
-            country_en: Some(location200.country.name_en),
-        };
-        diesel::insert_into(schema::user_locations::table)
-            .values(&_user_location)
-            .get_result::<UserLocation>(&_connection)
-            .expect("Error saving user_location.");
-
-        // записываем IP нового пользователя
-        let _user_ip = NewIpUser {
-            user_id: _new_user.id,
-            ip: ipaddr,
-        };
-        diesel::insert_into(schema::ip_users::table)
-            .values(&_user_ip)
-            .get_result::<IpUser>(&_connection)
-            .expect("Error saving user_ip.");
-
         set_current_user(&session, &_session_user);
         HttpResponse::Ok().content_type("text/html; charset=utf-8").body("ok")
     }
