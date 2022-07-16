@@ -2,6 +2,8 @@
 //extern crate concat_string;
 
 pub mod routes;
+mod errors;
+mod vars;
 
 #[macro_use]
 mod views;

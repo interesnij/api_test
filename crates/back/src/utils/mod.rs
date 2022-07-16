@@ -6,7 +6,6 @@ use actix_web::{
   http::header::CONTENT_TYPE,
   HttpRequest,
 };
-use crate::schema;
 
 
 #[derive(Debug, Serialize, Deserialize)]
