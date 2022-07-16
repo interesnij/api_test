@@ -221,11 +221,11 @@ pub async fn process_signup(session: Session, req: HttpRequest) -> impl Responde
         let count = 1;
         let link = "/id".to_string() + &count.to_string() + &"/".to_string();
 
-        let _session_user = SessionUser {
-            id: _new_user.id,
-            phone: _new_user.phone,
-        };
-        set_current_user(&session, &_session_user);
+        //let _session_user = SessionUser {
+        //    id: _new_user.id,
+        //    phone: _new_user.phone,
+        //};
+        //set_current_user(&session, &_session_user);
         HttpResponse::Ok().content_type("text/html; charset=utf-8").body("ok")
     }
 }
