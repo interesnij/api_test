@@ -5,6 +5,8 @@ pub mod routes;
 
 #[macro_use]
 mod views;
+#[macro_use]
+mod utils;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

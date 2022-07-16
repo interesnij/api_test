@@ -53,8 +53,8 @@ fn find_user(data: LoginUser2) -> Result<SessionUser, AuthError> {
     let user200: GetSessionFields = serde_json::from_str(&new_request).unwrap();
     let user = GetSessionFields {
         id: user200.id,
-        phone: user.phone.clone(),
-        password: user.password.clone(),
+        phone: user200.phone.clone(),
+        password: user200.password.clone(),
     };
 
     if user.id != 0 {
