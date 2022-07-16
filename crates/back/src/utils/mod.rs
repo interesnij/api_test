@@ -1,4 +1,13 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+use argonautica::{Hasher, Verifier};
+use actix_session::Session;
+use diesel::prelude::*;
+use actix_web::{
+  http::header::CONTENT_TYPE,
+  HttpRequest,
+};
+use crate::schema;
+
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SessionUser {
@@ -61,7 +70,7 @@ pub fn get_current_user(session: &Session) -> Result<SessionUser, AuthError> {
         .unwrap()
         .map_or(
           Err(AuthError::AuthenticationError(String::from(msg))),
-          |user| serde_json::from_str(&user).or_else(|_| Err(AuthError::AuthenticationError(String::from(msg))))
+          |&user| serde_json::from_str(&user).or_else(|_| Err(AuthError::AuthenticationError(String::from(msg))))
         )
 }
 
