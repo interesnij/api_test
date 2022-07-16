@@ -82,10 +82,9 @@ pub struct CommunityInfoJson {
 
 ////////
 #[derive(Serialize)]
-pub struct UserPrivateJson {
+pub struct CommunityPrivateJson {
     pub can_see_member:    String,
     pub can_see_info:      String,
-    pub can_see_friend:    String,
     pub can_send_message:  String,
     pub can_see_post:      String,
     pub can_see_photo:     String,

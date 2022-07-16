@@ -1130,6 +1130,7 @@ impl Community {
             .expect("E");
         return items_ids;
     }
+
     pub fn get_can_see_info_exclude_users_ids(&self) -> Vec<i32> {
         use crate::schema::community_visible_perms::dsl::community_visible_perms;
 
@@ -1154,14 +1155,96 @@ impl Community {
             .expect("E");
         return items_ids;
     }
-    //pub fn get_can_see_info_exclude_users(&self) -> Vec<User> {
-    //    use crate::utils::get_users_from_ids;
-    //    return get_users_from_ids(self.get_can_see_info_exclude_users_ids());
-    //}
-    //pub fn get_can_see_info_include_users(&self) -> Vec<User> {
-    //    use crate::utils::get_users_from_ids;
-    //    return get_users_from_ids(self.get_can_see_info_include_users_ids());
-    //}
+
+    pub fn get_can_see_info_exclude(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
+        use crate::schema::community_visible_perms::dsl::community_visible_perms;
+        use crate::models::CommunityVisiblePerms;
+
+        let _connection = establish_connection();
+        let items = community_visible_perms
+            .filter(schema::community_visible_perms::user_id.eq_any(self.get_members_ids()))
+            .filter(schema::community_visible_perms::can_see_info.eq("b"))
+            .limit(limit)
+            .offset(offset)
+            .load::<CommunityVisiblePerms>(&_connection)
+            .expect("E");
+
+        let mut json = Vec::new();
+        for i in items.iter() {
+            json.push (CardUserJson {
+                owner_name: i.owner_name.clone(),
+                owner_link: i.owner_link.clone(),
+                owner_image: i.owner_image.clone(),
+            })
+        }
+        return json;
+    }
+    pub fn get_can_see_info_include(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
+        use crate::schema::community_visible_perms::dsl::community_visible_perms;
+        use crate::models::CommunityVisiblePerms;
+
+        let _connection = establish_connection();
+        let items = post_list_perms
+            .filter(schema::community_visible_perms::user_id.eq_any(self.get_members_ids()))
+            .filter(schema::community_visible_perms::can_see_info.eq("a"))
+            .limit(limit)
+            .offset(offset)
+            .load::<CommunityVisiblePerms>(&_connection)
+            .expect("E");
+
+        let mut json = Vec::new();
+        for i in items.iter() {
+            json.push (CardUserJson {
+                owner_name: i.owner_name.clone(),
+                owner_link: i.owner_link.clone(),
+                owner_image: i.owner_image.clone(),
+            })
+        }
+        return json;
+    }
+
+    pub fn get_can_see_info_include_json(&self, page: i32, limit: i32) -> Json<UsersJson> {
+        let mut next_page_number = 0;
+        let users: Vec<CardUserJson>;
+        let have_next: i32;
+
+        if page > 1 {
+            have_next = page * limit + 1;
+            users = self.get_can_see_info_include(limit.into(), ((page - 1) * limit).into());
+        }
+        else {
+            users = self.get_can_see_info_include(limit.into(), 0);
+            have_next = limit + 1;
+        }
+        if self.get_can_see_info_include(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+        return Json(UsersJson {
+            users: users,
+            next_page: next_page_number,
+        });
+    }
+    pub fn get_can_see_info_exclude_json(&self, page: i32, limit: i32) -> Json<UsersJson> {
+        let mut next_page_number = 0;
+        let users: Vec<CardUserJson>;
+        let have_next: i32;
+
+        if page > 1 {
+            have_next = page * limit + 1;
+            users = self.get_can_see_info_exclude(limit.into(), ((page - 1) * limit).into());
+        }
+        else {
+            users = self.get_can_see_info_exclude(limit.into(), 0);
+            have_next = limit + 1;
+        }
+        if self.get_can_see_info_exclude(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+        return Json(UsersJson {
+            users: users,
+            next_page: next_page_number,
+        });
+    }
 
     pub fn get_can_see_member_exclude_users_ids(&self) -> Vec<i32> {
         use crate::schema::community_visible_perms::dsl::community_visible_perms;
@@ -1594,9 +1677,6 @@ impl Community {
     pub fn get_administrators_json(&self, page: i32, limit: i32) -> Json<UsersJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-
-        // это номер оффсета за пределами выборки, чтобы по нему
-        // проверять, есть ли элементы новой страницы
         let have_next: i32;
 
         if page > 1 {
@@ -1638,6 +1718,28 @@ impl Community {
         }
         return json;
     }
+
+    pub fn get_editors_json(&self, page: i32, limit: i32) -> Json<UsersJson> {
+        let mut next_page_number = 0;
+        let users: Vec<CardUserJson>;
+        let have_next: i32;
+
+        if page > 1 {
+            have_next = page * limit + 1;
+            users = self.get_editors(limit.into(), ((page - 1) * limit).into());
+        }
+        else {
+            users = self.get_editors(limit.into(), 0);
+            have_next = limit + 1;
+        }
+        if self.get_editors(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+        return Json(UsersJson {
+            users: users,
+            next_page: next_page_number,
+        });
+    }
     pub fn get_editors(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::communities_memberships::dsl::communities_memberships;
 
@@ -1661,6 +1763,28 @@ impl Community {
         }
         return json;
     }
+
+    pub fn get_moderators_json(&self, page: i32, limit: i32) -> Json<UsersJson> {
+        let mut next_page_number = 0;
+        let users: Vec<CardUserJson>;
+        let have_next: i32;
+
+        if page > 1 {
+            have_next = page * limit + 1;
+            users = self.get_moderators(limit.into(), ((page - 1) * limit).into());
+        }
+        else {
+            users = self.get_moderators(limit.into(), 0);
+            have_next = limit + 1;
+        }
+        if self.get_moderators(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+        return Json(UsersJson {
+            users: users,
+            next_page: next_page_number,
+        });
+    }
     pub fn get_moderators(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::communities_memberships::dsl::communities_memberships;
 
@@ -1683,6 +1807,28 @@ impl Community {
             });
         }
         return json;
+    }
+
+    pub fn get_advertisers_json(&self, page: i32, limit: i32) -> Json<UsersJson> {
+        let mut next_page_number = 0;
+        let users: Vec<CardUserJson>;
+        let have_next: i32;
+
+        if page > 1 {
+            have_next = page * limit + 1;
+            users = self.get_advertisers(limit.into(), ((page - 1) * limit).into());
+        }
+        else {
+            users = self.get_advertisers(limit.into(), 0);
+            have_next = limit + 1;
+        }
+        if self.get_advertisers(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+        return Json(UsersJson {
+            users: users,
+            next_page: next_page_number,
+        });
     }
     pub fn get_advertisers(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::communities_memberships::dsl::communities_memberships;
@@ -1719,6 +1865,27 @@ impl Community {
             .into_iter()
             .nth(0)
             .unwrap();
+    }
+    pub fn get_private_model_json(&self) -> Json<CommunityPrivateJson> {
+        let private = self.get_private_model();
+        let json = UserPrivateJson {
+            can_see_member:   private.can_see_member,
+            can_see_info:     private.can_see_info,
+            can_send_message: private.can_send_message,
+            can_see_post:     private.can_see_post,
+            can_see_photo:    private.can_see_photo,
+            can_see_good:     private.can_see_good,
+            can_see_video:    private.can_see_video,
+            can_see_music:    private.can_see_music,
+            can_see_planner:  private.can_see_planner,
+            can_see_doc:      private.can_see_doc,
+            can_see_survey:   private.can_see_survey,
+            can_see_settings: private.can_see_settings,
+            can_see_log:      private.can_see_log,
+            can_see_stat:     private.can_see_stat,
+            can_see_forum:    private.can_see_forum,
+        };
+        return Json(json);
     }
 
     pub fn is_user_can_see_info(&self, user_id: i32) -> bool {
@@ -2240,44 +2407,92 @@ impl Community {
         return bool_stack;
     }
 
-    pub fn get_follows_users(&self, limit: i64, offset: i64) -> Vec<i32> {
+    pub fn get_follows_json(&self, page: i32, limit: i32) -> Json<UsersJson> {
+        let mut next_page_number = 0;
+        let users: Vec<CardUserJson>;
+        let have_next: i32;
+
+        if page > 1 {
+            have_next = page * limit + 1;
+            users = self.get_follows_users(limit.into(), ((page - 1) * limit).into());
+        }
+        else {
+            users = self.get_follows_users(limit.into(), 0);
+            have_next = limit + 1;
+        }
+        if self.get_follows_users(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+        return Json(UsersJson {
+            users: users,
+            next_page: next_page_number,
+        });
+    }
+    pub fn get_follows_users(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::community_follows::dsl::community_follows;
-        //use crate::utils::get_users_from_ids;
 
         let _connection = establish_connection();
-        let follows = community_follows
+        let items = community_follows
             .filter(schema::community_follows::community_id.eq(self.id))
             .limit(limit)
             .offset(offset)
             .load::<CommunityFollow>(&_connection)
             .expect("E.");
 
-        let mut stack = Vec::new();
-        for _item in follows.iter() {
-            stack.push(_item.user_id);
-        };
-        //return get_users_from_ids(stack);
-        return stack;
+        let mut json = Vec::new();
+        for i in items.iter() {
+            json.push( CardUserJson {
+                id:          i.user_id,
+                owner_name:  i.owner_name.clone(),
+                owner_link:  i.owner_link.clone(),
+                owner_image: i.owner_image.clone(),
+            });
+        }
+        return json;
     }
-    pub fn get_banned_user(&self, limit: i64, offset: i64) -> Vec<i32> {
+
+    pub fn get_banned_user_json(&self, page: i32, limit: i32) -> Json<UsersJson> {
+        let mut next_page_number = 0;
+        let users: Vec<CardUserJson>;
+        let have_next: i32;
+
+        if page > 1 {
+            have_next = page * limit + 1;
+            users = self.get_banned_user(limit.into(), ((page - 1) * limit).into());
+        }
+        else {
+            users = self.get_banned_user(limit.into(), 0);
+            have_next = limit + 1;
+        }
+        if self.get_banned_user(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+        return Json(UsersJson {
+            users: users,
+            next_page: next_page_number,
+        });
+    }
+    pub fn get_banned_user(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::community_banner_users::dsl::community_banner_users;
-        //use crate::utils::get_users_from_ids;
 
         let _connection = establish_connection();
-
-        let banner_users = community_banner_users
+        let items = community_banner_users
             .filter(schema::community_banner_users::community_id.eq(self.id))
             .limit(limit)
             .offset(offset)
             .load::<CommunityBannerUser>(&_connection)
             .expect("E");
 
-        let mut stack = Vec::new();
-        for _item in banner_users.iter() {
-            stack.push(_item.user_id);
-        };
-        //return get_users_from_ids(stack);
-        return stack;
+        let mut json = Vec::new();
+        for i in items.iter() {
+            json.push( CardUserJson {
+                id:          i.user_id,
+                owner_name:  i.owner_name.clone(),
+                owner_link:  i.owner_link.clone(),
+                owner_image: i.owner_image.clone(),
+            });
+        }
+        return json;
     }
 
 
