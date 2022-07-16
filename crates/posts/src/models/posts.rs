@@ -100,11 +100,18 @@ pub struct EditPostPosition {
 }
 
 impl Post {
-    pub fn get_comments(&self, limit: i64, offset: i64) -> Vec<PostComment> {
+    pub fn get_comments (
+        &self,
+        limit: i64,
+        offset: i64,
+        user_id: i32,
+        reactions_list: Vec<i16>,
+    ) -> Vec<CardCommentJson> {
         use crate::schema::post_comments::dsl::post_comments;
 
         let _connection = establish_connection();
-        return post_comments
+        let json = Vec::new();
+        let items = post_comments
             .filter(schema::post_comments::post_id.eq(self.id))
             .filter(schema::post_comments::types.eq_any(vec!["a","b"]))
             .filter(schema::post_comments::parent_id.is_null())
@@ -112,38 +119,57 @@ impl Post {
             .offset(offset)
             .load::<PostComment>(&_connection)
             .expect("E.");
+
+        for c in items.iter() {
+            json.push (CardCommentJson {
+                content:        c.content.clone(),
+                owner_name:     c.owner_name.clone(),
+                owner_link:     c.owner_link.clone(),
+                owner_image:    c.owner_image.clone(),
+                created:        c.created.format("%d-%m-%Y в %H:%M").to_string(),
+                reactions:      c.reactions,
+                types:          c.types, // например cpo1
+                replies:        c.replies,    // кол-во ответов
+                reactions_list: c.get_reactions_json(user_id, reactions_list.clone()),
+                items:          c.items,
+            });
+        }
+        return json;
     }
     pub fn get_comments_post_json (
         &self,
         user_id: i32,
         reactions_list: Vec<i16>,
-        page: i32
+        page: i32,
+        limit: i32
     ) -> CommentsSmallJson {
-        let mut comments_json = Vec::new();
         let mut next_page_number = 0;
-        let count = self.comment;
+        let have_next: i32;
+
         if page > 1 {
-            let step = (page - 1) * 20;
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
-            //for c in self.get_comments(20, step.into()).iter() {
-            //    let r_list = reactions_list.clone();
-            //    comments_json.push(c.get_comment_json(user_id, r_list));
-            //}
+            have_next = page * limit + 1;
+            comments = self.get_comments (
+                limit.into(),
+                ((page - 1) * limit).into(),
+                user_id,
+                reactions_list,
+            );
         }
         else {
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
-            //for c in self.get_comments(20, 0).iter() {
-            //    let r_list = reactions_list.clone();
-            //    comments_json.push(c.get_comment_json(user_id, r_list));
-            //}
+            have_next = limit + 1;
+            comments = self.get_comments (
+                limit.into(),
+                0,
+                user_id,
+                reactions_list,
+            );
+        }
+        if self.get_comments(1, have_next.into(), user_id, Vec::new()).len() > 0 {
+            next_page_number = page + 1;
         }
 
         return CommentsSmallJson {
-            comments:  comments_json,
+            comments:  comments,
             next_page: next_page_number,
         };
     }
@@ -248,7 +274,7 @@ impl Post {
         return reactions_blocks;
     }
 
-    pub fn get_detail_post_json (&self, user_id: i32, page: i32) -> PostDetailJson {
+    pub fn get_detail_post_json (&self, user_id: i32, page: i32, limit: i32) -> PostDetailJson {
         let list = self.get_list();
         let reactions_list = list.get_reactions_list();
         let mut prev: Option<i32> = None;
@@ -285,7 +311,7 @@ impl Post {
                 next:                     next,
                 is_user_can_see_comments: list.is_user_can_see_comment(user_id),
                 is_user_can_create_el:    list.is_user_can_create_el(user_id),
-                comments:                 self.get_comments_post_json(user_id, reactions_list.clone(), page),
+                comments:                 self.get_comments_post_json(user_id, reactions_list.clone(), page, limit),
                 items:                    None,
             };
     }

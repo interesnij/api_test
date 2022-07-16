@@ -132,27 +132,25 @@ pub struct EditPostList {
 }
 
 impl PostList {
-    pub fn get_json_user_post_page(user_id: i32, page: i32) -> Json<PostListPageJson> {
+    pub fn get_json_user_post_page(user_id: i32, page: i32, limit: i32) -> Json<PostListPageJson> {
         use crate::utils::CardPostListJson;
 
         let mut next_page_number = 0;
         let selected_post_list_pk = PostList::get_user_selected_post_list_pk(user_id);
         let list = get_post_list(selected_post_list_pk);
-        let count = PostList::count_user_post_lists(user_id);
         let lists: Vec<PostList>;
+        let have_next: i32;
 
         if page > 1 {
-            let step = (page - 1) * 20;
-            lists = PostList::get_user_post_lists(user_id, 20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            lists = PostList::get_user_post_lists(user_id, limit, step.into());
         }
         else {
-            lists = PostList::get_user_post_lists(user_id, 20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = limit + 1;
+            lists = PostList::get_user_post_lists(user_id, limit, 0);
+        }
+        if self.get_user_post_lists(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
         }
 
         let mut lists_json = Vec::new();
@@ -181,27 +179,25 @@ impl PostList {
         };
         return Json(data);
     }
-    pub fn get_json_community_post_page(community_id: i32, page: i32) -> Json<PostListPageJson> {
+    pub fn get_json_community_post_page(community_id: i32, page: i32, limit: i32) -> Json<PostListPageJson> {
         use crate::utils::CardPostListJson;
 
         let mut next_page_number = 0;
         let selected_post_list_pk = PostList::get_community_selected_post_list_pk(community_id);
         let list = get_post_list(selected_post_list_pk);
-        let count = PostList::count_community_post_lists(community_id);
         let lists: Vec<PostList>;
 
+        let have_next: i32;
         if page > 1 {
-            let step = (page - 1) * 20;
-            lists = PostList::get_community_post_lists(community_id, 20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            lists = PostList::get_community_post_lists(community_id, limit, step.into());
         }
         else {
-            lists = PostList::get_community_post_lists(community_id, 20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = limit + 1;
+            lists = PostList::get_community_post_lists(community_id, limit, 0);
+        }
+        if self.get_community_post_lists(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
         }
 
         let mut lists_json = Vec::new();
@@ -231,12 +227,16 @@ impl PostList {
         return Json(data);
     }
 
-    pub fn get_json_post_list(user_id: i32, list_id: i32, page: i32) -> Json<PostListDetailJson> {
+    pub fn get_json_post_list (
+        user_id: i32,
+        list_id: i32,
+        page: i32,
+        limit: i32
+    ) -> Json<PostListDetailJson> {
         use crate::utils::CardPostListJson;
 
         let mut next_page_number = 0;
         let list = get_post_list(list_id);
-        let count = list.count;
         let lists: Vec<PostList>;
         if list.community_id.is_some() {
             lists = PostList::get_user_post_lists(list.community_id.unwrap(), 20, 0);
@@ -260,20 +260,19 @@ impl PostList {
         }
 
         let posts: Vec<Post>;
+        let have_next: i32;
         let reactions_list = list.get_reactions_list();
 
         if page > 1 {
-            let step = (page - 1) * 20;
-            posts = list.get_paginate_items(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            posts = list.get_paginate_items(limit, step.into());
         }
         else {
-            posts = list.get_paginate_items(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = limit + 1;
+            posts = list.get_paginate_items(limit, 0);
+        }
+        if self.get_paginate_items(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
         }
 
         let mut posts_json = Vec::new();
@@ -532,24 +531,23 @@ impl PostList {
 
         return items;
     }
-    pub fn get_can_see_el_exclude_json(&self, page: i32) -> Json<UserListJson> {
+    pub fn get_can_see_el_exclude_json(&self, page: i32, limit: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_can_see_el_exclude_users_ids().len();
+        let have_next: i32;
 
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_can_see_el_exclude(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_can_see_el_exclude(limit, step.into());
         }
         else {
-            users = self.get_can_see_el_exclude(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = limit + 1;
+            users = self.get_can_see_el_exclude(limit, 0);
         }
+        if self.get_can_see_el_exclude(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UserListJson {
             users:     users,
             next_page: next_page_number,
@@ -579,24 +577,23 @@ impl PostList {
         return json;
     }
 
-    pub fn get_can_see_el_include_json(&self, page: i32) -> Json<UserListJson> {
+    pub fn get_can_see_el_include_json(&self, page: i32, limit: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_can_see_el_include_users_ids().len();
 
+        let have_next: i32;
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_can_see_el_include(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_can_see_el_include(limit, step.into());
         }
         else {
-            users = self.get_can_see_el_include(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = limit + 1;
+            users = self.get_can_see_el_include(limit, 0);
         }
+        if self.get_can_see_el_include(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UserListJson {
             users:     users,
             next_page: next_page_number,
@@ -653,24 +650,22 @@ impl PostList {
         return items;
     }
 
-    pub fn get_can_see_comment_exclude_json(&self, page: i32) -> Json<UserListJson> {
+    pub fn get_can_see_comment_exclude_json(&self, page: i32, limit: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_can_see_comment_exclude_users_ids().len();
-
+        let have_next: i32;
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_can_see_comment_exclude(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_can_see_coment_exclude(limit, step.into());
         }
         else {
-            users = self.get_can_see_comment_exclude(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = limit + 1;
+            users = self.get_can_see_coment_exclude(limit, 0);
         }
+        if self.get_can_see_coment_exclude(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UserListJson {
             users:     users,
             next_page: next_page_number,
@@ -700,24 +695,22 @@ impl PostList {
         return json;
     }
 
-    pub fn get_can_see_comment_include_json(&self, page: i32) -> Json<UserListJson> {
+    pub fn get_can_see_comment_include_json(&self, page: i32, limit: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_can_see_comment_include_users_ids().len();
-
+        let have_next: i32;
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_can_see_comment_include(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_can_see_coment_include(limit, step.into());
         }
         else {
-            users = self.get_can_see_comment_include(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = limit + 1;
+            users = self.get_can_see_coment_include(limit, 0);
         }
+        if self.get_can_see_coment_include(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UserListJson {
             users:     users,
             next_page: next_page_number,
@@ -774,24 +767,22 @@ impl PostList {
         return items;
     }
 
-    pub fn get_can_create_el_exclude_json(&self, page: i32) -> Json<UserListJson> {
+    pub fn get_can_create_el_exclude_json(&self, page: i32, limit: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_can_create_el_exclude_users_ids().len();
-
+        let have_next: i32;
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_can_create_el_exclude(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_can_create_el_exclude(limit, step.into());
         }
         else {
-            users = self.get_can_create_el_exclude(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = limit + 1;
+            users = self.get_can_create_el_exclude(limit, 0);
         }
+        if self.get_can_create_el_exclude(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UserListJson {
             users:     users,
             next_page: next_page_number,
@@ -821,24 +812,22 @@ impl PostList {
         return json;
     }
 
-    pub fn get_can_create_el_include_json(&self, page: i32) -> Json<UserListJson> {
+    pub fn get_can_create_el_include_json(&self, page: i32, limit: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_can_create_el_include_users_ids().len();
-
+        let have_next: i32;
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_can_create_el_include(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_can_create_el_include(limit, step.into());
         }
         else {
-            users = self.get_can_create_el_include(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = limit + 1;
+            users = self.get_can_create_el_include(limit, 0);
         }
+        if self.get_can_create_el_include(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UserListJson {
             users:     users,
             next_page: next_page_number,
@@ -895,24 +884,22 @@ impl PostList {
         return items;
     }
 
-    pub fn get_can_create_comment_exclude_json(&self, page: i32) -> Json<UserListJson> {
+    pub fn get_can_create_comment_exclude_json(&self, page: i32, limit: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_can_create_comment_exclude_users_ids().len();
-
+        let have_next: i32;
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_can_create_comment_exclude(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_can_create_comment_exclude(limit, step.into());
         }
         else {
-            users = self.get_can_create_comment_exclude(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = limit + 1;
+            users = self.get_can_create_comment_exclude(limit, 0);
         }
+        if self.get_can_create_comment_exclude(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UserListJson {
             users:     users,
             next_page: next_page_number,
@@ -942,24 +929,22 @@ impl PostList {
         return json;
     }
 
-    pub fn get_can_create_comment_include_json(&self, page: i32) -> Json<UserListJson> {
+    pub fn get_can_create_comment_include_json(&self, page: i32, limit: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_can_create_comment_include_users_ids().len();
-
+        let have_next: i32;
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_can_create_comment_include(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_can_create_comment_include(limit, step.into());
         }
         else {
-            users = self.get_can_create_comment_include(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = limit + 1;
+            users = self.get_can_create_comment_include(limit, 0);
         }
+        if self.get_can_create_comment_include(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UserListJson {
             users:     users,
             next_page: next_page_number,
@@ -1016,24 +1001,22 @@ impl PostList {
         return items;
     }
 
-    pub fn get_copy_el_exclude_json(&self, page: i32) -> Json<UserListJson> {
+    pub fn get_copy_el_exclude_json(&self, page: i3, limit: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_copy_el_exclude_users_ids().len();
-
+        let have_next: i32;
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_copy_el_exclude(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_copy_el_exclude(limit, step.into());
         }
         else {
-            users = self.get_copy_el_exclude(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = limit + 1;
+            users = self.get_copy_el_exclude(limit, 0);
         }
+        if self.get_copy_el_exclude(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UserListJson {
             users:     users,
             next_page: next_page_number,
@@ -1063,24 +1046,22 @@ impl PostList {
         return json;
     }
 
-    pub fn get_copy_el_include_json(&self, page: i32) -> Json<UserListJson> {
+    pub fn get_copy_el_include_json(&self, page: i32, limit: i32) -> Json<UserListJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.get_copy_el_include_users_ids().len();
-
+        let have_next: i32;
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_copy_el_include(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            have_next = page * limit + 1;
+            users = self.get_copy_el_include(limit, step.into());
         }
         else {
-            users = self.get_copy_el_include(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            have_next = limit + 1;
+            users = self.get_copy_el_include(limit, 0);
         }
+        if self.get_copy_el_include(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
+        }
+
         return Json(UserListJson {
             users:     users,
             next_page: next_page_number,
