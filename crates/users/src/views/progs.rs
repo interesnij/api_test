@@ -6,7 +6,7 @@ use actix_web::{
 };
 use crate::models::{User, GetSessionFields};
 use serde::{Serialize, Deserialize};
-use crate::diesel::{QueryDsl, RunQueryDsl};
+use crate::diesel::{QueryDsl, RunQueryDsl, ExpressionMethods};
 use crate::utils::establish_connection;
 
 
