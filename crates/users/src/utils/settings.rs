@@ -1,10 +1,5 @@
 use crate::utils::{
     establish_connection,
-    UserDetailJson,
-    LocationsJson,
-    LocationJson,
-    ProfileJson,
-    IpsJson,
     ListsUserCommunitiesJson,
     UniversalUserCommunityKeysJson,
     DesignSettingsJson,
@@ -14,7 +9,6 @@ use crate::utils::{
     UserPopulateSmileJson,
     FriendsVisiblePermJson,
     PhoneCodeJson,
-    UserWorkPermJson,
     UsersListJson,
 };
 
