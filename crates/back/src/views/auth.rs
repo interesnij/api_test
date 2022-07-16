@@ -28,7 +28,7 @@ pub fn auth_routes(config: &mut web::ServiceConfig) {
     //config.route("/signup/", web::get().to(process_signup));
     //config.route("/mob_register/", web::get().to(mobile_signup));
     config.route("/login/", web::post().to(login));
-    //config.route("/logout/", web::get().to(logout));
+    config.route("/logout/", web::get().to(logout));
 }
 
 
