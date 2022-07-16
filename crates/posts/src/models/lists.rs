@@ -656,13 +656,13 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_see_coment_exclude(limit.into(), have_next.into());
+            users = self.get_can_see_comment_exclude(limit.into(), have_next.into());
         }
         else {
             have_next = limit + 1;
-            users = self.get_can_see_coment_exclude(limit.into(), 0);
+            users = self.get_can_see_comment_exclude(limit.into(), 0);
         }
-        if self.get_can_see_coment_exclude(1, have_next.into()).len() > 0 {
+        if self.get_can_see_comment_exclude(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
         }
 
@@ -701,13 +701,13 @@ impl PostList {
         let have_next: i32;
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_can_see_coment_include(limit.into(), have_next.into());
+            users = self.get_can_see_comment_include(limit.into(), have_next.into());
         }
         else {
             have_next = limit + 1;
-            users = self.get_can_see_coment_include(limit.into(), 0);
+            users = self.get_can_see_comment_include(limit.into(), 0);
         }
-        if self.get_can_see_coment_include(1, have_next.into()).len() > 0 {
+        if self.get_can_see_comment_include(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
         }
 

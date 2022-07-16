@@ -131,7 +131,7 @@ impl Post {
                 types:          c.types, // например cpo1
                 replies:        c.replies,    // кол-во ответов
                 reactions_list: c.get_reactions_json(user_id, reactions_list.clone()),
-                items:          c.items,
+                items:          None, 
             });
         }
         return json;
