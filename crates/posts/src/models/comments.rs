@@ -198,29 +198,28 @@ impl PostComment {
         &self,
         user_id: i32,
         reactions_list: Vec<i16>,
-        page: i32
+        page: i32, limit: i32
     ) -> RepliesSmallJson {
         let mut comments_json = Vec::new();
         let mut next_page_number = 0;
-        let count = self.count_replies();
+        let have_next: i32;
+
         if page > 1 {
-            let step = (page - 1) * 20;
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
-            for c in self.get_replies(20, step.into()).iter() {
+            have_next = page * limit + 1;
+            for c in self.get_replies(limit, have_next.into()).iter() {
                 let r_list = reactions_list.clone();
                 comments_json.push(c.get_reply_json(user_id, r_list));
             }
         }
         else {
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
-            for c in self.get_replies(20, 0).iter() {
+            have_next = limit + 1;
+            for c in self.get_replies(limit, 0).iter() {
                 let r_list = reactions_list.clone();
                 comments_json.push(c.get_reply_json(user_id, r_list));
             }
+        }
+        if self.get_replies(1, have_next.into()).len() > 0 {
+            next_page_number = page + 1;
         }
 
         return RepliesSmallJson {
