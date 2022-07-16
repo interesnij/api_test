@@ -46,7 +46,7 @@ pub struct GetSessionFields {
 fn find_user(data: LoginUser2) -> Result<SessionUser, AuthError> {
     let _find_user_url = get_user_server_ip() + &"/users/get_user_session/".to_string() + &data.phone +  &"/".to_string();
     let _request = reqwest::get(_find_user_url).await.expect("E.");
-    let new_request = _request.text().unwrap();
+    let new_request = _request.text().await.unwrap();
     let user200: GetSessionFields = serde_json::from_str(&new_request).unwrap();
     let user = GetSessionFields {
         id: user200.id,
