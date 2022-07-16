@@ -131,7 +131,7 @@ impl Post {
                 types:          c.types, // например cpo1
                 replies:        c.replies,    // кол-во ответов
                 reactions_list: c.get_reactions_json(user_id, reactions_list.clone()),
-                items:          None, 
+                items:          None,
             });
         }
         return json;
@@ -226,7 +226,7 @@ impl Post {
         let reposts_window: Option<RepostsPostJson>;
         if self.repost > 0 {
             let mut reposts_json = Vec::new();
-            for r in self.reposts(limit, offset).iter() {
+            for r in self.reposts(limit.into(), offset).iter() {
                 reposts_json.push (
                     CardUserJson {
                         owner_name:  r.owner_name.clone(),
@@ -311,7 +311,7 @@ impl Post {
                 next:                     next,
                 is_user_can_see_comments: list.is_user_can_see_comment(user_id),
                 is_user_can_create_el:    list.is_user_can_create_el(user_id),
-                comments:                 self.get_comments_post_json(user_id, reactions_list.clone(), page, limit),
+                comments:                 self.get_comments_post_json(user_id, reactions_list.clone(), page, limit.into()),
                 items:                    None,
             };
     }
