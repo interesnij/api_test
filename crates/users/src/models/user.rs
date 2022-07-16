@@ -3519,7 +3519,7 @@ impl User {
     }
 
     pub fn add_notification_user_subscriber(&self, user: &User) -> () {
-        use crate::models::NewNotifyUserCommunitie;
+        use crate::models::{NotifyUserCommunitie, NewNotifyUserCommunitie};
         use crate::schema::notify_user_communities::dsl::notify_user_communities;
 
         let _connection = establish_connection();
