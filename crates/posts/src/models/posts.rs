@@ -1120,6 +1120,7 @@ impl Post {
     pub fn get_user_reaction(&self, user_id: i32) -> i16 {
         use crate::schema::post_votes::dsl::post_votes;
         // "/static/images/reactions/" + get_user_reaction + ".jpg"
+        use crate::models::PostVote;
 
         let _connection = establish_connection();
         let vote = post_votes

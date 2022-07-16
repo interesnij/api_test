@@ -1,6 +1,5 @@
 use diesel::prelude::*;
 use crate::schema;
-use std::collections::HashMap;
 use serde::{Serialize, Deserialize};
 use crate::models::{
     PostList,
