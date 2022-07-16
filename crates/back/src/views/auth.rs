@@ -6,6 +6,7 @@ use actix_web::{
     error::InternalError,
     http::StatusCode,
 };
+use crate::errors::AuthError;
 use serde::{Deserialize, Serialize};
 use crate::utils::{
     is_signed_in,
