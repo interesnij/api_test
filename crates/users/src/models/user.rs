@@ -166,7 +166,21 @@ pub struct EditTypesUser {
     pub types: i16,
 }
 
+#[derive(Serialize)]
+pub struct GetSessionFields {
+    pub id:       i32,
+    pub phone:    String,
+    pub password: String,
+}
+
 impl User {
+    pub fn get_session_fields_json(&self) -> Json<GetSessionFields> {
+        return Json( GetSessionFields {
+            id:       self.id,
+            phone:    self.phone.clone(),
+            password: self.password.clone(),
+        });
+    }
     pub fn get_user_detail_json(&self) -> Json<UserDetailJson> {
          let user_json = UserDetailJson {
              id:            self.id,
