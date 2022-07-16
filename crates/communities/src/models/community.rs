@@ -1532,14 +1532,14 @@ impl Community {
         let have_next: i32;
 
         if page > 1 {
-            users = self.get_members(limit, ((page - 1) * limit).into());
+            users = self.get_members(limit.into(), ((page - 1) * limit).into());
             have_next = page * limit + 1;
         }
         else {
-            users = self.get_members(limit, 0);
+            users = self.get_members(limit.into(), 0);
             have_next = limit + 1;
         }
-        if self.get_members(1, have_next).len() > 0 {
+        if self.get_members(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
         }
         return Json(UsersJson {
@@ -1601,13 +1601,13 @@ impl Community {
 
         if page > 1 {
             have_next = page * limit + 1;
-            users = self.get_administrators(limit, ((page - 1) * limit).into());
+            users = self.get_administrators(limit.into(), ((page - 1) * limit).into());
         }
         else {
-            users = self.get_administrators(limit, 0);
+            users = self.get_administrators(limit.into(), 0);
             have_next = limit + 1;
         }
-        if self.get_administrators(1, have_next).len() > 0 {
+        if self.get_administrators(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
         }
         return Json(UsersJson {
