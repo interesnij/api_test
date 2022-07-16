@@ -271,7 +271,7 @@ impl PostList {
             have_next = limit + 1;
             posts = list.get_paginate_items(limit.into(), 0);
         }
-        if self.get_paginate_items(1, have_next.into()).len() > 0 {
+        if list.get_paginate_items(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
         }
 
