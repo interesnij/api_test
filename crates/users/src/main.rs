@@ -24,7 +24,7 @@ async fn main() -> std::io::Result<()> {
             .allowed_origin("194.58.90.123:8000")
             .allowed_methods(vec!["GET", "POST"])
             .max_age(3600);
-            
+
         App::new()
             .wrap(cors)
             .configure(routes)

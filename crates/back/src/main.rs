@@ -9,11 +9,13 @@ mod views;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     use actix_web::{App, HttpServer};
+    use actix_redis::RedisSession;
     use crate::routes::routes;
 
     HttpServer::new(|| {
         App::new()
-        .configure(routes)
+            .wrap(RedisSession::new("127.0.0.1:6379", &[0; 32]))
+            .configure(routes)
     })
     .bind("194.58.90.123:8000")?
     .run()
