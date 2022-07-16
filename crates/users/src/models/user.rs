@@ -3431,7 +3431,7 @@ impl User {
         }
     }
     pub fn add_new_user_subscriber(&self, user: &User) -> () {
-        use crate::models::NewNewsUserCommunitie;
+        use crate::models::{NewsUserCommunitie, NewNewsUserCommunitie};
         use crate::schema::news_user_communities::dsl::news_user_communities;
 
         let _connection = establish_connection();
