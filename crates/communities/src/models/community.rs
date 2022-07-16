@@ -24,6 +24,7 @@ use crate::utils::{
     CardUserJson,
     CommunityInfoJson,
     CommunityDetailJson,
+    CommunityPrivateJson,
 };
 
 /////// CommunityCategories //////
@@ -1158,7 +1159,7 @@ impl Community {
 
     pub fn get_can_see_info_exclude(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::community_visible_perms::dsl::community_visible_perms;
-        use crate::models::CommunityVisiblePerms;
+        use crate::models::CommunityVisiblePerm;
 
         let _connection = establish_connection();
         let items = community_visible_perms
@@ -1166,7 +1167,7 @@ impl Community {
             .filter(schema::community_visible_perms::can_see_info.eq("b"))
             .limit(limit)
             .offset(offset)
-            .load::<CommunityVisiblePerms>(&_connection)
+            .load::<CommunityVisiblePerm>(&_connection)
             .expect("E");
 
         let mut json = Vec::new();
@@ -1182,15 +1183,15 @@ impl Community {
     }
     pub fn get_can_see_info_include(&self, limit: i64, offset: i64) -> Vec<CardUserJson> {
         use crate::schema::community_visible_perms::dsl::community_visible_perms;
-        use crate::models::CommunityVisiblePerms;
+        use crate::models::CommunityVisiblePerm;
 
         let _connection = establish_connection();
-        let items = post_list_perms
+        let items = community_visible_perms
             .filter(schema::community_visible_perms::user_id.eq_any(self.get_members_ids()))
             .filter(schema::community_visible_perms::can_see_info.eq("a"))
             .limit(limit)
             .offset(offset)
-            .load::<CommunityVisiblePerms>(&_connection)
+            .load::<CommunityVisiblePerm>(&_connection)
             .expect("E");
 
         let mut json = Vec::new();
@@ -1870,7 +1871,7 @@ impl Community {
     }
     pub fn get_private_model_json(&self) -> Json<CommunityPrivateJson> {
         let private = self.get_private_model();
-        let json = UserPrivateJson {
+        let json = CommunityPrivateJson {
             can_see_member:   private.can_see_member,
             can_see_info:     private.can_see_info,
             can_send_message: private.can_send_message,
