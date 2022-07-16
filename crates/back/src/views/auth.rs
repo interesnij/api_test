@@ -47,7 +47,7 @@ async fn find_user(data: LoginUser2) -> Result<SessionUser, AuthError> {
     let _find_user_url = get_user_server_ip() + &"/users/get_user_session/".to_string() + &data.phone +  &"/".to_string();
     let _request = reqwest::get(_find_user_url).await.expect("E.");
     let new_request = _request.text().await.unwrap();
-    let user200: GetSessionFields = serde_json::from_str(&new_request).unwrap();
+    let user200 = serde_json::from_str(&new_request).unwrap();
     let user = GetSessionFields {
         id: user200.id,
         phone: user200.phone.clone(),
@@ -68,9 +68,11 @@ async fn find_user(data: LoginUser2) -> Result<SessionUser, AuthError> {
     Err(AuthError::NotFound(String::from("User not found")))
 }
 
-async fn handle_sign_in(data: LoginUser2,
-                session: &Session,
-                req: &HttpRequest) -> Result<HttpResponse, AuthError> {
+async fn handle_sign_in (
+    data: LoginUser2,
+    session: &Session,
+    req: &HttpRequest
+) -> Result<HttpResponse, AuthError> {
     use crate::utils::{is_json_request, set_current_user};
 
     let result = find_user(data);
