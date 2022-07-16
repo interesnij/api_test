@@ -170,14 +170,6 @@ pub struct NewUserForm {
 pub async fn process_signup(session: Session, req: HttpRequest) -> impl Responder {
     use crate::utils::{hash_password, set_current_user};
     use chrono::NaiveDate;
-    use crate::models::{
-        UserLocation, NewUserLocation,
-        UserProfile, NewUserProfile,
-        IpUser, NewIpUser,
-        DesignSetting, NewDesignSetting,
-        UserPrivate, NewUserPrivate,
-        UserProfileNotification, NewUserProfileNotification,
-    };
 
     let params = web::Query::<NewUserForm>::from_query(&req.query_string());
      // Если пользователь не аноним, то отправляем его на страницу новостей
