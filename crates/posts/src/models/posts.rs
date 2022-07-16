@@ -146,7 +146,7 @@ impl Post {
     ) -> CommentsSmallJson {
         let mut next_page_number = 0;
         let have_next: i32;
-        let comments: Vec<PostComment>;
+        let comments: Vec<CardCommentJson>;
 
         if page > 1 {
             have_next = page * limit + 1;
