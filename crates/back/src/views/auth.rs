@@ -68,7 +68,7 @@ async fn find_user(data: LoginUser2) -> Result<SessionUser, AuthError> {
     Err(AuthError::NotFound(String::from("User not found")))
 }
 
-fn handle_sign_in(data: LoginUser2,
+async fn handle_sign_in(data: LoginUser2,
                 session: &Session,
                 req: &HttpRequest) -> Result<HttpResponse, AuthError> {
     use crate::utils::{is_json_request, set_current_user};
@@ -76,7 +76,7 @@ fn handle_sign_in(data: LoginUser2,
     let result = find_user(data);
     let is_json = is_json_request(req);
 
-    match result {
+    match result.await {
         Ok(user) => {
             set_current_user(&session, &user);
             if is_json {
