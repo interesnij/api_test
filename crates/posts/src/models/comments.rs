@@ -206,14 +206,14 @@ impl PostComment {
 
         if page > 1 {
             have_next = page * limit + 1;
-            for c in self.get_replies(limit, have_next.into()).iter() {
+            for c in self.get_replies(limit.into(), have_next.into()).iter() {
                 let r_list = reactions_list.clone();
                 comments_json.push(c.get_reply_json(user_id, r_list));
             }
         }
         else {
             have_next = limit + 1;
-            for c in self.get_replies(limit, 0).iter() {
+            for c in self.get_replies(limit.into(), 0).iter() {
                 let r_list = reactions_list.clone();
                 comments_json.push(c.get_reply_json(user_id, r_list));
             }
