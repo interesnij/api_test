@@ -2,6 +2,7 @@ use actix_web::web;
 
 use crate::views::{
     pages_routes,
+    auth_routes,
 };
 
 pub fn routes(cfg: &mut web::ServiceConfig) {
