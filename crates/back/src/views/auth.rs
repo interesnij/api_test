@@ -8,7 +8,6 @@ use actix_web::{
 };
 use serde::{Deserialize, Serialize};
 use crate::utils::{
-    establish_connection,
     is_signed_in,
     verify,
     SessionUser,
@@ -16,7 +15,10 @@ use crate::utils::{
     get_user_server_ip,
 };
 use actix_session::Session;
-use crate::errors::AuthError;
+use crate::{
+    errors::AuthError,
+    vars,
+};
 use actix_multipart::{Field, Multipart};
 use std::borrow::BorrowMut;
 use futures_util::stream::StreamExt as _;
