@@ -3574,8 +3574,7 @@ impl User {
         if _notify.len() > 0 && _notify[0].owner == self.id {
             diesel::delete(
                 notify_user_communities
-                    .filter(schema::notify_user_communities::owner.eq(self.id))
-                    .filter(schema::notify_user_communities::user_id.eq(user_id))
+                    .filter(schema::notify_user_communities::id.eq(notify_id))
                 )
                 .execute(&_connection)
                 .expect("E");
@@ -3604,7 +3603,7 @@ impl User {
         owner_link: String,
         owner_image: Option<String>,
     ) -> () {
-        use crate::models::NewNewsUserCommunitie;
+        use crate::models::{NewsUserCommunitie, NewNewsUserCommunitie};
         use crate::schema::news_user_communities::dsl::news_user_communities;
 
         let _connection = establish_connection();
@@ -3967,7 +3966,6 @@ impl User {
 
     pub fn get_members_for_notify_ids(&self) -> Vec<i32> {
         use crate::schema::notify_user_communities::dsl::notify_user_communities;
-        use crate::models::NotifyUserCommunitie;
 
         let _connection = establish_connection();
         let items = notify_user_communities
