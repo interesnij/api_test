@@ -149,7 +149,7 @@ impl PostList {
             have_next = limit + 1;
             lists = PostList::get_user_post_lists(user_id, limit.into(), 0);
         }
-        if self.get_user_post_lists(1, have_next.into()).len() > 0 {
+        if PostList::get_user_post_lists(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
         }
 
@@ -196,7 +196,7 @@ impl PostList {
             have_next = limit + 1;
             lists = PostList::get_community_post_lists(community_id, limit.into(), 0);
         }
-        if self.get_community_post_lists(1, have_next.into()).len() > 0 {
+        if PostList::get_community_post_lists(1, have_next.into()).len() > 0 {
             next_page_number = page + 1;
         }
 
