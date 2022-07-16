@@ -6,8 +6,10 @@ use actix_web::{
   http::header::CONTENT_TYPE,
   HttpRequest,
 };
-use crate::errors::AuthError;
-
+use crate::{
+    errors::AuthError,
+    vars,
+};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SessionUser {

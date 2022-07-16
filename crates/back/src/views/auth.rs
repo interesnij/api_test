@@ -15,10 +15,6 @@ use crate::utils::{
     get_user_server_ip,
 };
 use actix_session::Session;
-use crate::{
-    errors::AuthError,
-    vars,
-};
 use actix_multipart::{Field, Multipart};
 use std::borrow::BorrowMut;
 use futures_util::stream::StreamExt as _;
@@ -78,7 +74,6 @@ fn handle_sign_in(data: LoginUser2,
                 req: &HttpRequest) -> Result<HttpResponse, AuthError> {
     use crate::utils::{is_json_request, set_current_user};
 
-    let _connection = establish_connection();
     let result = find_user(data);
     let is_json = is_json_request(req);
 
@@ -133,93 +128,5 @@ pub async fn login(mut payload: Multipart, session: Session, req: HttpRequest) -
         println!("{:?}", form.phone.clone());
         println!("{:?}", form.password.clone());
         handle_sign_in(form, &session, &req)
-    }
-}
-
-#[derive(Debug, Deserialize)]
-pub struct UserLoc {
-    pub city:      CityLoc,
-    pub region:    RegionLoc,
-    pub country:   CountryLoc,
-}
-#[derive(Debug, Deserialize)]
-pub struct CityLoc {
-    pub name_ru:    String,
-    pub name_en:    String,
-}
-#[derive(Debug, Deserialize)]
-pub struct RegionLoc {
-    pub name_ru:    String,
-    pub name_en:    String,
-}
-#[derive(Debug, Deserialize)]
-pub struct CountryLoc {
-    pub name_ru:    String,
-    pub name_en:    String,
-}
-
-
-#[derive(Deserialize)]
-pub struct NewUserForm {
-    pub first_name:  String,
-    pub last_name:   String,
-    pub gender:      String,
-    pub password:    String,
-    pub birthday:    String,
-    pub phone:       String,
-}
-
-pub async fn process_signup(session: Session, req: HttpRequest) -> impl Responder {
-    use crate::utils::{hash_password, set_current_user};
-    use chrono::NaiveDate;
-
-    let params = web::Query::<NewUserForm>::from_query(&req.query_string());
-     // Если пользователь не аноним, то отправляем его на страницу новостей
-    if is_signed_in(&session) {
-        HttpResponse::Ok().content_type("text/html; charset=utf-8").body("")
-    }
-    else if params.is_err() {
-        HttpResponse::Ok().content_type("text/html; charset=utf-8").body("")
-    }
-    else {
-
-    let _connection = establish_connection();
-        let params_2 = params.unwrap();
-        let mut get_perm = 1;
-        let mut ipaddr: String = String::new();
-
-        if let Some(val) = &req.peer_addr() {
-            ipaddr = val.ip().to_string();
-            if ipaddr.contains(&"91.239.184.81".to_string()) {
-                get_perm = 60;
-            };
-            //println!("{:?}", location200.city.name_ru);
-        };
-
-        let mut get_device = "a";
-        for header in req.headers().into_iter() {
-            if header.0 == "user-agent" {
-                let _val = format!("{:?}", header.1);
-                if _val.contains("Mobile"){
-                    get_device = "b";
-                };
-            }
-        };
-
-        let get_language = "a";
-        let mut get_gender = "a";
-        if params_2.gender.clone() == "Fem".to_string() {
-            get_gender = "b";
-        }
-        //let count = User::count_users() + 1;
-        let count = 1;
-        let link = "/id".to_string() + &count.to_string() + &"/".to_string();
-
-        //let _session_user = SessionUser {
-        //    id: _new_user.id,
-        //    phone: _new_user.phone,
-        //};
-        //set_current_user(&session, &_session_user);
-        HttpResponse::Ok().content_type("text/html; charset=utf-8").body("ok")
     }
 }
