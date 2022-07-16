@@ -44,10 +44,8 @@ pub struct GetSessionFields {
     pub password: String,
 }
 fn find_user(data: LoginUser2) -> Result<SessionUser, AuthError> {
-    use crate::schema::users::dsl::users;
-
     let _find_user_url = get_user_server_ip() + &"/users/get_user_session/".to_string() + &data.phone +  &"/".to_string();
-    let _request = reqwest::get(_find_user_url).expect("E.");
+    let _request = reqwest::get(_find_user_url).await.expect("E.");
     let new_request = _request.text().unwrap();
     let user200: GetSessionFields = serde_json::from_str(&new_request).unwrap();
     let user = GetSessionFields {

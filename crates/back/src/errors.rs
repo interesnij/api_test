@@ -1,6 +1,5 @@
 use actix_web::{HttpResponse, ResponseError};
 use derive_more::Display;
-use diesel::result::{DatabaseErrorKind, Error as DBError};
 use std::convert::From;
 
 #[derive(Clone, Debug, Display)]
@@ -39,23 +38,6 @@ impl ResponseError for AuthError {
             AuthError::DuplicateValue(ref message) => HttpResponse::BadRequest().json(message),
 
             AuthError::GenericError(ref message) => HttpResponse::BadRequest().json(message),
-        }
-    }
-}
-
-impl From<DBError> for AuthError {
-    fn from(error: DBError) -> AuthError {
-        // We only care about UniqueViolations
-        match error {
-            DBError::DatabaseError(kind, info) => {
-                let message = info.details().unwrap_or_else(|| info.message()).to_string();
-
-                match kind {
-                    DatabaseErrorKind::UniqueViolation => AuthError::DuplicateValue(message),
-                    _ => AuthError::GenericError(message)
-                }
-            }
-            _ => AuthError::GenericError(String::from("Some database error occured")),
         }
     }
 }
