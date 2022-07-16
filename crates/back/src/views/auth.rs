@@ -76,7 +76,7 @@ fn handle_sign_in(data: LoginUser2,
     let result = find_user(data);
     let is_json = is_json_request(req);
 
-    match result {
+    match result.await {
         Ok(user) => {
             set_current_user(&session, &user);
             if is_json {
