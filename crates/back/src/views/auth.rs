@@ -25,10 +25,10 @@ use futures::StreamExt;
 pub fn auth_routes(config: &mut web::ServiceConfig) {
     //config.route("/phone_send/{phone}/", web::get().to(phone_send));
     //config.route("/phone_verify/{phone}/{code}/", web::get().to(phone_verify));
-    config.route("/signup/", web::get().to(process_signup));
+    //config.route("/signup/", web::get().to(process_signup));
     //config.route("/mob_register/", web::get().to(mobile_signup));
     config.route("/login/", web::post().to(login));
-    config.route("/logout/", web::get().to(logout));
+    //config.route("/logout/", web::get().to(logout));
 }
 
 
@@ -43,12 +43,12 @@ pub struct GetSessionFields {
     pub phone:    String,
     pub password: String,
 }
-async fn find_user(data: LoginUser2) -> Result<SessionUser, AuthError> {
+fn find_user(data: LoginUser2) -> Result<SessionUser, AuthError> {
     use crate::schema::users::dsl::users;
 
     let _find_user_url = get_user_server_ip() + &"/users/get_user_session/".to_string() + &data.phone +  &"/".to_string();
-    let _request = reqwest::get(_find_user_url).await.expect("E.");
-    let new_request = _request.text().await.unwrap();
+    let _request = reqwest::get(_find_user_url).expect("E.");
+    let new_request = _request.text().unwrap();
     let user200: GetSessionFields = serde_json::from_str(&new_request).unwrap();
     let user = GetSessionFields {
         id: user200.id,
