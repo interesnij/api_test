@@ -1,3 +1,4 @@
+use crate::schema;
 use actix_web::{
     HttpRequest,
     web,
@@ -28,10 +29,10 @@ pub async fn get_user_session(phone: web::Path<String>) -> Json<GetSessionFields
         return user.get_session_fields_json()
     }
     else {
-        return GetSessionFields {
+        return Json( GetSessionFields {
             id:       0,
             phone:    "".to_string(),
             password: "".to_string(),
-        }
+        })
     }
 }
