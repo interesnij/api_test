@@ -6,6 +6,7 @@ use actix_web::{
   http::header::CONTENT_TYPE,
   HttpRequest,
 };
+use crate::errors::AuthError;
 
 
 #[derive(Debug, Serialize, Deserialize)]
