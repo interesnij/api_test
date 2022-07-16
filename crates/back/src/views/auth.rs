@@ -43,7 +43,7 @@ pub struct GetSessionFields {
     pub phone:    String,
     pub password: String,
 }
-async fn find_user(data: LoginUser2) -> impl Responder {
+fn find_user(data: LoginUser2) -> Result<SessionUser, AuthError> {
     let _find_user_url = get_user_server_ip() + &"/users/get_user_session/".to_string() + &data.phone +  &"/".to_string();
     let _request = reqwest::get(_find_user_url).await.expect("E.");
     let new_request = _request.text().await.unwrap();
