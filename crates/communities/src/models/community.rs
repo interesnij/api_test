@@ -1526,23 +1526,21 @@ impl Community {
     //    return get_users_from_ids(self.get_can_see_forum_include_users_ids());
     //}
 
-    pub fn get_members_json(&self, page: i32) -> Json<UsersJson> {
+    pub fn get_members_json(&self, page: i32, limit: i32) -> Json<UsersJson> {
         let mut next_page_number = 0;
         let users: Vec<CardUserJson>;
-        let count = self.count_members();
+        let have_next: i32;
 
         if page > 1 {
-            let step = (page - 1) * 20;
-            users = self.get_members(20, step.into());
-            if count > (page * 20).try_into().unwrap() {
-                next_page_number = page + 1;
-            }
+            users = self.get_members(limit, ((page - 1) * limit).into());
+            have_next = page * limit + 1;
         }
         else {
-            users = self.get_members(20, 0);
-            if count > 20.try_into().unwrap() {
-                next_page_number = 2;
-            }
+            users = self.get_members(limit, 0);
+            have_next = limit + 1;
+        }
+        if self.get_members(1, have_next).len() > 0 {
+            next_page_number = page + 1;
         }
         return Json(UsersJson {
             users: users,
@@ -1599,7 +1597,7 @@ impl Community {
 
         // это номер оффсета за пределами выборки, чтобы по нему
         // проверять, есть ли элементы новой страницы
-        let have_next: i64;
+        let have_next: i32;
 
         if page > 1 {
             have_next = page * limit + 1;
