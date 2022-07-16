@@ -1103,7 +1103,6 @@ impl Post {
 
     pub fn reactions_ids(&self) -> Vec<i32> {
         use crate::schema::post_votes::dsl::post_votes;
-        use crate::models::PostVote;
 
         let _connection = establish_connection();
         let votes_ids = post_votes
@@ -1120,7 +1119,6 @@ impl Post {
 
     pub fn get_user_reaction(&self, user_id: i32) -> i16 {
         use crate::schema::post_votes::dsl::post_votes;
-        use crate::models::PostVote;
         // "/static/images/reactions/" + get_user_reaction + ".jpg"
 
         let _connection = establish_connection();
