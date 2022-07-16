@@ -14,6 +14,7 @@ use crate::utils::{
     PostDetailJson,
     CardUserJson,
     CommentsSmallJson,
+    CardCommentJson,
 };
 use actix_web::web::Json;
 use crate::models::{
