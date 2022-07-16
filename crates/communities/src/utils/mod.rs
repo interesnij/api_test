@@ -1,5 +1,5 @@
 mod community;
-use serde::Serialize;
+//use serde::Serialize;
 use diesel::prelude::*;
 use crate::schema;
 use crate::models::Community;
