@@ -18,8 +18,8 @@ use utils::requests::*;
 
 #[derive(Clone, Routable, PartialEq)]
 pub enum PrivateRoute {
-    #[at("/")]
-    Search,
+    //#[at("/")]
+    //Search,
     //#[at("/info/:id")]
     //Detail { id: String },
     #[at("/profile")]
