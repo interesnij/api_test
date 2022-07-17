@@ -15,7 +15,10 @@ mod handlers;
 mod repositories;
 mod config;
 
-use handlers::major_handlers::major_scope;
+use handlers::{
+    major_handlers::major_scope,
+    user_handlers::user_scope,
+};
 use rbatis::{rbatis::Rbatis, plugin::snowflake::Snowflake};
 
 
