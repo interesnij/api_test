@@ -1,94 +1,108 @@
-use yew_router::prelude::*;
+#![recursion_limit = "640"]
+use async_std::task::current;
+use gloo_utils::history;
+use wasm_bindgen::prelude::*;
 use yew::prelude::*;
+use yew::{Context, ContextProvider};
+use yew_hooks::{use_async, use_mount};
+use yew_router::prelude::*;
 
-use reqwasm::http::Request;
-use serde::Deserialize;
-
+mod models;
+mod pages;
+mod sections;
+mod utils;
+use pages::*;
+use models::user::{self, UserDetail};
+use utils::not_found::NotFound;
+use utils::requests::*;
 
 #[derive(Clone, Routable, PartialEq)]
-enum Route {
+pub enum PrivateRoute {
     #[at("/")]
-    Home,
-
-    #[at("/secure")]
-    Secure,
-
+    Search,
+    //#[at("/info/:id")]
+    //Detail { id: String },
+    #[at("/profile")]
+    Profile,
+    //#[at("/medicine/new")]
+    //NewMedicine,
     #[not_found]
-    #[at("/404")]
+    #[at("/error")]
     NotFound,
+    #[at("/login")]
+    Login,
+    //#[at("/signup")]
+    //Signup,
 }
 
-#[function_component(Secure)]
-fn secure() -> Html {
-    let history = use_history().unwrap();
-    let onclick = Callback::once(move |_| history.push(Route::Home));
-    html! {
-        <div>
-            <h1>{ "Secure" }</h1>
-            <button {onclick}>{ "Go Home" }</button>
-        </div>
-    }
-}
-#[function_component(Home)]
-fn home() -> Html {
-    let history = use_history().unwrap();
-    let onclick = Callback::once(move |_| history.push(Route::Secure));
-    html! {
-        <div>
-            <h1>{ "Home" }</h1>
-            <button {onclick}>{ "Go Secure" }</button>
-        </div>
-    }
-}
-#[function_component(NotFound)]
-fn not_found() -> Html {
-    let history = use_history().unwrap();
-    let go_home_button = {
-        let history = history.clone();
-        let onclick = Callback::once(move |_| history.push(Route::Home));
-        html! {
-            <button {onclick}>{"Home"}</button>
-        }
-    };
-
-    let go_secure_button = {
-        let history = history.clone();
-        let onclick = Callback::once(move |_| history.push(Route::Secure));
-        html! {
-            <button {onclick}>{"Secure"}</button>
-        }
-    };
-    html! {
-        <>
-            {go_home_button}
-            {go_secure_button}
-        </>
+fn private_switch(route: &PrivateRoute) -> Html {
+    match route {
+        //PrivateRoute::Detail { id } => html! {<info::Info id={(*id).clone()}/>},
+        PrivateRoute::Profile => html! {<profile::Profile/>},
+        PrivateRoute::NotFound => html! {<NotFound/>},
+        //PrivateRoute::Search => html! {<search::Search/>},
+        //PrivateRoute::NewMedicine => html! {<new_medicine::NewMedicine/>},
+        PrivateRoute::Login => html! {<login::LoginForm/>},
+        //PrivateRoute::Signup => html! {<signup::SignupForm/>},
     }
 }
 
-fn switch(routes: &Route) -> Html {
-    match routes {
-        Route::Home => html! {
-             <Home />
-         },
-        Route::Secure => html! {
-            <Secure />
-        },
-        Route::NotFound => html! {
-             <NotFound />
-        },
-    }
-}
-
-#[function_component(Main)]
+#[function_component(App)]
 fn app() -> Html {
-    html! {
-        <BrowserRouter>
-            <Switch<Route> render={Switch::render(switch)} />
-        </BrowserRouter>
+    let user_ctx = use_state(|| Some(UserDetail::default()));
+    let login_ctx = use_state(|| false);
+    let current_user =
+        use_async(async move { request_get::<UserDetail>("/api/users/user/detail".to_string()).await });
+
+    {
+        let current_user = current_user.clone();
+
+        use_mount(move || {
+            if get_token().is_some() {
+                current_user.run();
+            }
+        })
+    }
+
+    {
+        let user_ctx = user_ctx.clone();
+
+        use_effect_with_deps(
+            move |current_user| {
+                if let Some(user_info) = &current_user.data {
+                    user_ctx.set(Some(user_info.clone()))
+                }
+                if let Some(_) = &current_user.error{
+                    user_ctx.set(None);
+                    remove_token();
+                }
+
+                || ()
+            },
+            current_user,
+        )
+    }
+
+    {
+        let user_ctx = user_ctx.clone();
+        html! {
+            <>
+                <ContextProvider<Option<UserDetail>> context={(*user_ctx).clone()}>
+                    <sections::header::Header />
+                    <main>
+                        <BrowserRouter>
+                            <Switch<PrivateRoute> render={Switch::render(private_switch)} />
+                        </BrowserRouter>
+                    </main>
+                    <sections::footer::Footer/>
+                </ContextProvider<Option<UserDetail>>>
+            </>
+        }
     }
 }
 
-fn main() {
-    yew::start_app::<Main>();
+//#[wasm_bindgen(start)]
+pub fn main() {
+    wasm_logger::init(wasm_logger::Config::default());
+    yew::start_app::<App>();
 }
