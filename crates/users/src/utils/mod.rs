@@ -1,14 +1,14 @@
-mod profile;
+//mod profile;
 //mod settings;
-mod lists;
+//mod lists;
 
-pub use self::{
-    profile::*,
+//pub use self::{
+//    profile::*,
 //    settings::*,
-    lists::*,
-};
+//    lists::*,
+//};
 
-use crate::schema;
+//use crate::schema;
 
 
 pub fn get_count_for_ru(count: i32, word1: String, word2: String, word3: String) -> String {
