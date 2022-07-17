@@ -81,7 +81,7 @@ async fn user_profile(_state: web::Data<AppState>, user_id: web::Path<u64>) -> i
             HttpResponse::Ok().body(body)
         },
         Err(_) => {
-            HttpResponse::Unauthorized().finish()
+            HttpResponse::Ok().body("user not found")
         },
     }
 }
