@@ -13,7 +13,8 @@ use log::Level;
 mod models;
 mod handlers;
 mod config;
-
+mod ro;
+use handlers::major_handlers::major_scope;
 use rbatis::{rbatis::Rbatis, plugin::snowflake::Snowflake};
 
 
@@ -54,7 +55,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(app_state.to_owned()))
             .wrap(cors)
-            .configure(routes)
+            .service(major_scope())
     })
     .bind("194.58.90.123:9001")?
     .run()
