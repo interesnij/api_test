@@ -25,9 +25,41 @@ async fn user_detail(_req: HttpRequest, _state: web::Data<AppState>, _token: Bea
 
     let user: Result<User, _> = _state.rb.fetch_by_column("id", claims.id).await;
 
-    match user{
+    match user {
         Ok(user_data) => {
 
+            let body = serde_json::to_string(&UserDetail {
+                id: user_data.id,
+                first_name: user_data.first_name,
+                last_name: user_data.last_name,
+                types: user_data.types,
+                gender: user_data.gender,
+                device: user_data.device,
+                language: user_data.language,
+                perm: user_data.perm,
+                link: user_data.link,
+                city: user_data.city,
+                status: user_data.status,
+                image: user_data.b_avatar.unwrap(),
+                birthday: user_data.birthday.to_string(),
+                last_activity: user_data.last_activity.to_string(),
+            }).unwrap();
+
+            HttpResponse::Ok().body(body)
+        },
+        Err(_) => {
+            HttpResponse::Unauthorized().finish()
+        },
+    }
+}
+
+#[get("/detail/{id}")]
+async fn user_detail(user_id: web::Path<u64>) -> impl Responder{
+
+    let user: Result<User, _> = _state.rb.fetch_by_column("id", user_id).await;
+
+    match user {
+        Ok(user_data) => {
             let body = serde_json::to_string(&UserDetail {
                 id: user_data.id,
                 first_name: user_data.first_name,
