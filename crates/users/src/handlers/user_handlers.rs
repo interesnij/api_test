@@ -9,7 +9,7 @@ use crate::{
 };
 
 pub fn user_scope() -> actix_web::Scope{
-    web::scope("users/")
+    web::scope("/users")
         .service(user_profile)
         .service(user_detail)
 }
