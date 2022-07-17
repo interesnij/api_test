@@ -18,6 +18,7 @@ pub async fn create(user_data: &UserSignup, rb: &Rbatis, sflake: &Snowflake) -> 
         types: 1,
         gender: user_data.gender.clone(),
         device: user_data.device.clone(),
+        language: user_data.language.clone(),
         perm: 1,
         level: 100,
         password: hash(user_data.password.clone(), 8).unwrap(),
