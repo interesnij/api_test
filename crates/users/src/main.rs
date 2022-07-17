@@ -61,7 +61,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(app_state.to_owned()))
             .wrap(cors)
             .service(major_scope())
-            .service(user_scope())
+            .configure(user_scope) 
     })
     .bind("194.58.90.123:9001")?
     .run()
