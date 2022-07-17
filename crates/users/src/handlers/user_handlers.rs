@@ -54,7 +54,7 @@ async fn user_detail(_req: HttpRequest, _state: web::Data<AppState>, _token: Bea
     }
 }
 
-#[get("/{id}")]
+#[get("/{user_id}")]
 async fn user_profile(_state: web::Data<AppState>, user_id: web::Path<u64>) -> impl Responder{
     println!("user_profile!");
     let user: Result<User, _> = _state.rb.fetch_by_column("id", *user_id).await;
