@@ -73,7 +73,7 @@ async fn user_profile(_state: web::Data<AppState>, user_id: web::Path<u64>) -> i
                 link: user_data.link,
                 city: user_data.city,
                 status: user_data.status,
-                image: user_data.b_avatar.unwrap(),
+                image: user_data.b_avatar,
                 birthday: user_data.birthday.to_string(),
                 last_activity: user_data.last_activity.to_string(),
             }).unwrap();
