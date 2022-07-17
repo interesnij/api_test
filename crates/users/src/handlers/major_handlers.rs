@@ -61,8 +61,8 @@ async fn login(_req:HttpRequest, _data: web::Json<UserLogin>, _state: web::Data<
                 }
             }
     } else {
-            log::info!("Bad password for user {}", user.username);
-            let msg = format!("Bad password for user {}", user.username);
+            log::info!("Bad password for user {}", user.last_name);
+            let msg = format!("Bad password for user {}", user.last_name);
             HttpResponse::BadRequest().body(HandlersError::new_str(msg))
 
     }

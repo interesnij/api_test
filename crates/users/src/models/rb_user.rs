@@ -80,7 +80,7 @@ pub struct User {
 
 #[derive(Serialize, Deserialize)]
 pub struct UserDetail {
-    pub id:            i32,
+    pub id:            u64,
     pub first_name:    String,
     pub last_name:     String,
     pub types:         i16,
@@ -109,6 +109,7 @@ pub struct UserLogin{
 
 #[derive(Deserialize)]
 pub struct UserSignup {
+    pub id:            u64,
     pub first_name:    String,
     pub last_name:     String,
     pub phone:         String,
