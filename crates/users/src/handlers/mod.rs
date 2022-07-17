@@ -14,3 +14,4 @@ impl HandlersError {
 }
 
 pub mod major_handlers;
+pub mod user_handlers;
