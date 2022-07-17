@@ -17,14 +17,6 @@ struct ReqResult<T> {
     body: Arc<T>,
 }
 
-#[derive(Clone, PartialEq, Deserialize)]
-struct Video {
-    id: usize,
-    title: String,
-    speaker: String,
-    url: String,
-}
-
 
 pub fn get_token()-> Option<String>{
     let token = LocalStorage::get("pharmacy-token");
@@ -53,7 +45,7 @@ where
 {
     let allow_body = method == reqwest::Method::POST || method == reqwest::Method::PUT;
     let mut req = reqwest::Client::new()
-        .request(method, format!("http://localhost:8080{}", url))
+        .request(method, url)
         .header("Content-Type", "application/json");
 
 
