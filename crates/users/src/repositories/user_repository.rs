@@ -2,8 +2,8 @@ use bcrypt::{hash, verify, DEFAULT_COST};
 use rbatis::crud::CRUD;
 use rbatis::{core::Result, rbatis::Rbatis, snowflake::Snowflake};
 
-use crate::models::user::User;
-use crate::models::user::UserSignup;
+use crate::models::users::User;
+use crate::models::users::UserSignup;
 
 pub async fn create(user_data: &UserSignup, rb: &Rbatis, sflake: &Snowflake) -> Option<User> {
     log::info!("Create user");

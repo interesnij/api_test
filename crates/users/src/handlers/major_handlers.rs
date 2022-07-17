@@ -5,7 +5,7 @@ use actix_web::{http::header::HeaderName, http::header::HeaderValue,
 use rbatis::crud::CRUD;
 use crate::handlers::HandlersError;
 use crate::models::medicine::Medicine;
-use crate::models::user::{UserSignup, UserInfo, UserLogin, UserToken};
+use crate::models::users::{UserSignup, UserLogin, UserToken};
 use crate::repositories::user_repository;
 //use crate::repositories::medicine_repository;
 use crate::AppState;
@@ -15,7 +15,7 @@ pub fn major_scope() -> actix_web::Scope{
     web::scope("")
         .service(signup)
         .service(login)
-        .service(info)
+        //.service(info)
 }
 
 #[post("/signup")]
