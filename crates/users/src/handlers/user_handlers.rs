@@ -28,9 +28,8 @@ async fn user_detail(_req: HttpRequest, _state: web::Data<AppState>, _token: Bea
 
     match user {
         Ok(user_data) => {
-
             let body = serde_json::to_string(&UserDetail {
-                id: user_data.id,
+                id: 0,
                 first_name: user_data.first_name,
                 last_name: user_data.last_name,
                 types: user_data.types,
