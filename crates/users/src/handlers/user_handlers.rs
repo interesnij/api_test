@@ -11,6 +11,7 @@ use crate::{
 pub fn user_scope() -> actix_web::Scope{
     web::scope("/user")
         .service(user_detail)
+        .service(user_profile)
 }
 
 #[get("/detail")]
@@ -54,7 +55,7 @@ async fn user_detail(_req: HttpRequest, _state: web::Data<AppState>, _token: Bea
 }
 
 #[get("/detail/{id}")]
-async fn user_detail(user_id: web::Path<u64>) -> impl Responder{
+async fn user_profile(user_id: web::Path<u64>) -> impl Responder{
 
     let user: Result<User, _> = _state.rb.fetch_by_column("id", user_id).await;
 
