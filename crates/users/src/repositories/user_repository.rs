@@ -22,8 +22,13 @@ pub async fn create(user_data: &UserSignup, rb: &Rbatis, sflake: &Snowflake) -> 
         level: 100,
         password: hash(user_data.password.clone(), 8).unwrap(),
         link: link,
-        birthday: rbatis::DateNative::now(),
-        last_activity: rbatis::DateTimeNative::now(),
+        city: None,
+        status: None,
+        b_avatar: None,
+        s_avatar: None,
+        email: None,
+        birthday: *rbatis::DateNative::now(),
+        last_activity: *rbatis::DateTimeNative::now(),
     };
 
     match rb.save(&user, &[]).await{
