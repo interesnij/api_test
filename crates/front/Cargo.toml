@@ -24,10 +24,10 @@ bcrypt = "0.12.1"
 async-std = "1.11.0"
 wasm-bindgen-futures = "0.4.30"
 crossbeam = "0.8.1"
-getrandom = { version = "0.2", features = ["js"] }
 wasm-rs-shared-channel = "0.1.0"
 futures = "0.3.21"
 pollster = "0.2.5"
 wasm-cookies = "0.1.0"
 cookie = "0.16.0"
 reqwest = { version = "0.11.10", features = ["json"] }
+getrandom = { version = "0.2", features = ["js"] }
