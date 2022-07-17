@@ -12,8 +12,9 @@ use log::Level;
 
 mod models;
 mod handlers;
+mod repositories;
 mod config;
-mod ro;
+
 use handlers::major_handlers::major_scope;
 use rbatis::{rbatis::Rbatis, plugin::snowflake::Snowflake};
 
