@@ -8,7 +8,7 @@ use crate::{
     models::{UserDetail, User}
 };
 
-pub fn user_scope(config: &mut web::ServiceConfig) -> {
+pub fn user_scope(config: &mut web::ServiceConfig) {
     config.route("/{user_id}/", web::get().to(user_profile));
     config.route("/detail/", web::get().to(user_detail));
 }
