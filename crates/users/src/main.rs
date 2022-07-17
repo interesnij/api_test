@@ -60,7 +60,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(app_state.to_owned()))
             //.wrap(cors)
-            .configure(user_scope)
+            .service(user_scope())
             .service(major_scope())
 
     })

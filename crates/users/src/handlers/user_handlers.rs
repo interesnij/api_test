@@ -8,12 +8,13 @@ use crate::{
     models::{UserDetail, User}
 };
 
-pub fn user_scope(config: &mut web::ServiceConfig) {
-    config.route("/{user_id}/", web::get().to(user_profile));
-    config.route("/detail/", web::get().to(user_detail));
+pub fn user_scope() -> actix_web::Scope{
+    web::scope("users/")
+        .service(user_profile)
+        .service(user_detail)
 }
 
-
+#[get("/user_profile")]
 async fn user_detail(_req: HttpRequest, _state: web::Data<AppState>, _token: BearerAuth) -> impl Responder{
     log::info!("User detail: {}", _token.token());
 
@@ -53,7 +54,7 @@ async fn user_detail(_req: HttpRequest, _state: web::Data<AppState>, _token: Bea
     }
 }
 
-
+#[get("/user_detail/{user_id}")]
 async fn user_profile(_state: web::Data<AppState>, user_id: web::Path<u64>) -> impl Responder{
     println!("user_profile!");
     let user: Result<User, _> = _state.rb.fetch_by_column("id", *user_id).await;
