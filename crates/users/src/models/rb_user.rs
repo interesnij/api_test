@@ -83,11 +83,11 @@ pub struct UserDetail {
     pub id:            u64,
     pub first_name:    String,
     pub last_name:     String,
-    pub types:         i16,
+    pub types:         u16,
     pub gender:        String,
     pub device:        String,
     pub language:      String,
-    pub perm:          i16,
+    pub perm:          u16,
     pub link:          String, // community.get_link()
     pub city:          Option<String>,
     pub status:        Option<String>,

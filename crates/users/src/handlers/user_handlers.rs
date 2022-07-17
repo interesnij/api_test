@@ -40,7 +40,7 @@ async fn user_detail(_req: HttpRequest, _state: web::Data<AppState>, _token: Bea
                 link: user_data.link,
                 city: user_data.city,
                 status: user_data.status,
-                image: user_data.b_avatar,
+                image: user_data.b_avatar.unwrap(),
                 birthday: user_data.birthday.to_string(),
                 last_activity: user_data.last_activity.to_string(),
             }).unwrap();
