@@ -24,16 +24,8 @@ CREATE TABLE users (
     UNIQUE(phone),
     UNIQUE(email)
 );
-INSERT INTO users (
-  id, first_name, last_name, phone, types,
-  gender, device, language, perm, level,
-  password, link, birthday
-)
-VALUES (
-  1, 'Сергей', 'Зубарев', "79042373637", 1,
-  "a", "a", "a", 60, 100,
-  "ulihos46", "id1", current_timestamp
-)
+INSERT INTO users (id, first_name, last_name, phone, types, gender, device, language, perm, level, password, link, birthday, last_activity)
+VALUES (1, 'Сергей', 'Зубарев', '79042373637', 1, 'a', 'a', 'a', 60, 100, 'ulihos46', 'id1', current_timestamp, current_timestamp)
 ON CONFLICT DO NOTHING;
 
 -- профили пользователей -------
@@ -299,7 +291,7 @@ CREATE TABLE user_populate_smiles (
     user_id  INT NOT NULL,
     smile_id INT NOT NULL,
     count    INT NOT NULL DEFAULT 0,
-    image    VARCHAR(500) NOT NULL,
+    image    VARCHAR(500) NOT NULL
 );
 CREATE UNIQUE INDEX user_populate_smiles_unq ON user_populate_smiles (user_id, smile_id);
 
@@ -309,7 +301,7 @@ CREATE TABLE user_populate_stickers (
     user_id    INT NOT NULL,
     sticker_id INT NOT NULL,
     count      INT NOT NULL DEFAULT 0,
-    image      VARCHAR(500) NOT NULL,
+    image      VARCHAR(500) NOT NULL
 );
 CREATE UNIQUE INDEX user_populate_stickers_unq ON user_populate_stickers (user_id, sticker_id);
 
