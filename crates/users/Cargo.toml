@@ -3,27 +3,19 @@ name = "users"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-actix-web = "4"
-native-tls = "0.2.4"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-diesel = { version = "1.4.4", features = ["chrono", "postgres", "r2d2", "uuidv07", "serde_json"] }
+actix-web = "4.0.1"
+actix-cors= "0.6.1"
+actix-web-httpauth = "0.6.0"
+serde = { version = "1.0.136", features = ["derive"] }
+serde_json = "1.0.79"
+bcrypt = "0.12.1"
+simple_logger = "2.1.0"
+log = "0.4.16"
+jsonwebtoken = "8.1.0"
+rbson = "2.0.3"
+config = "0.13.0"
 dotenv = "0.15.0"
-chrono = { version = "0.4", features = ["serde"] }
-argonautica = "0.2.0"
-actix-multipart = "0.4.0-beta.12"
-futures = "0.3.21"
-actix-form-data = "0.6.2"
-mime = "0.3.16"
-failure = "0.1.8"
-uuid = { version = "0.8.2", features = ["serde", "v4"] }
-actix-cors = "0.6.1"
-actix-service = "*"
-lazy_static = "*"
-actix-rt = "2"
-concat-string = "1.0.1"
-futures-util = "0.3.21"
-reqwest = "*"
+rbatis = {version = "3.1.6", features = ["postgres"]}
+chrono = "0.4.19"

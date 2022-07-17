@@ -1,7 +1,7 @@
 -- пользователи -------
 
 CREATE TABLE users (
-    id            SERIAL PRIMARY KEY,
+    id            BIGSERIAL PRIMARY KEY,
     first_name    VARCHAR(100) NOT NULL,
     last_name     VARCHAR(100) NOT NULL,
     phone         VARCHAR(14) NOT NULL,
@@ -24,6 +24,17 @@ CREATE TABLE users (
     UNIQUE(phone),
     UNIQUE(email)
 );
+INSERT INTO users (
+  id, first_name, last_name, phone, types,
+  gender, device, language, perm, level,
+  password, link, birthday
+)
+VALUES (
+  1, 'Сергей', 'Зубарев', "79042373637", 1,
+  "a", "a", "a", 60, 100,
+  "ulihos46", "id1", current_timestamp
+)
+ON CONFLICT DO NOTHING;
 
 -- профили пользователей -------
 CREATE TABLE user_profiles (

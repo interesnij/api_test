@@ -1,4 +1,3 @@
-//use diesel::prelude::*;
 //use crate::schema;
 use actix_web::{
     //HttpRequest,
@@ -7,9 +6,6 @@ use actix_web::{
     web,
 };
 //use serde::Deserialize;
-//use crate::utils::{
-//    establish_connection,
-//};
 
 pub fn pages_routes(config: &mut web::ServiceConfig) {
     config.route("/", web::get().to(index_page));

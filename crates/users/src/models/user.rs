@@ -89,7 +89,7 @@ use actix_web::web::Json;
 
 #[derive(Serialize, Identifiable, Queryable)]
 pub struct User {
-    pub id:            i32,
+    pub id:            u64,
     pub first_name:    String,
     pub last_name:     String,
     pub phone:         String,
