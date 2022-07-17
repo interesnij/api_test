@@ -15,7 +15,7 @@ pub fn image(props: &ImageProps) -> Html {
         src={
             match &props.src{
                 Some(val) => {
-                    if(val.len() > 0){
+                    if val.len() > 0 {
                         val.clone()
                     } else {
                         "public/default.jpg".to_owned()

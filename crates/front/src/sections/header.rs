@@ -2,7 +2,7 @@ use log::debug;
 use yew::{function_component, html, use_context, Callback, Component, Context, Properties, classes, use_state, use_effect_with_deps, callback, UseStateHandle};
 use yew_router::{hooks::use_history, history::History};
 
-use crate::{models::{self, user::UserInfo}, utils::requests::{get_token, remove_token}, PrivateRoute};
+use crate::{models::{self, user::UserProfile}, utils::requests::{get_token, remove_token}, PrivateRoute};
 
 #[function_component(Header)]
 pub fn header() -> Html {

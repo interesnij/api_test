@@ -23,7 +23,7 @@ pub struct UserDetail {
 
 #[derive(Deserialize, Debug, Clone, Validate, Serialize, PartialEq)]
 pub struct UserLogin {
-    #[validate(length(min = 8)]
+    #[validate(length(min = 8))]
     pub phone: String,
     #[validate(length(min = 8))]
     pub password: String,
@@ -53,7 +53,7 @@ pub struct UserSignup {
     pub perm:          i16,
     pub password:      String,
     pub link:          String,
-    pub birthday:      DateNative,
+    pub birthday:      String,
 }
 
 impl UserSignup {
