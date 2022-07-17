@@ -4,8 +4,7 @@ use actix_web::{http::header::HeaderName, http::header::HeaderValue,
     http::header};
 use rbatis::crud::CRUD;
 use crate::handlers::HandlersError;
-use crate::models::medicine::Medicine;
-use crate::models::rb_user::{UserSignup, UserLogin, UserToken};
+use crate::models::{UserSignup, UserLogin, UserToken};
 use crate::repositories::user_repository;
 //use crate::repositories::medicine_repository;
 use crate::AppState;
