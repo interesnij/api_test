@@ -19,7 +19,7 @@ struct ReqResult<T> {
 
 
 pub fn get_token()-> Option<String>{
-    let token = LocalStorage::get("pharmacy-token");
+    let token = LocalStorage::get("Test-token");
     match token{
         Ok(tok) => Some(tok),
         Err(err) => {
@@ -30,11 +30,11 @@ pub fn get_token()-> Option<String>{
 }
 
 pub fn set_token(token: String){
-    LocalStorage::set("pharmacy-token", token).unwrap();
+    LocalStorage::set("Test-token", token).unwrap();
 }
 
 pub fn remove_token(){
-    LocalStorage::delete("pharmacy-token");
+    LocalStorage::delete("Test-token");
 }
 
 
