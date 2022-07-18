@@ -48,7 +48,8 @@ async fn user_detail(_req: HttpRequest, _state: web::Data<AppState>, _token: Bea
             HttpResponse::Ok().body(body)
         },
         Err(_) => {
-            HttpResponse::Unauthorized().finish()
+            HttpResponse::Ok().body("not ok")
+            //HttpResponse::Unauthorized().finish()
         },
     }
 }
