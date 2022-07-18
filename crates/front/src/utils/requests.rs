@@ -49,13 +49,13 @@ where
         .header("Content-Type", "application/json");
 
 
-    if let Some(token) = get_token() {
-        req = req.bearer_auth(token);
-    }
+    //if let Some(token) = get_token() {
+    //    req = req.bearer_auth(token);
+    //}
 
-    if allow_body {
-        req = req.json(body);
-    }
+    //if allow_body {
+    //    req = req.json(body);
+    //}
 
     log::info!("Request: {:?}", req);
     let res_resp = req.send().await;
@@ -63,7 +63,7 @@ where
 
     match res_resp {
         Ok(resp) => {
-            match resp.status().is_success(){
+            match resp.status().is_success() {
                 true => {
                     match resp.json::<T>().await{
                         Ok(data) => Ok(data),
