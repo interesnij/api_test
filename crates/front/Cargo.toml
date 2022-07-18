@@ -33,3 +33,6 @@ reqwest = { version = "0.11.10", features = ["json"] }
 reqwasm = "0.2"
 indexmap = "=1.6.2"
 getrandom = { version = "*", features = ["js"] }
+
+[cargo-web]
+minimum-version = "0.6.0"

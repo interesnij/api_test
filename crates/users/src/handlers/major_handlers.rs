@@ -38,7 +38,7 @@ async fn login(_req:HttpRequest, _data: web::Json<UserLogin>, _state: web::Data<
     log::info!("Try login: {}, {}", _data.phone, _data.password);
     let user = user_repository::find_by_phone(&_data.phone, _state.rb.as_ref()).await;
 
-    if let None = user{
+    if let None = user {
         let msg = format!("User not found by phone {}", _data.phone);
         return HttpResponse::BadRequest().body(HandlersError::new_str(msg))
     }
@@ -51,7 +51,7 @@ async fn login(_req:HttpRequest, _data: web::Json<UserLogin>, _state: web::Data<
             match token{
                 Ok(token_str) => {
 
-                    let body = serde_json::to_string(&UserToken{
+                    let body = serde_json::to_string(&UserToken {
                         token: token_str,
                     }).unwrap();
 
