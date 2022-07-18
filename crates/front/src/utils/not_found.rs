@@ -24,23 +24,8 @@ pub fn not_found() -> Html {
             wasm_bindgen_futures::spawn_local(async move {
                 let fetched_test = request_get::<Test>("/api/users/user/1".to_string()).await;
                 match fetched_test {
-                    Ok(resp) => {
-                        match resp.status().is_success(){
-                            true => {
-                                match resp.json::<T>().await{
-                                    Ok(data) => test.set(data),
-                                    Err(_) => {
-                                        log::info!("Failed parse body");
-                                        Err(0)
-                                    },
-                                }
-                            },
-                            false => Err(resp.status().as_u16())
-                        }
-                    },
-                    Err(err) => {
-                        Err(0)
-                    }
+                    Ok(resp) => test.set(resp),
+                    _ => log::info!("Failed parse body")
                 }
             });
             || ()
