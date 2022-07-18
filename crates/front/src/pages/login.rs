@@ -9,6 +9,7 @@ use yew_router::prelude::*;
 use crate::models::user::{UserLogin, UserToken};
 use crate::utils::requests::{request_post, set_token};
 use crate::PrivateRoute;
+use yew::services::fetch::Request;
 
 
 #[function_component(LoginForm)]
@@ -22,6 +23,15 @@ pub fn login_form() -> Html {
             request_post::<UserLogin, UserToken>("login".to_string(), &*data_state.borrow_mut()).await
         }
     });
+    let post_request = Request::post("login")
+        .header("Content-Type", "application/json")
+        .body(&*data_state.borrow_mut())
+        .send()
+        .await
+        .unwrap()
+        .text()
+        .await
+        .unwrap();
 
     let history = use_history().unwrap();
     {
