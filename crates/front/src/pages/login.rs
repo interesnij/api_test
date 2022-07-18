@@ -23,15 +23,7 @@ pub fn login_form() -> Html {
             request_post::<UserLogin, UserToken>("login".to_string(), &*data_state.borrow_mut()).await
         }
     });
-    let post_request = Request::post("login")
-        .header("Content-Type", "application/json")
-        .body(&*data_state.borrow_mut())
-        .send()
-        .await
-        .unwrap()
-        .text()
-        .await
-        .unwrap();
+
 
     let history = use_history().unwrap();
     {
@@ -54,6 +46,21 @@ pub fn login_form() -> Html {
         );
     }
 
+    use_effect_with_deps(move |_| {
+        let test = test.clone();
+        wasm_bindgen_futures::spawn_local(async move {
+            let post_request = Request::post("login")
+                .header("Content-Type", "application/json")
+                .body(&*data_state.borrow_mut())
+                .send()
+                .await
+                .unwrap()
+                .json()
+                .await
+                .unwrap();
+        });
+        || ()
+    }, ());
     let change_phone = {
         let data_state = data_state.clone();
 
