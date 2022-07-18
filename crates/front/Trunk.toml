@@ -9,13 +9,13 @@ address = "194.58.90.123"
 # The port to serve on.
 port = 8100
 
-[[proxy]]
-rewrite = "/api/v1/"
-backend = "http://194.58.90.123:8000/"
+#[[proxy]]
+#rewrite = "/api/v1/"
+#backend = "http://194.58.90.123:8000/"
 
 [[proxy]]
-rewrite = "/api_users/v1"
-backend = "http://194.58.90.123:9001"
+rewrite = "/api_users/v1/"
+backend = "http://194.58.90.123:9001/"
 
 #[[proxy]]
 # В этом примере прокси-сервера WebSocket есть серверная часть и поле ws. В этом примере будет прослушиваться
