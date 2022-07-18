@@ -12,13 +12,7 @@ pub fn not_found() -> Html {
         use_effect_with_deps(move |_| {
             let test = test.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                let fetched_test: Tes = Request::get("/api_users/v1/users/1/")
-                    .send()
-                    .await
-                    .unwrap()
-                    .json()
-                    .await
-                    .unwrap();
+                let fetched_test: Test = request_get::<Test>("/api/users/user/1".to_string()).await;
                 test.set(fetched_test);
             });
             || ()
