@@ -2,13 +2,16 @@ use actix_web::cookie::time::{Duration, OffsetDateTime};
 use actix_web::{web, get, post, HttpRequest, HttpResponse, Responder};
 use actix_web::{http::header::HeaderName, http::header::HeaderValue,
     http::header};
+
 use rbatis::crud::CRUD;
+
 use crate::handlers::HandlersError;
 use crate::models::{UserSignup, UserLogin, UserToken};
 use crate::repositories::user_repository;
-//use crate::repositories::medicine_repository;
 use crate::AppState;
+
 use crate::config::crypto::{Claims, gen_jwt};
+
 
 pub fn major_scope() -> actix_web::Scope{
     web::scope("")
@@ -31,7 +34,7 @@ async fn signup(_req: HttpRequest, _data: web::Json<UserSignup>, _state: web::Da
 }
 
 #[post("/login")]
-async fn login(_req:HttpRequest, _data: web::Json<UserLogin>, _state: web::Data<AppState>) -> impl Responder{
+async fn login(_req:HttpRequest, _data: web::Json<UserLogin>, _state: web::Data<AppState>) -> impl Responder {
     log::info!("Try login: {}, {}", _data.phone, _data.password);
     let user = user_repository::find_by_phone(&_data.phone, _state.rb.as_ref()).await;
 

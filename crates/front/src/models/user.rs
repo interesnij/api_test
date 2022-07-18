@@ -37,7 +37,7 @@ impl UserLogin {
         }
     }
 
-    pub fn is_empty(&self)->bool{
+    pub fn is_empty(&self) -> bool {
         !(self.phone.len() > 0 && self.password.len() > 0)
     }
 }
@@ -72,12 +72,12 @@ impl UserSignup {
         }
     }
 
-    pub fn is_empty(&self)->bool{
+    pub fn is_empty(&self)-> bool {
         !(self.first_name.len() > 0 && self.last_name.len() > 0 && self.password.len() > 0)
     }
 }
 
 #[derive(Deserialize, Debug, Serialize, PartialEq, Clone)]
-pub struct UserToken{
+pub struct UserToken {
     pub token: String
 }
