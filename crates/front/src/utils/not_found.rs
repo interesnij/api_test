@@ -10,7 +10,7 @@ use yew::{
 use serde::Deserialize;
 use crate::utils::requests::request_get;
 
-#[derive(Clone, PartialEq, Deserialize)]
+#[derive(Clone, PartialEq, Deserialize, Debug)]
 struct Test {
     text: String,
 }
@@ -22,7 +22,7 @@ pub fn not_found() -> Html {
         use_effect_with_deps(move |_| {
             let test = test.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                let fetched_test: Test = request_get::<Test>("/api/users/user/1".to_string()).await;
+                let fetched_test = request_get::<Test>("/api/users/user/1".to_string()).await;
                 test.set(fetched_test);
             });
             || ()
