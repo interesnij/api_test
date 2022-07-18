@@ -44,9 +44,9 @@ where
     U: Serialize + Debug ,
 {
     let allow_body = method == reqwest::Method::POST || method == reqwest::Method::PUT;
-    log::info!("url: {:?}", format!("/users/", url));
+    log::info!("url: {:?}", format!("/users/{}", url));
     let mut req = reqwest::Client::new()
-        .request(method, format!("/users/", url))
+        .request(method, format!("/users/{}", url))
         .header("Content-Type", "application/json");
 
 
