@@ -23,9 +23,7 @@ pub struct UserDetail {
 
 #[derive(Deserialize, Debug, Clone, Validate, Serialize, PartialEq)]
 pub struct UserLogin {
-    #[validate(length(min = 8))]
     pub phone: String,
-    #[validate(length(min = 8))]
     pub password: String,
 }
 
