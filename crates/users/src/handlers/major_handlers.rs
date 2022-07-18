@@ -17,7 +17,6 @@ pub fn major_scope() -> actix_web::Scope{
     web::scope("")
         .service(signup)
         .service(login)
-        .service(login_get)
         //.service(info)
 }
 
@@ -70,10 +69,4 @@ async fn login(_req:HttpRequest, _data: web::Json<UserLogin>, _state: web::Data<
             HttpResponse::BadRequest().body(HandlersError::new_str(msg))
 
     }
-}
-
-#[get("/login_get")]
-async fn login_get() -> impl Responder {
-    log::info!("Get login");
-    HttpResponse::BadRequest().body("")
 }
