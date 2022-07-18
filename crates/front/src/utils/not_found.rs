@@ -1,4 +1,11 @@
-use yew::{function_component, html, Component, Context, Properties};
+use yew::{
+    function_component,
+    use_effect_with_deps,
+    html,
+    Component,
+    Context,
+    Properties
+};
 
 #[derive(Clone, PartialEq, Deserialize)]
 struct Test {
@@ -6,7 +13,7 @@ struct Test {
 }
 #[function_component(NotFound)]
 pub fn not_found() -> Html {
-    let test = use_state(|| String);
+    let test = use_state(|| "".to_string());
     {
         let test = test.clone();
         use_effect_with_deps(move |_| {
