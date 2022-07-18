@@ -30,7 +30,7 @@ struct UserDetail {
 
 #[function_component(NotFound)]
 pub fn not_found() -> Html {
-    let test = use_state(|| UserDetail UserDetail {
+    let test = use_state(|| UserDetail {
         id: 0,
         first_name: "".to_string(),
         last_name: "".to_string(),
