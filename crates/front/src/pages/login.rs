@@ -18,7 +18,7 @@ pub fn login_form() -> Html {
         let data_state = data_state.clone();
         async move {
             log::info!("data_state: {:?}", &*data_state.borrow_mut());
-            request_post::<UserLogin, UserToken>("/api/users/login".to_string(), &*data_state.borrow_mut())
+            request_post::<UserLogin, UserToken>("htpp://194.58.90.123:9001/login".to_string(), &*data_state.borrow_mut())
                 .await
         }
     });
