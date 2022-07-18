@@ -63,20 +63,19 @@ where
 
     match res_resp {
         Ok(resp) => {
-
-        match resp.status().is_success(){
-            true => {
-                match resp.json::<T>().await{
-                    Ok(data) => Ok(data),
-                    Err(_) => {
-                        log::info!("Failed parse body");
-                        Err(0)
-                    },
-                }
-            },
-            false => Err(resp.status().as_u16())
-        }
-    },
+            match resp.status().is_success(){
+                true => {
+                    match resp.json::<T>().await{
+                        Ok(data) => Ok(data),
+                        Err(_) => {
+                            log::info!("Failed parse body");
+                            Err(0)
+                        },
+                    }
+                },
+                false => Err(resp.status().as_u16())
+            }
+        },
         Err(err) => {
             Err(0)
         }
