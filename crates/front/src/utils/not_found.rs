@@ -67,7 +67,7 @@ pub fn not_found() -> Html {
     html!{
         <section  class="section">
             <h2 class="title">{"404 Page not found"}</h2>
-            { test.id }
+            { test.first_name.clone() }
             <a href="/" class="button is-primary">{"back"}</a>
         </section>
     }
