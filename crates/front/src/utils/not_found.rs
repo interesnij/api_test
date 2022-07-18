@@ -5,7 +5,10 @@ use yew::{
     Component,
     Context,
     Properties
+    use_state,
 };
+use serde::Deserialize;
+use crate::utils::request_get;
 
 #[derive(Clone, PartialEq, Deserialize)]
 struct Test {
