@@ -16,13 +16,13 @@ pub fn user_scope() -> actix_web::Scope{
 #[get("/{user_id}")]
 async fn user_profile(_state: web::Data<AppState>, user_id: web::Path<u64>) -> impl Responder{
     println!("user_profile!");
-    use core::str::from_utf8;
+    use str;
 
     let user: Result<User, _> = _state.rb.fetch_by_column("id", *user_id).await;
 
     match user {
         Ok(user_data) => {
-            let body = serde_json::from_utf8(&UserDetail {
+            let body = serde_json::to_string(&UserDetail {
                 id: user_data.id,
                 first_name: user_data.first_name,
                 last_name: user_data.last_name,
@@ -39,7 +39,7 @@ async fn user_profile(_state: web::Data<AppState>, user_id: web::Path<u64>) -> i
                 last_activity: user_data.last_activity.to_string(),
             }).unwrap();
 
-            HttpResponse::Ok().body(body)
+            HttpResponse::Ok().body(str::from_utf8(body))
         },
         Err(_) => {
             HttpResponse::Ok().body("user not found")
