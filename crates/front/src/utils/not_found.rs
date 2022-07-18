@@ -4,11 +4,11 @@ use yew::{
     html,
     Component,
     Context,
-    Properties
+    Properties,
     use_state,
 };
 use serde::Deserialize;
-use crate::utils::request_get;
+use crate::utils::requests::request_get;
 
 #[derive(Clone, PartialEq, Deserialize)]
 struct Test {
@@ -16,7 +16,7 @@ struct Test {
 }
 #[function_component(NotFound)]
 pub fn not_found() -> Html {
-    let test = use_state(|| "".to_string());
+    let test = use_state(|| Test {text: "".to_string()});
     {
         let test = test.clone();
         use_effect_with_deps(move |_| {
