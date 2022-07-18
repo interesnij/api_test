@@ -10,7 +10,7 @@ use crate::{
 
 pub fn user_scope() -> actix_web::Scope{
     web::scope("/users")
-        .service(user_detail)
+        .service(user_profile)
 }
 
 #[get("/{user_id}")]
