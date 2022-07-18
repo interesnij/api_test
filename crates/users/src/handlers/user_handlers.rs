@@ -20,7 +20,7 @@ async fn user_profile(_state: web::Data<AppState>, user_id: web::Path<u64>) -> i
 
     match user {
         Ok(user_data) => {
-            let body = serde_json::from_str(&UserDetail {
+            let body = serde_json::from_utf8(&UserDetail {
                 id: user_data.id,
                 first_name: user_data.first_name,
                 last_name: user_data.last_name,
