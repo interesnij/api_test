@@ -51,15 +51,16 @@ async fn main() -> std::io::Result<()> {
 
     log::info!("Start server");
     HttpServer::new(move || {
-        //let cors = Cors::default()
-        //    .allowed_origin("194.58.90.123:8000")
-        //    .allowed_origin("194.58.90.123:9001")
-        //    .allowed_methods(vec!["GET", "POST"])
-        //    .max_age(3600);
+        let cors = Cors::default()
+            .allowed_origin("194.58.90.123:9001")
+            .allowed_origin("194.58.90.123:8000")
+            .allowed_origin("194.58.90.123:8100")
+            .allowed_methods(vec!["GET", "POST"])
+            .max_age(3600);
 
         App::new()
             .app_data(web::Data::new(app_state.to_owned()))
-            //.wrap(cors)
+            .wrap(cors)
             .service(user_scope())
             .service(major_scope())
 
