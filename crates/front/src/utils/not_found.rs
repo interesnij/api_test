@@ -8,7 +8,7 @@ use yew::{
     use_state,
 };
 use serde::Deserialize;
-use crate::utils::requests::request_get;
+use reqwasm::http::Request;
 
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 struct Test {
@@ -22,11 +22,14 @@ pub fn not_found() -> Html {
         use_effect_with_deps(move |_| {
             let test = test.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                let fetched_test = request_get::<Test>("/api/users/user/1".to_string()).await;
-                match fetched_test {
-                    Ok(resp) => test.set(resp),
-                    _ => log::info!("Failed parse body")
-                }
+                let fetched_test: Test = Request::get("/api_users/v1/users/1")
+                    .send()
+                    .await
+                    .unwrap()
+                    .json()
+                    .await
+                    .unwrap();
+                test.set(fetched_test);
             });
             || ()
         }, ());
