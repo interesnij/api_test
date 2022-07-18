@@ -53,9 +53,9 @@ where
     //    req = req.bearer_auth(token);
     //}
 
-    //if allow_body {
-    //    req = req.json(body);
-    //}
+    if allow_body {
+        req = req.json(body);
+    }
 
     log::info!("Request: {:?}", req);
     let res_resp = req.send().await;

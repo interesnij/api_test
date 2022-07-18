@@ -102,7 +102,7 @@ pub struct UserToken {
 }
 
 #[derive(Deserialize)]
-pub struct UserLogin{
+pub struct UserLogin {
     pub phone: String,
     pub password: String,
 }
