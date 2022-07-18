@@ -14,7 +14,7 @@ rewrite = "/api/v1/"
 backend = "http://194.58.90.123:8000/"
 
 [[proxy]]
-rewrite = "/api/users/"
+rewrite = "/api_users/v1/"
 backend = "http://194.58.90.123:9001"
 
 #[[proxy]]
