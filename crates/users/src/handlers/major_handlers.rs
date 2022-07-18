@@ -14,7 +14,7 @@ use crate::config::crypto::{Claims, gen_jwt};
 
 
 pub fn major_scope() -> actix_web::Scope{
-    web::scope("")
+    web::scope("/progs")
         .service(signup)
         .service(login)
         //.service(info)
