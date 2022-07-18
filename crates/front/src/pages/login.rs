@@ -9,6 +9,8 @@ use yew_router::prelude::*;
 use crate::models::user::{UserLogin, UserToken};
 use crate::utils::requests::{request_post, set_token};
 use crate::PrivateRoute;
+use reqwasm::http::Request;
+
 
 #[function_component(LoginForm)]
 pub fn login_form() -> Html {
@@ -18,8 +20,13 @@ pub fn login_form() -> Html {
         let data_state = data_state.clone();
         async move {
             log::info!("data_state: {:?}", &*data_state.borrow_mut());
-            request_post::<UserLogin, UserToken>("/api_users/v1/login".to_string(), &*data_state.borrow_mut())
-                .await
+            //request_post::<UserLogin, UserToken>("/api_users/v1/login".to_string(), &*data_state.borrow_mut()).await
+            Request::post("/api_users/v1/login", &*data_state.borrow_mut()).send()
+            .await
+            .unwrap()
+            .json()
+            .await
+            .unwrap();;
         }
     });
 
