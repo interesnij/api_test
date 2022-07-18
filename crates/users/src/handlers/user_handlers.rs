@@ -39,7 +39,7 @@ async fn user_profile(_state: web::Data<AppState>, user_id: web::Path<u64>) -> i
                 last_activity: user_data.last_activity.to_string(),
             }).unwrap();
 
-            HttpResponse::Ok().body(str::from_utf8(&body))
+            HttpResponse::Ok().body(str::from_utf8(body).unwrap())
         },
         Err(_) => {
             HttpResponse::Ok().body("user not found")
