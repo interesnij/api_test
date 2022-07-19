@@ -114,7 +114,7 @@ where
 }
 
 /// Post request with a body
-pub async fn request_post<B, T>(url: String, body: B) -> Result<T, Error>
+pub async fn request_post<B, T>(url: String, body: &B) -> Result<T, Error>
 where
     T: DeserializeOwned + 'static + std::fmt::Debug,
     B: Serialize + std::fmt::Debug,
@@ -123,7 +123,7 @@ where
 }
 
 /// Put request with a body
-pub async fn request_put<B, T>(url: String, body: B) -> Result<T, Error>
+pub async fn request_put<B, T>(url: String, body: &B) -> Result<T, Error>
 where
     T: DeserializeOwned + 'static + std::fmt::Debug,
     B: Serialize + std::fmt::Debug,
