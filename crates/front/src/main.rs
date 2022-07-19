@@ -11,6 +11,7 @@ mod models;
 mod pages;
 mod sections;
 mod utils;
+mod error;
 use pages::*;
 use models::user::{self, UserDetail};
 use utils::not_found::NotFound;
