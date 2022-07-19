@@ -8,3 +8,13 @@ members = [
   "crates/posts",
   "crates/files",
 ]
+
+[[bin]]
+name = "users"
+path = "crates/users"
+test = false
+
+[[bin]]
+name = "posts"
+path = "crates/posts"
+test = false
