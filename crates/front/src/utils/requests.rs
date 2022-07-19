@@ -46,49 +46,43 @@ pub struct ErrorInfo {
     pub errors: HashMap<String, Vec<String>>,
 }
 
-async fn request<U, T>(url: String, method: reqwest::Method, body: &U) -> Result<T, Error>
+pub async fn request<B, T>(method: reqwest::Method, url: String, body: B) -> Result<T, Error>
 where
-    T: DeserializeOwned + Debug + Send,
-    U: Serialize + Debug ,
+    T: DeserializeOwned + 'static + std::fmt::Debug,
+    B: Serialize + std::fmt::Debug,
 {
     let allow_body = method == reqwest::Method::POST || method == reqwest::Method::PUT;
-    let mut req = reqwest::Client::new()
-        .request(method, format!("/api_users/v1/{}", url))
+    let url = format!("{}{}", API_ROOT, url);
+    let mut builder = reqwest::Client::new()
+        .request(method, url)
         .header("Content-Type", "application/json");
-
-
-    if let Some(token) = get_token(){
-        req = req.bearer_auth(token);
+    if let Some(token) = get_token() {
+        builder = builder.bearer_auth(token);
     }
 
-    if allow_body{
-        req = req.json(&body);
+    if allow_body {
+        builder = builder.json(&body);
     }
 
-    log::info!("Request: {:?}", req);
-    let res_resp = req.send().await;
-    log::info!("Response: {:?}", res_resp);
+    let response = builder.send().await;
 
-    match res_resp {
-        Ok(resp) => {
-
-        match resp.status().is_success() {
-            true => {
-                match resp.json::<T>().await{
-                    Ok(data) => Ok(data),
-                    Err(_) => {
-                        log::info!("Failed parse body");
-                        Err(0)
-                    },
-                }
-            },
-            false => match resp.status() {
+    if let Ok(data) = response {
+        if data.status().is_success() {
+            let data: Result<T, _> = data.json::<T>().await;
+            if let Ok(data) = data {
+                log::debug!("Response: {:?}", data);
+                Ok(data)
+            } else {
+                Err(Error::DeserializeError)
+            }
+        } else {
+            match data.status().as_u16() {
                 401 => Err(Error::Unauthorized),
                 403 => Err(Error::Forbidden),
                 404 => Err(Error::NotFound),
                 500 => Err(Error::InternalServerError),
                 422 => {
-                    let data: Result<ErrorInfo, _> = resp.json::<ErrorInfo>().await;
+                    let data: Result<ErrorInfo, _> = data.json::<ErrorInfo>().await;
                     if let Ok(data) = data {
                         Err(Error::UnprocessableEntity(data))
                     } else {
@@ -98,42 +92,47 @@ where
                 _ => Err(Error::RequestError),
             }
         }
-    },
-        Err(err) => {
-            Err(0)
-        }
+    } else {
+        Err(Error::RequestError)
     }
 }
 
-pub async fn request_delete<T>(url: String) -> Result<T, u16>
+/// Delete request
+pub async fn request_delete<T>(url: String) -> Result<T, Error>
 where
-    T: DeserializeOwned + 'static + std::fmt::Debug + Send,
+    T: DeserializeOwned + 'static + std::fmt::Debug,
 {
-    request(url, reqwest::Method::DELETE, &()).await
+    request(reqwest::Method::DELETE, url, ()).await
 }
 
 /// Get request
-pub async fn request_get<T>(url: String) -> Result<T, u16>
+pub async fn request_get<T>(url: String) -> Result<T, Error>
 where
-    T: DeserializeOwned + 'static + std::fmt::Debug + Send,
+    T: DeserializeOwned + 'static + std::fmt::Debug,
 {
-    request(url, reqwest::Method::GET, &()).await
+    request(reqwest::Method::GET, url, ()).await
 }
 
 /// Post request with a body
-pub async fn request_post<U, T>(url: String, body: &U) -> Result<T, u16>
+pub async fn request_post<B, T>(url: String, body: B) -> Result<T, Error>
 where
-    T: DeserializeOwned + 'static + std::fmt::Debug + Send,
-    U: Serialize + std::fmt::Debug,
+    T: DeserializeOwned + 'static + std::fmt::Debug,
+    B: Serialize + std::fmt::Debug,
 {
-    request(url, reqwest::Method::POST, body).await
+    request(reqwest::Method::POST, url, body).await
 }
 
 /// Put request with a body
-pub async fn request_put<U, T>(url: String, body: &U) -> Result<T, u16>
+pub async fn request_put<B, T>(url: String, body: B) -> Result<T, Error>
 where
-    T: DeserializeOwned + 'static + std::fmt::Debug + Send,
-    U: Serialize + std::fmt::Debug,
+    T: DeserializeOwned + 'static + std::fmt::Debug,
+    B: Serialize + std::fmt::Debug,
 {
-    request(url, reqwest::Method::PUT, body).await
+    request(reqwest::Method::PUT, url, body).await
+}
+
+/// Set limit for pagination
+pub fn limit(count: u32, p: u32) -> String {
+    let offset = if p > 0 { p * count } else { 0 };
+    format!("limit={}&offset={}", count, offset)
 }
