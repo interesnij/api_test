@@ -52,7 +52,7 @@ where
     B: Serialize + std::fmt::Debug,
 {
     let allow_body = method == reqwest::Method::POST || method == reqwest::Method::PUT;
-    let url = format!("{}{}", API_ROOT, url);
+    let url = format!("/api_users/v1/{}", url);
     let mut builder = reqwest::Client::new()
         .request(method, url)
         .header("Content-Type", "application/json");
