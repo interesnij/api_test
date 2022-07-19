@@ -72,3 +72,9 @@ impl UserSignup {
         !(self.first_name.len() > 0 && self.last_name.len() > 0 && self.password.len() > 0)
     }
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SessionUser {
+    pub id: u64,
+    pub phone: String,
+}
