@@ -3,9 +3,11 @@ use argonautica::{Hasher, Verifier};
 use actix_web::{
   http::header::CONTENT_TYPE,
   HttpRequest,
+  web::Query,
 };
 use crate::{errors::AuthError, vars, models::SessionUser};
 use crate::models::User;
+use actix_session::Session;
 
 
 #[derive(Debug, Deserialize)]

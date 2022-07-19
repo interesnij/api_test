@@ -1,6 +1,4 @@
 use serde::{Deserialize, Serialize};
-use validator::Validate;
-use wasm_bindgen::JsValue;
 
 
 #[derive(Serialize, Deserialize, PartialEq, Clone, Debug, Default)]
