@@ -19,7 +19,7 @@ pub struct UserDetail {
     pub last_activity: String,
 }
 
-#[derive(Deserialize, Debug, Clone, Validate, Serialize, PartialEq)]
+#[derive(Deserialize, Debug, Clone, Serialize, PartialEq)]
 pub struct UserLogin {
     pub phone: String,
     pub password: String,
