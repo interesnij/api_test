@@ -47,7 +47,6 @@ pub fn login_form() -> Html {
     }
 
     use_effect_with_deps(move |_| {
-        let test = test.clone();
         wasm_bindgen_futures::spawn_local(async move {
             let post_request = Request::post("login")
                 .header("Content-Type", "application/json")
