@@ -8,8 +8,7 @@ use std::fmt::Debug;
 use std::result;
 use std::result::Result;
 use std::sync::Arc;
-
-
+use dotenv_codegen::dotenv;
 use crate::models::user::*;
 
 const API_ROOT: &str = dotenv!("API_ROOT");
