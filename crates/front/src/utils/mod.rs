@@ -6,7 +6,6 @@ use actix_web::{
   web,
 };
 use crate::{errors::AuthError, vars, models::SessionUser};
-use crate::models::User;
 use actix_session::Session;
 
 

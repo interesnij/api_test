@@ -12,7 +12,6 @@ use crate::utils::{
 };
 use actix_session::Session;
 use sailfish::TemplateOnce;
-use crate::models::User;
 
 
 pub fn pages_routes(config: &mut web::ServiceConfig) {
