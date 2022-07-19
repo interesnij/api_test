@@ -1,6 +1,6 @@
 use futures::task::LocalSpawn;
 use reqwest::header::HeaderValue;
-use serde::{de::DeserializeOwned, ser::Error};
+use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::{JsValue, JsCast};
 use gloo_storage::{LocalStorage, Storage, errors::StorageError};
@@ -82,7 +82,7 @@ where
                     },
                 }
             },
-            false => match data.status().as_u16() {
+            false => match resp.status().as_u16() {
                 401 => Err(Error::Unauthorized),
                 403 => Err(Error::Forbidden),
                 404 => Err(Error::NotFound),
