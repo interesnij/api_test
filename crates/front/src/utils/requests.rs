@@ -46,7 +46,7 @@ pub struct ErrorInfo {
     pub errors: HashMap<String, Vec<String>>,
 }
 
-async fn request<U, T>(url: String, method: reqwest::Method, body: &U) -> Result<T, u16>
+async fn request<U, T>(url: String, method: reqwest::Method, body: &U) -> Result<T, Error>
 where
     T: DeserializeOwned + Debug + Send,
     U: Serialize + Debug ,
