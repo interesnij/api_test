@@ -38,6 +38,11 @@ pub fn remove_token(){
     LocalStorage::delete("Test-token");
 }
 
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct ErrorInfo {
+    pub errors: HashMap<String, Vec<String>>,
+}
 
 async fn request<U, T>(url: String, method: reqwest::Method, body: &U) -> Result<T, u16>
 where
@@ -55,7 +60,7 @@ where
     }
 
     if allow_body{
-        req = req.json(body);
+        req = req.json(&body);
     }
 
     log::info!("Request: {:?}", req);
@@ -65,7 +70,7 @@ where
     match res_resp {
         Ok(resp) => {
 
-        match resp.status().is_success(){
+        match resp.status().is_success() {
             true => {
                 match resp.json::<T>().await{
                     Ok(data) => Ok(data),
@@ -75,7 +80,21 @@ where
                     },
                 }
             },
-            false => Err(resp.status().as_u16())
+            false => match data.status().as_u16() {
+                401 => Err(Error::Unauthorized),
+                403 => Err(Error::Forbidden),
+                404 => Err(Error::NotFound),
+                500 => Err(Error::InternalServerError),
+                422 => {
+                    let data: Result<ErrorInfo, _> = data.json::<ErrorInfo>().await;
+                    if let Ok(data) = data {
+                        Err(Error::UnprocessableEntity(data))
+                    } else {
+                        Err(Error::DeserializeError)
+                    }
+                }
+                _ => Err(Error::RequestError),
+            }
         }
     },
         Err(err) => {
