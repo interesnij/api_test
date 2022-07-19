@@ -1,0 +1,77 @@
+<div class="mb-4 data-title" data-title="Мои аудиозаписи">
+  <div class="card-body">
+    <div class="media mt-3" style="padding-left: 7px;">
+      <h5 class="mt-1" style="flex: 1;">Плейлисты</h5>
+    </div>
+    <div class="row no-gutters mb-2" style="overflow-x: auto;">
+      <div class="col-12">
+        <ul style="width:max-content;list-style: none;">
+          <% for object in request_user.get_music_lists().iter() { %>
+          <li class="list_item">
+            <div class="text-center bg-dark position-relative border" data-uuid="<%= object.id %>">
+              <figure class="background-img">
+                <img class="image_fit_200" src="<%= object.get_image() %>">
+              </figure>
+              <div class="container p-3">
+                <h6 class="media-body text-white pointer">
+                  <a class="pointer nowrap list_toggle load_attach_music_list"><%= object.name %></a>
+                </h6>
+                <span class="text-white count"><%= object.count_items_ru() %></span>
+
+                <hr style="margin-bottom: 3rem !important">
+                <% if object.count > 0 { %>
+                  <a class="file-accessed pointer underline music_attach_list" track-pk="<%= object.get_first_track_pk() %>" data-pk="<%= object.id %>">Прикрепить список</a>
+                <% } else { %>
+                <p style="margin-bottom: 64px;"></p>
+                <% } %>
+              </div>
+            </div>
+          </li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+
+
+    <span class="load_attach_block">
+      <% if object_list.len() > 0 { %>
+
+      <ul class="is_block_paginate is_paginate" playlist-pk="<%= list.id %>">
+        <% for object in object_list.iter() { %>
+        <li class="border music_item track" track-pk="<%= object.id %>" playlist-pk="<%= object.music_list_id %>">
+          <div class="current_color" style="display:flex" music-pk="<%= object.id %>">
+            <figure>
+              <a class="pointer music_list_item">
+                <%- object.get_image() %>
+              </a>
+            </figure>
+            <div class="media-body" style="padding-top: 5px; padding-left: 5px;margin-right:40px">
+              <h6 class="music_list_item pointer">
+                <a class="track_title" style="white-space: nowrap;"><%= object.title %></a>
+              </h6>
+            </div>
+          </div>
+          <span class="custom_color border item_attach_circle music_load_several" tooltip="Выбрать несколько" flow="up">
+            <svg class="svg_default" fill="currentColor" viewBox="2 2 20 20">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z" />
+            </svg>
+          </span>
+          <div class="progress2"></div>
+        </li>
+        <% } %>
+        <% if next_page_number > 0 { %>
+        <div class="load centered m-1 next_page_list" data-link="/users/load/music/?page=<%= next_page_number %>">
+          <img src="/static/images/preloader.gif">
+        </div>
+        <% } %>
+
+      </ul>
+      <% } else { %>
+      <div class="card mb-3 centered">
+        <h5 style="text-align: center;margin: 20px;"> Плейлист пустой.</h5>
+      </div>
+      <% } %>
+    </span>
+  </div>
+</div>

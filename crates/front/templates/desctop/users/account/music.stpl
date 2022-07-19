@@ -1,0 +1,43 @@
+<% if user.is_have_music() { %>
+<div class="card mb-3">
+    <div class="p-1">
+      <a href="/id<%= user.id %>/music/" class="ajax">
+        <div class="media current_color">
+            <div class="media-body">
+                <h6 class="content-color-primary mb-0">Аудиозаписи </h6>
+            </div>
+          <%= user.count_tracks() %>
+        </div>
+      </a>
+    </div>
+
+    <% for object in user.get_6_tracks().iter() { %>
+    <div class="border-top music_item track" track-pk="<%= object.id %>" playlist-pk="<%= object.music_list_id %>" style="padding: 2px;">
+      <div class="media current_color">
+        <figure>
+          <a class="pointer music_list_item">
+            <%- object.get_image() %>
+          </a>
+        </figure>
+        <div class="media-body" style="line-height: 10px;">
+          <h6 class="music_list_item mb-0" style="cursor:pointer"><a class="track_title"><%- object.title %></a></h6>
+          <% if object.artist_id.is_some() { %>
+            <% let artist = object.get_artist(); %>
+            <a class="small ajax" href="/music/artists/<%= artist.id %>"/> <%= artist.name %></a>
+          <% } else { %>
+            <% if object.community_id.is_some() { %>
+              <% let _community = object.get_community(); %>
+              <a class="small ajax" href="<%= _community.link %>"> <%= _community.name %></a>
+            <% } else { %>
+            <% let _creator = object.get_creator(); %>
+              <a class="small ajax" href="<%= _creator.link %>"><%= _creator.get_full_name() %></a>
+            <% } %>
+          <% } %>
+          </div>
+        </div>
+        <div class='progress2'></div>
+    </div>
+    <% } %>
+</div>
+
+<% } %>

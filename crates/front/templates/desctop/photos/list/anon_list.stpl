@@ -1,0 +1,57 @@
+<span class="text_support">
+<a href="<%= owner_link %>" class="ajax i_link font-weight">
+  <%= owner_name %>
+</a> - фотоальбом
+<% if lists.len() > 1 { %>
+  <a class="pointer i_link toggle_visible_owner_lists">(другие списки)</a>
+<% } %>
+</span>
+
+<div class="mt-2 mb-2 border-bottom">
+  <div class="owner_lists hide">
+    <% for object in lists.iter() { %>
+      <% if list.id != object.id { %>
+        <p photolist-pk="<%= object.id %>" class="text_support">
+          <span><span>
+            <span class="pointer load_photo_list">
+              <%= object.name %> (<%= object.count %>)
+            </span>
+          </span></span>
+        </p>
+      <% } %>
+    <% } %>
+  </div>
+</div>
+
+<span class="load_block">
+<span class="data-title" data-title="<%= list.name %> - фотоальбом">
+<% if is_user_can_see_photo_list { %>
+  <div class="media mt-3 uuid_saver" data-pk="<%= list.id %>" data-uuid="<%= list.id %>" style="padding-left: 7px;">
+    <h5 class="mt-1">
+      <span class="second_list_name" data-name="<%= list.name %>"><%= list.name %></span> (<%= list.count %>)
+      <span class="pointer badge badge-light-primary copy_link">Копировать ссылку</span>
+    </h5>
+  </div>
+
+  <div class="row no-gutters is_paginate drag_container is_stat_list" data-pk="<%= list.id %>" data-type="pho">
+
+    <% if object_list.len() > 0 { %>
+    <% for object in object_list.iter() { %>
+    <% include!("../../generic/items/photo.stpl"); %>
+    <% } %>
+    <% if next_page_number > 0 { %>
+    <div class="load centered m-1 next_page_list" data-link="/photos/load_list/<%= list.id %>/?page=<%= next_page_number %>">
+      <img src="/static/images/preloader.gif">
+    </div>
+    <% } %>
+
+    <% } else { %>
+    <% include!("../no_photos.stpl"); %>
+    <% } %>
+
+  </div>
+  <% } else { %>
+    <% include!("../../generic/centered/private_list.stpl"); %>
+  <% } %>
+</span>
+</span>

@@ -1,0 +1,25 @@
+<% if community.count_members() > 0 { %>
+
+<div class="card mb-3">
+  <div class="p-1">
+    <a href="/communities/<%=community.id %>/members/" class="ajax">
+      <div class="media">
+          <div class="media-body">
+              <h6 class="content-color-primary mb-0">Подписчики</h6>
+          </div>
+          <%= community.count_members() %>
+      </div>
+    </a>
+  </div>
+
+    <% for object in community.get_6_members().iter() { %>
+    <div class="card border-top">
+        <div class="p-1">
+            <div class="media">
+              <% include!("../../generic/user/card_small_profile.stpl"); %>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>
+<% } %>

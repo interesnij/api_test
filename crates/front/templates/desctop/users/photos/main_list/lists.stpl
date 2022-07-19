@@ -1,0 +1,30 @@
+<% let lists = user.get_photo_lists(); %>
+
+<% if lists.len() > 1 { %>
+<div class="media mt-3" style="padding-left: 7px;">
+  <h5 class="mt-1" style="flex: 1;">
+    <a class="underline ajax" href="<%= user.link %>">
+      <%= user.get_full_name() %>
+    </a> - фотоальбомы
+    (<%= lists.len() %>)
+  </h5>
+</div>
+<div class="row no-gutters" style="overflow-x: auto;">
+   <div class="col-12">
+   <ul class="drag_list" data-type="lph" style="width:max-content;list-style: none;">
+     <% for object in lists.iter() { %>
+        <% include!("../../../generic/items/lists/photo_list_card.stpl"); %>
+     <% } %>
+   </ul>
+   </div>
+</div>
+<% } else { %>
+<div class="empty_list_block media mt-3" style="padding-left: 7px;">
+  <h5 class="mt-1" style="flex: 1;">
+    <a class="underline ajax" href="<%= user.link %>">
+      <%= user.get_full_name() %>
+    </a> - фотографии
+  </h5>
+</div>
+<div class="mt-1 new_ul_container"></div>
+<% } %>

@@ -74,8 +74,3 @@ impl UserSignup {
         !(self.first_name.len() > 0 && self.last_name.len() > 0 && self.password.len() > 0)
     }
 }
-
-#[derive(Deserialize, Debug, Serialize, PartialEq, Clone)]
-pub struct UserToken {
-    pub token: String
-}

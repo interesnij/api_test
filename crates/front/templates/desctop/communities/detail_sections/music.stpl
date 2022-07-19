@@ -1,0 +1,50 @@
+<% if community.is_have_music() { %>
+
+<div class="mb-3 music_playlist">
+    <div class="p-1">
+      <a href="/communities/<%=community.id %>/music/" class="ajax">
+        <div class="media current_color">
+            <div class="media-body">
+                <h6 class="content-color-primary mb-0">Аудиозаписи</h6>
+            </div>
+            <%= community.count_tracks() %>
+        </div>
+      </a>
+    </div>
+
+    <% for object in community.get_6_tracks().iter() { %>
+      <div class="border-top music_item track" track-pk="<%= object.id %>" playlist-pk="<%= object.music_list_id %>" style="padding: 2px;">
+            <div class="media current_color">
+              <figure>
+                <a class="pointer music_list_item">
+                  <%- object.get_image() %>
+                </a>
+              </figure>
+                <div class="media-body" style="line-height: 10px;">
+                    <p class="track_item music_list_item pointer" style="font-size: 17px;"><a class="track_title"><%= object.title %></a></p>
+                      <% if object.community_id.is_some() { %>
+                        <% let community = object.get_community(); %>
+                        <a class="small ajax" href="<%= community.link %>"><%= community.name %></a>
+                      <% } else { %>
+                        <% let creator = object.get_creator(); %>
+                        <a class="small ajax" href="<%= creator.link %>"><%= creator.get_full_name() %></a>
+                      <% } %>
+                </div>
+            </div>
+            <div class='progress2'></div>
+        </div>
+    <% } %>
+</div>
+<% } else if request_user.is_administrator_of_community(community.id) { %>
+<div class="card mb-3">
+    <div class="card-header">
+        <div class="media centered">
+            <a href="/communities/<%=community.id %>/music/" class="ajax">
+                <div class="media-body">
+                    <h6 class="content-color-primary mb-0">Аудиозаписи</h6>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<% } %>

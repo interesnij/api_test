@@ -1,109 +1,29 @@
-#![recursion_limit = "640"]
-use async_std::task::current;
-use gloo_utils::history;
-use wasm_bindgen::prelude::*;
-use yew::prelude::*;
-use yew::{Context, ContextProvider};
-use yew_hooks::{use_async, use_mount};
-use yew_router::prelude::*;
+pub mod models;
+pub mod routes;
+mod errors;
+mod vars;
 
-mod models;
-mod pages;
-mod sections;
+#[macro_use]
 mod utils;
-mod error;
-use pages::*;
-use models::user::{self, UserDetail};
-use utils::not_found::NotFound;
-use utils::requests::*;
+#[macro_use]
+mod views;
 
-#[derive(Clone, Routable, PartialEq)]
-pub enum PrivateRoute {
-    //#[at("/")]
-    //Search,
-    //#[at("/info/:id")]
-    //Detail { id: String },
-    #[at("/profile")]
-    Profile,
-    //#[at("/medicine/new")]
-    //NewMedicine,
-    #[not_found]
-    #[at("/error")]
-    NotFound,
-    #[at("/login")]
-    Login,
-    //#[at("/signup")]
-    //Signup,
-}
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    //use actix_cors::Cors;
+    use actix_files::Files;
+    use crate::routes::routes;
+    use actix_redis::RedisSession;
+    use actix_web::{App, HttpServer};
 
-fn private_switch(route: &PrivateRoute) -> Html {
-    match route {
-        //PrivateRoute::Detail { id } => html! {<info::Info id={(*id).clone()}/>},
-        PrivateRoute::Profile => html! {<profile::Profile/>},
-        PrivateRoute::NotFound => html! {<NotFound/>},
-        //PrivateRoute::Search => html! {<search::Search/>},
-        //PrivateRoute::NewMedicine => html! {<new_medicine::NewMedicine/>},
-        PrivateRoute::Login => html! {<login::LoginForm/>},
-        //PrivateRoute::Signup => html! {<signup::SignupForm/>},
-    }
-}
-
-#[function_component(App)]
-fn app() -> Html {
-    let user_ctx = use_state(|| Some(UserDetail::default()));
-    let login_ctx = use_state(|| false);
-    let current_user =
-        use_async(async move { request_get::<UserDetail>("/api/users/user/detail".to_string()).await });
-
-    {
-        let current_user = current_user.clone();
-
-        use_mount(move || {
-            if get_token().is_some() {
-                current_user.run();
-            }
-        })
-    }
-
-    {
-        let user_ctx = user_ctx.clone();
-
-        use_effect_with_deps(
-            move |current_user| {
-                if let Some(user_info) = &current_user.data {
-                    user_ctx.set(Some(user_info.clone()))
-                }
-                if let Some(_) = &current_user.error{
-                    user_ctx.set(None);
-                    remove_token();
-                }
-
-                || ()
-            },
-            current_user,
-        )
-    }
-
-    {
-        let user_ctx = user_ctx.clone();
-        html! {
-            <>
-                <ContextProvider<Option<UserDetail>> context={(*user_ctx).clone()}>
-                    <sections::header::Header />
-                    <main>
-                        <BrowserRouter>
-                            <Switch<PrivateRoute> render={Switch::render(private_switch)} />
-                        </BrowserRouter>
-                    </main>
-                    <sections::footer::Footer/>
-                </ContextProvider<Option<UserDetail>>>
-            </>
-        }
-    }
-}
-
-//#[wasm_bindgen(start)]
-pub fn main() {
-    wasm_logger::init(wasm_logger::Config::default());
-    yew::start_app::<App>();
+    HttpServer::new(|| {
+        let static_files = Files::new("/static", "static/").show_files_listing();
+        App::new()
+            .wrap(RedisSession::new("127.0.0.1:6379", &[0; 32]))
+            .service(static_files)
+            .configure(routes)
+    })
+    .bind("194.58.90.123:8100")?
+    .run()
+    .await
 }

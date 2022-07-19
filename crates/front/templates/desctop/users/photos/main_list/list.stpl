@@ -1,0 +1,11 @@
+<% include!("../../../../base_block/base_header.stpl"); %>
+
+<div data-title="<%= user.get_full_name() %> - фотографии" class="main-container pk_saver mt-3" data-pk="<%= user.id %>" data-type="user_photo">
+  <% include!("lists.stpl"); %>
+
+<span class="load_block" data-link="/photos/load_list/<%= list.id %>/">
+
+</span>
+</div>
+
+<% include!("../../../../base_block/base_footer.stpl"); %>

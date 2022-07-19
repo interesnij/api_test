@@ -1,0 +1,97 @@
+<% include!("../../../base_block/base_header.stpl"); %>
+
+<% include!("cover.stpl"); %>
+
+<div class="container main-container mt-3 pk_saver" data-pk="<%= community.id %>" data-title="Сообщество <%= community.name %>">
+    <div class="row">
+        <div class="col-12 col-md-12 col-lg-8">
+            <div class="container card">
+              <h1 class="mb-0 mt-1" style="font-size: 22px;"><%= community.name %>
+                <% if community.is_identified() { %>
+                  <svg class="svg_info svg_default" fill="currentColor" enable-background="new 0 0 24 24" viewBox="0 0 24 24"><g><rect fill="none" /></g><g><path d="M23,12l-2.44-2.79l0.34-3.69l-3.61-0.82L15.4,1.5L12,2.96L8.6,1.5L6.71,4.69L3.1,5.5L3.44,9.2L1,12l2.44,2.79l-0.34,3.7 l3.61,0.82L8.6,22.5l3.4-1.47l3.4,1.46l1.89-3.19l3.61-0.82l-0.34-3.69L23,12z M10.09,16.72l-3.8-3.81l1.48-1.48l2.32,2.33 l5.85-5.87l1.48,1.48L10.09,16.72z"/></g></svg>
+                <% } %>
+              </h1>
+                <span>
+                  <% if community.status.is_some() { %>
+                    <%= community.status.as_deref().unwrap() %>
+                  <% } %>
+                </span>
+
+                <% include!("../detail_sections/description.stpl"); %>
+            </div>
+
+
+            <% include!("../detail_sections/stat.stpl"); %>
+
+            <% include!("../detail_sections/goods.stpl"); %>
+
+            <span class="draft_post_container">
+              <% if request_user.get_draft_posts_of_community_with_pk(community.id).len() > 0 { %>
+              <div class="card mt-3 user_draft_list">
+                <div class="card-header">
+                  <a href="/community/<%= community.id %>/draft/" class="ajax">
+                    <div class="media">
+                        <div class="media-body">
+                            <h6 class="content-color-primary mb-0">Предложенные записи</h6>
+                        </div>
+                        <span class="user_draft_count"><%= community.count_draft_posts_for_user(request_user.id) %></span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <% } %>
+            </span>
+
+            <div class="load_block post_view_generator" data-link="/communities/<%= community.id %>/wall/<%= community.get_selected_post_list_pk() %>/"></div>
+        </div>
+        <div class="col-12 col-md-12 col-lg-4">
+            <div class="card">
+              <figure class="mx-auto mb-3 avatar_figure">
+                <% if community.b_avatar.is_some() { %>
+                  <%- community.get_b_avatar() %>
+                  <form id="add_user_avatar">
+                    <input type="file" id="community_avatar_upload" name="file" style="display:none">
+                    <p class="previous_click change_avatar pointer" style="display:none; color:white !important"> Загрузить аватар</p>
+                  </form>
+                <% } else { %>
+                <form id="add_user_avatar">
+                  <input type="file" id="community_avatar_upload" name="file" style="display:none">
+                  <img src="/static/images/no_img/b_avatar.png" class="previous_click pointer">
+                </form>
+                <% } %>
+              </figure>
+                <% if community.get_members_ids().iter().any(|&i| i==request_user.id) { %>
+                  <button type="button" class="btn btn-sm border member_delete" style="margin: 3px;margin-top:10px">
+                    Отписаться
+                  </button>
+                <% } else { %>
+                  <button type="button" class="btn btn-sm border member_create" style="margin: 3px;margin-top:10px">
+                    Подписаться
+                  </button>
+                <% } %>
+                <div class="card mt-1 mb-1" style="padding: 10px;" data-type="com<%=community.id %>">
+                  <a class="create_repost pointer">Поделиться</a>
+                  <a href="" class="ajax">Статистика</a>
+                  <a href="/communities/<%= community.id %>/settings/" class="ajax">Управление</a>
+                </div>
+          </div>
+
+            <% include!("../detail_sections/frends_member.stpl"); %>
+
+            <% include!("../detail_sections/membersheeps.stpl"); %>
+
+            <% include!("../detail_sections/photo.stpl"); %>
+
+            <% include!("../detail_sections/music.stpl"); %>
+
+            <% include!("../detail_sections/video.stpl"); %>
+
+            <% include!("../detail_sections/doc.stpl"); %>
+
+        </div>
+    </div>
+</div>
+
+<% include!("../detail_sections/warning_banner.stpl"); %>
+
+<% include!("../../../base_block/base_footer.stpl"); %>

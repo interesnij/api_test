@@ -1,0 +1,5 @@
+<% for object in object_list.iter().reverse() { %>
+<div class="media p-1 centered">
+  <%- object.get_manager_text() %>
+</div>
+<% } %>

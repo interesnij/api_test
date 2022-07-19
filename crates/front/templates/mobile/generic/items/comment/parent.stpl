@@ -1,0 +1,205 @@
+<% let creator = comment.get_commenter(); %>
+<div class="comment react_style">
+    <div class="media">
+      <a href="<%= creator.link %>" class="ajax">
+        <figure>
+          <%- creator.get_40_avatar() %>
+        </figure>
+      </a>
+
+        <div class="media-body" style="overflow: inherit;">
+            <h5 class="mt-0">
+                <a href="<%= creator.link %>" class="ajax">
+                    <span class="commenter_first_name"><%= creator.first_name %></span> <%= creator.last_name %>
+                </a>
+                <small class="text-muted float-right"><%= comment.created.format("%d-%m-%Y в %H:%M").to_string() %></small>
+            </h5>
+
+            <% if comment.sticker_id.is_some() { %>
+            <% let sticker = comment.get_sticker(); %>
+            <div data-id="<%= sticker.id %>" class="comment_sticker mt-1 pointer show_cticker_info">
+                <img src="<%= sticker.image %>" style="width: 128px;">
+            </div>
+            <% } else { %>
+
+            <span class="comment_text text_support"><%- comment.get_format_text() %></span>
+
+              <% if comment.attach.is_some() { %>
+                <%- comment.get_attach(request_user.id) %>
+              <% } %>
+            <% } %>
+
+            <div class="card_footer">
+                <div class="row">
+                    <div class="col react_style" data-type="<%= comment.get_code() %>">
+
+                    <% if c_reactions_list.len() != 0 { %>
+                      <% if comment.reactions == 0 { %>
+                        <span class="react_items comments" data-type="<%= comment.get_code() %>" style="display: inline-flex"></span>
+                      <% } else { %>
+
+                        <% let comment_reactions_count = comment.get_or_create_react_model(); %>
+                        <% let mut user_reaction = 0; %>
+
+                        <% if comment.is_have_user_reaction(request_user.id) { %>
+                          <% user_reaction = comment.get_user_reaction(request_user.id); %>
+                        <% } %>
+
+                        <span class="react_items comments" data-type="<%= comment.get_code() %>" style="display: inline-flex">
+                          <% for reaction in c_reactions_list.iter() { %>
+
+                            <% let count = comment_reactions_count.count_reactions_of_types(*reaction); %>
+                            <% if count != 0 { %>
+                              <span class="react" data-react="<%= reaction %>">
+                                <span class="like send_react <% if &user_reaction == reaction { %>border_radius<% } %>">
+                                  <img style="width:16px" src="/static/images/reactions/<%= reaction %>.png" alt="img" />
+                                  <span class="small reactions_count"><%= count %></span>
+                                </span>
+
+                                <span class="like_window">
+                                  <div class="like_pop">
+                                    <span class="item_reactions pointer">Отреагировали: <span data-count="like"><%= count %></span></span>
+                                    <span class="like_list" style="display:flex;flex-wrap:wrap;margin-top:10px;">
+                                      <% for user in comment.get_6_reactions_users_of_types(*reaction).iter() { %>
+                                        <% include!("../../../generic/user/voter.stpl"); %>
+                                      <% } %>
+                                    </span>
+                                  </div>
+                                </span>
+                              </span>
+                            <% } %>
+                          <% } %>
+                        </span>
+                      <% } %>
+                    <% } %>
+
+                        <% if request_user.id == creator.id { %>
+                          <% if comment.sticker_id.is_none() { %>
+                            <span class="comment_edit btn_default pointer" style="margin-right:7px" flow="up" tooltip="Редактировать">
+                            <svg class="svg_s_info" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M0 0h24v24H0z" fill="none" />
+                                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                            </svg>
+                            </span>
+                          <% } %>
+                        <span class="comment_delete btn_default pointer" style="margin-right:7px" flow="up" tooltip="Удалить">
+                            <svg class="svg_s_info" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4h-3.5z" />
+                            </svg>
+                        </span>
+
+                        <% } else if request_user.perm > 10 { %>
+                        <span class="create_close btn_default pointer" style="margin-right:7px" flow="up" tooltip="Закрыть">
+                            <svg class="svg_s_info" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z" />
+                            </svg>
+                        </span>
+                        <% } else { %>
+                        <span class="create_claim btn_default pointer" style="margin-right:7px" flow="up" tooltip="Пожаловаться">
+                            <svg class="svg_s_info" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" />
+                            </svg>
+                        </span>
+                        <% } %>
+
+                        <% if is_user_can_create_comments { %>
+                        <span class="commenter_first_name" style="display:none"><%= creator.first_name %></span>
+                        <span flow="up" tooltip="Ответить" class="content-color-secondary reply_comment" style="font-size:15px;cursor:pointer">
+                            <svg class="svg_s_info" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                <path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z" />
+                            </svg>
+                        </span>
+                        <% } %>
+
+                        <span style="float: right;">
+                          <% if c_reactions_list.len() != 0 { %>
+                          <span class="like react_shower" style="display:none" title="Реакция">
+                            <svg fill="currentColor" class="svg_info pointer svg_default" style="width:17px;" viewBox="0 0 24 24">
+                              <rect fill="none" height="24" width="24" />
+                              <path d="M7,9.5C7,8.67,7.67,8,8.5,8S10,8.67,10,9.5c0,0.83-0.67,1.5-1.5,1.5S7,10.33,7,9.5z M12,17.5c2.33,0,4.31-1.46,5.11-3.5 H6.89C7.69,16.04,9.67,17.5,12,17.5z M15.5,11c0.83,0,1.5-0.67,1.5-1.5C17,8.67,16.33,8,15.5,8S14,8.67,14,9.5 C14,10.33,14.67,11,15.5,11z M22,1h-2v2h-2v2h2v2h2V5h2V3h-2V1z M20,12c0,4.42-3.58,8-8,8s-8-3.58-8-8c0-4.42,3.58-8,8-8 c1.46,0,2.82,0.4,4,1.08V2.84C14.77,2.3,13.42,2,11.99,2C6.47,2,2,6.48,2,12c0,5.52,4.47,10,9.99,10C17.52,22,22,17.52,22,12 c0-1.05-0.17-2.05-0.47-3h-2.13C19.78,9.93,20,10.94,20,12z" />
+                            </svg>
+                            <span class="small all_reactions">
+                              <%= comment.reactions %>
+                            </span>
+                          </span>
+                          <span class="like_window react_window">
+                            <div class="like_pop">
+                              <span style="display: flex;flex-wrap:wrap;">
+                                <% for reaction in c_reactions_list.iter() { %>
+                                <img class="react_window_toggle" src="/static/images/reactions/<%= reaction %>.png" data-pk="<%= reaction %>" alt="img" />
+                                <% } %>
+                              </span>
+                            </div>
+                          </span>
+                          <% } %>
+                        </span>
+
+                        <div style="display:none">
+                            <form>
+                                <div class="row img_block reply_form check_mesage_form" style="margin:5px"></div>
+
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend dropdown files_null">
+                                        <span style="position:relative;height: fit-content;">
+                                            <svg fill="currentColor" style="width: 27px;" class="svg_default pointer input-group-text px-1 rounded-0" viewBox="0 0 24 24">
+                                                <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z" />
+                                                <path d="M0 0h24v24H0z" fill="none" />
+                                            </svg>
+                                            <div class="dropdown-menu" style="margin-top:-172px;">
+                                                <a class="dropdown-item u_load_comment_photo">Добавить изображение</a>
+                                                <a class="dropdown-item u_load_comment_video">Добавить видеоролик</a>
+                                                <a class="dropdown-item u_load_comment_music">Добавить аудиозапись</a>
+                                                <a class="dropdown-item u_load_comment_doc">Добавить документ</a>
+                                                <a class="dropdown-item u_load_comment_good">Добавить товар</a>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div contenteditable="true" class="form-control text smile_supported comment_text" placeholder="Напишите комментарий"></div>
+                                    <div class="input-group-prepend" style="position:relative;height: fit-content;">
+                                        <svg viewBox="0 0 24 24" class="svg_default pointer input-group-text px-1 rounded-0 smile_sticker_dropdown" fill="currentColor">
+                                            <path d="M0 0h24v24H0V0z" fill="none" />
+                                            <circle cx="15.5" cy="9.5" r="1.5" />
+                                            <circle cx="8.5" cy="9.5" r="1.5" />
+                                            <path d="M12 16c-1.48 0-2.75-.81-3.45-2H6.88c.8 2.05 2.79 3.5 5.12 3.5s4.32-1.45 5.12-3.5h-1.67c-.7 1.19-1.97 2-3.45 2zm-.01-14C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" />
+                                        </svg>
+                                        <div class="hide_block_menu dropdown-menu smile_dropdown_menu" style="left: -200px;"></div>
+                                    </div>
+                                    <div class="input-group-prepend">
+                                        <button data-types="<%= comment.get_code() %>" class="input-group-text px-1 pointer reply_comment_btn" type="button">
+                                            <svg class="svg_info svg_default" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                                <path d="M4.01 6.03l7.51 3.22-7.52-1 .01-2.22m7.5 8.72L4 17.97v-2.22l7.51-1M2.01 3L2 10l15 2-15 2 .01 7L23 12 2.01 3z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="show_replies content-color-primary centered">
+        <% if comment.count_replies() > 0 { %>
+        ---- <%= comment.count_replies_ru() %> ----
+        <% } %>
+    </span>
+    <span class="stream_reply_comments">
+        <% for reply in comment.get_replies().iter() { %>
+        <% if reply.is_deleted() { %>
+        <div class="comment">
+            <p class="underline" style="display: flex;">Комментарий удален</p>
+        </div>
+          <% } else { %>
+            <% include!("reply.stpl"); %>
+          <% } %>
+        <% } %>
+        <% if next_page_number > 0 { %>
+          <a class="pointer load_next_list_comments mt-1" data-link="/posts/load_replies/<%= comment.id %>/?page=<%= next_page_number %>">Показать еще ответы</a>
+        <% } %>
+    </span>
+</div>

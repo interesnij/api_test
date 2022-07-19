@@ -1,0 +1,26 @@
+<li class="custom_color list_item text-center has-background-img position-relative box-shadow" photolist-pk="<%= object.id %>">
+  <figure class="background-img">
+    <img src="<%= object.get_cover_photo() %>" class="image_fit_200">
+  </figure>
+  <div class="container">
+    <br>
+    <h6 class="load_photo_list media-body pointer">
+      <a><%= object.name %></a>
+    </h6>
+    <p class="">
+      <% if object.community_id.is_some() { %>
+        <% let community = object.get_community(); %>
+        <a class="ajax underline" href="<%= community.link %>">
+          <%= community.name %>
+        </a>
+      <% } else { %>
+        <% let creator = object.get_creator(); %>
+        <a class="ajax underline" href="<%= creator.link %>">
+          <%= creator.get_full_name() %>
+        </a>
+      <% } %>
+    </p>
+    <hr class="my-3">
+    <a class="load_photo_list pointer"><%= object.count_items_ru() %></a>
+  </div>
+</li>

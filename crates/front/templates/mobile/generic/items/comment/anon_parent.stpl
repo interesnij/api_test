@@ -1,0 +1,88 @@
+<% let creator = comment.get_commenter(); %>
+<div class="comment">
+    <div class="media">
+      <a href="<%= creator.link %>" class="ajax">
+        <figure>
+          <%- creator.get_40_avatar() %>
+        </figure>
+      </a>
+
+        <div class="media-body" style="overflow: inherit;">
+            <h5 class="mt-0">
+                <a href="<%= creator.link %>" class="ajax">
+                    <span class="commenter_first_name"><%= creator.first_name %></span> <%= creator.last_name %>
+                </a>
+                <small class="text-muted float-right"><%= comment.created.format("%d-%m-%Y в %H:%M").to_string() %></small>
+            </h5>
+
+            <% if comment.sticker_id.is_some() { %>
+            <% let sticker = comment.get_sticker(); %>
+            <div data-id="<%= sticker.id %>" class="comment_sticker mt-1 pointer show_cticker_info">
+                <img src="<%= sticker.image %>" style="width: 128px;">
+            </div>
+            <% } else { %>
+
+            <span class="comment_text text_support"><%- comment.get_format_text() %></span>
+
+              <% if comment.attach.is_some() { %>
+                <%- comment.get_anon_attach() %>
+              <% } %>
+            <% } %>
+
+            <% if comment.reactions != 0 && c_reactions_list.len() != 0 { %>
+            <div class="card_footer">
+                <div class="row">
+                    <div class="col" data-type="<%= comment.get_code() %>" data-subtype="comment">
+                        <% let comment_reactions_count = comment.get_or_create_react_model(); %>
+
+                        <span class="react_items comments" data-type="<%= comment.get_code() %>" style="display: inline-flex">
+                          <% for reaction in c_reactions_list.iter() { %>
+
+                            <% let count = comment_reactions_count.count_reactions_of_types(*reaction); %>
+                            <% if count != 0 { %>
+                              <span class="react" data-react="<%= reaction %>">
+                                <span class="like">
+                                  <img style="width:16px" src="/static/images/reactions/<%= reaction %>.png" alt="img" />
+                                  <span class="small reactions_count"><%= count %></span>
+                                </span>
+
+                                <span class="like_window">
+                                  <div class="like_pop">
+                                    <span class="item_reactions pointer">Отреагировали: <span data-count="like"><%= count %></span></span>
+                                    <span class="like_list" style="display:flex;flex-wrap:wrap;margin-top:10px;">
+                                      <% for user in comment.get_6_reactions_users_of_types(*reaction).iter() { %>
+                                        <% include!("../../../generic/user/voter.stpl"); %>
+                                      <% } %>
+                                    </span>
+                                  </div>
+                                </span>
+                              </span>
+                            <% } %>
+                          <% } %>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+    <span class="show_replies content-color-primary centered">
+        <% if comment.count_replies() > 0 { %>
+        ---- <%= comment.count_replies_ru() %> ----
+        <% } %>
+    </span>
+    <span class="stream_reply_comments">
+        <% for reply in comment.get_replies().iter() { %>
+        <% if reply.is_deleted() { %>
+        <div class="comment">
+            <p class="underline" style="display: flex;">Комментарий удален</p>
+        </div>
+          <% } else { %>
+            <% include!("anon_reply.stpl"); %>
+          <% } %>
+        <% } %>
+        <% if next_page_number > 0 { %>
+          <a class="pointer load_next_list_comments mt-1" data-link="posts/load_replies/<%= comment.id %>/?page=<%= next_page_number %>">Показать еще ответы</a>
+        <% } %>
+    </span>
+</div>

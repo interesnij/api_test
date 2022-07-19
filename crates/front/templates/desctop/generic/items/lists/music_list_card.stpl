@@ -1,0 +1,28 @@
+<li class="list_item drag_item">
+  <div data-pk="<%= object.id %>" playlist-pk="<%= object.id %>" style="flex-basis: 100%;" class="card playlist">
+    <div class="card-body" playlist-pk="<%= object.id %>" style="padding: 4px;padding-bottom: 0;">
+       <div>
+        <figure class="position-relative">
+          <a class="load_music_list btn_default pointer">
+            <img class="image_fit_160" src="<%= object.get_image() %>" alt="image">
+          </a>
+          <% if object.count > 0 { %>
+           <div class="play_list_mode music_list_item" track-pk="<%= object.get_first_track_pk() %>"></div>
+          <% } %>
+        </figure>
+         <p class="my-0 mt-1 load_music_list pointer"><%= object.name %> (<%= object.count %>)</p>
+       </div>
+         <% if object.community_id.is_some() { %>
+           <% let community = object.get_community(); %>
+           <a class="ajax small i_link" href="<%= community.link %>">
+              <%= community.name %>
+           </a>
+           <% } else { %>
+             <% let creator = object.get_creator(); %>
+             <a class="ajax small i_link" href="<%= creator.link %>">
+                <%= creator.get_full_name() %>
+             </a>
+           <% } %>
+    </div>
+  </div>
+</li>

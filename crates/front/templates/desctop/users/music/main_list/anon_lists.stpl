@@ -1,0 +1,29 @@
+<% let lists = user.get_music_lists(); %>
+
+<% if lists.len() > 1 { %>
+<div class="media mt-3" style="padding-left: 7px;">
+  <h5 class="mt-1" style="flex: 1;">
+    <a class="underline ajax" href="<%= user.link %>">
+      <%= user.get_full_name() %>
+    </a> - плейлисты
+    (<%= lists.len() %>)
+  </h5>
+</div>
+<div class="row no-gutters gorizontal_scroll">
+   <div class="col-12">
+   <ul class="drag_list" data-type="lmu" style="width:max-content;list-style: none;">
+   <% for object in lists.iter() { %>
+      <% include!("../../../generic/items/lists/music_list_card.stpl"); %>
+   <% } %>
+   </ul>
+   </div>
+</div>
+<% } else { %>
+<div class="media mt-3" style="padding-left: 7px;">
+  <h5 class="mt-1" style="flex: 1;">
+    <a class="underline ajax" href="<%= user.link %>">
+      <%= user.get_full_name() %>
+    </a> - аудиозаписи
+  </h5>
+</div>
+<% } %>
