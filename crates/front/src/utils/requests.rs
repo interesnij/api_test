@@ -88,7 +88,7 @@ where
                 404 => Err(Error::NotFound),
                 500 => Err(Error::InternalServerError),
                 422 => {
-                    let data: Result<ErrorInfo, _> = data.json::<ErrorInfo>().await;
+                    let data: Result<ErrorInfo, _> = resp.json::<ErrorInfo>().await;
                     if let Ok(data) = data {
                         Err(Error::UnprocessableEntity(data))
                     } else {
