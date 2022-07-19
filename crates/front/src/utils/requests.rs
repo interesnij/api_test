@@ -89,35 +89,42 @@ where
     }
 }
 
-pub async fn request_delete<T>(url: String) -> Result<T, u16>
+/// Delete request
+pub async fn request_delete<T>(url: String) -> Result<T, Error>
 where
-    T: DeserializeOwned + 'static + std::fmt::Debug + Send,
+    T: DeserializeOwned + 'static + std::fmt::Debug,
 {
-    request(url, reqwest::Method::DELETE, &()).await
+    request(reqwest::Method::DELETE, url, ()).await
 }
 
 /// Get request
-pub async fn request_get<T>(url: String) -> Result<T, u16>
+pub async fn request_get<T>(url: String) -> Result<T, Error>
 where
-    T: DeserializeOwned + 'static + std::fmt::Debug + Send,
+    T: DeserializeOwned + 'static + std::fmt::Debug,
 {
-    request(url, reqwest::Method::GET, &()).await
+    request(reqwest::Method::GET, url, ()).await
 }
 
 /// Post request with a body
-pub async fn request_post<U, T>(url: String, body: &U) -> Result<T, u16>
+pub async fn request_post<B, T>(url: String, body: B) -> Result<T, Error>
 where
-    T: DeserializeOwned + 'static + std::fmt::Debug + Send,
-    U: Serialize + std::fmt::Debug,
+    T: DeserializeOwned + 'static + std::fmt::Debug,
+    B: Serialize + std::fmt::Debug,
 {
-    request(url, reqwest::Method::POST, body).await
+    request(reqwest::Method::POST, url, body).await
 }
 
 /// Put request with a body
-pub async fn request_put<U, T>(url: String, body: &U) -> Result<T, u16>
+pub async fn request_put<B, T>(url: String, body: B) -> Result<T, Error>
 where
-    T: DeserializeOwned + 'static + std::fmt::Debug + Send,
-    U: Serialize + std::fmt::Debug,
+    T: DeserializeOwned + 'static + std::fmt::Debug,
+    B: Serialize + std::fmt::Debug,
 {
-    request(url, reqwest::Method::PUT, body).await
+    request(reqwest::Method::PUT, url, body).await
+}
+
+/// Set limit for pagination
+pub fn limit(count: u32, p: u32) -> String {
+    let offset = if p > 0 { p * count } else { 0 };
+    format!("limit={}&offset={}", count, offset)
 }
