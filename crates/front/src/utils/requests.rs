@@ -10,6 +10,8 @@ use std::result::Result;
 use std::sync::Arc;
 use dotenv_codegen::dotenv;
 use crate::models::user::*;
+use crate::error::Error;
+
 
 const API_ROOT: &str = dotenv!("API_ROOT");
 
