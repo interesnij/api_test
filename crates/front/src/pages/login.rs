@@ -9,7 +9,6 @@ use yew_router::prelude::*;
 use crate::models::user::{UserLogin, UserToken};
 use crate::utils::requests::{request_post, set_token};
 use crate::PrivateRoute;
-use yew::services::fetch::Request;
 
 
 #[function_component(LoginForm)]
