@@ -139,29 +139,3 @@ pub fn get_ajax(req: &HttpRequest) -> bool {
     }
     is_ajax
 }
-pub fn get_device_and_ajax(req: &HttpRequest) -> (bool, bool) {
-    #[derive(Debug, Deserialize)]
-    struct Params {
-        pub ajax: Option<i32>,
-    }
-    let params_some = web::Query::<Params>::from_query(&req.query_string());
-    let mut is_ajax = false;
-    let mut _type = true;
-
-    if params_some.is_ok() {
-        let params = params_some.unwrap();
-        if params.ajax.is_some() {
-            is_ajax = true;
-        }
-    }
-
-    for header in req.headers().into_iter() {
-        if header.0 == "user-agent" {
-            let _val = format!("{:?}", header.1);
-            if _val.contains("Mobile"){
-                _type = false;
-            }
-        }
-    };
-    (_type, is_ajax)
-}
