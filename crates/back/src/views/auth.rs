@@ -20,14 +20,12 @@ use actix_multipart::{Field, Multipart};
 use std::borrow::BorrowMut;
 use futures_util::stream::StreamExt as _;
 use futures::StreamExt;
+use actix_web::web::Json;
 
 
 pub fn auth_routes(config: &mut web::ServiceConfig) {
-    //config.route("/phone_send/{phone}/", web::get().to(phone_send));
-    //config.route("/phone_verify/{phone}/{code}/", web::get().to(phone_verify));
-    //config.route("/signup/", web::get().to(process_signup));
-    //config.route("/mob_register/", web::get().to(mobile_signup));
-    config.route("/login/", web::post().to(login));
+    config.route("/find_user/{phone}/{password}/", web::get().to(find_user));
+    config.route("/login/", web::post().to(check_login));
     config.route("/logout/", web::get().to(logout));
 }
 
@@ -37,35 +35,13 @@ pub async fn logout(session: Session) -> HttpResponse {
     HttpResponse::Ok().body("ok")
 }
 
-#[derive(Deserialize, Serialize)]
-pub struct GetSessionFields {
-    pub id:       i32,
-    pub phone:    String,
-    pub password: String,
-}
-async fn find_user(data: LoginUser2) -> Result<SessionUser, AuthError> {
-    let _find_user_url = get_user_server_ip() + &"/users/get_user_session/".to_string() + &data.phone +  &"/".to_string();
+async fn find_user(param: web::Path<(String, String)>) -> Json<SessionUser> {
+    let url = format!("/users/find_user/{}/{}/", param.0, param.1);
+    let _find_user_url = get_user_server_ip() + &url;
     let _request = reqwest::get(_find_user_url).await.expect("E.");
     let new_request = _request.text().await.unwrap();
-    let user200: GetSessionFields = serde_json::from_str(&new_request).unwrap();
-    let user = GetSessionFields {
-        id: user200.id,
-        phone: user200.phone.clone(),
-        password: user200.password.clone(),
-    };
-
-    if user.id != 0 {
-        if let Ok(matching) = verify(&user.password, &data.password) {
-            if matching {
-                let __user = SessionUser {
-                    id: user.id,
-                    phone: user.phone,
-                };
-                return Ok(__user.into());
-            }
-        }
-    }
-    Err(AuthError::NotFound(String::from("User not found")))
+    let user200: SessionUser = serde_json::from_str(&new_request).unwrap();
+    return Json(user200);
 }
 
 async fn handle_sign_in (

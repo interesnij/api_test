@@ -19,7 +19,6 @@ pub fn pages_routes(config: &mut web::ServiceConfig) {
 }
 
 pub async fn index_page(session: Session, req: HttpRequest) -> actix_web::Result<HttpResponse> {
-
     let (is_desctop, is_ajax) = get_device_and_ajax(&req);
     if is_signed_in(&session) {
         //return news_page(session, req).await;

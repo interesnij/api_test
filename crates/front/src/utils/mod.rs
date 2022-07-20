@@ -118,3 +118,8 @@ pub fn get_device_and_ajax(req: &HttpRequest) -> (bool, bool) {
     };
     (_type, is_ajax)
 }
+
+
+pub fn get_api_server_ip() -> String {
+    return "194.58.90.123:9001".to_string();
+}

@@ -1,4 +1,3 @@
-use crate::schema;
 use actix_web::{
     HttpRequest,
     web,
@@ -6,31 +5,46 @@ use actix_web::{
 };
 use crate::models::{User, GetSessionFields};
 use serde::{Serialize, Deserialize};
-
+use crate::utils::{
+    verify,
+};
 
 pub fn progs_routes(config: &mut web::ServiceConfig) {
-    config.route("/users/get_user_session/{phone}/", web::get().to(get_user_session));
+    config.route("/find_user/{phone}/{password}/", web::get().to(find_user));
 }
 
-pub async fn get_user_session(phone: web::Path<String>) -> Json<GetSessionFields> {
-    use crate::schema::users::dsl::users;
-
-    let _connection = establish_connection();
-    let clone_phone = phone.clone();
-    let users_by_phone = users
-        .filter(schema::users::phone.eq(clone_phone))
-        .load::<User>(&_connection)
-        .expect("E");
-
-    if users_by_phone.len() > 0 {
-        let user = users_by_phone.into_iter().nth(0).unwrap();
-        return user.get_session_fields_json()
-    }
-    else {
-        return Json( GetSessionFields {
-            id:       0,
-            phone:    "".to_string(),
-            password: "".to_string(),
-        })
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SessionUser {
+    pub id: u64,
+    pub phone: String,
+}
+pub async fn find_user(_state: web::Data<AppState>, param: web::Path<(String, String)>) -> Json<SessionUser> {
+    let user: Result<User, _> = _state.rb.fetch_by_column("phone", param.0).await;
+    match user {
+        Ok(user_data) => {
+            if let Ok(matching) = verify(&user.password, &param.1) {
+                if matching {
+                    let body = serde_json::to_string(&SessionUser {
+                        id: user_data.id,
+                        phone: user_data.phone,
+                    }).unwrap();
+                    HttpResponse::Ok().body(body)
+                }
+            }
+            else {
+                let body = serde_json::to_string(&SessionUser {
+                    id:    0,
+                    phone: "".to_string(),
+                }).unwrap();
+                HttpResponse::Ok().body(body)
+            }
+        },
+        Err(_) => {
+            let body = serde_json::to_string(&SessionUser {
+                id:    0,
+                phone: "".to_string(),
+            }).unwrap();
+            HttpResponse::Ok().body(body)
+        },
     }
 }
