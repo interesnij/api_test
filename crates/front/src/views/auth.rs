@@ -11,7 +11,7 @@ use crate::utils::{
     is_signed_in,
     verify,
     get_ajax,
-    get_user_server_ip,
+    get_api_server_ip,
 };
 use crate::models::SessionUser;
 use actix_session::Session;
@@ -76,7 +76,7 @@ fn handle_sign_in (
     let result = find_user(data);
     let is_json = is_json_request(req);
 
-    match result {
+    match result.await {
         Ok(user) => {
             set_current_user(&session, &user);
             if is_json {
