@@ -11,8 +11,9 @@ command = "cargo"
 args = ["run", "--bin front"]
 
 [tasks.run-members]
+
 dependencies = [
-    "users",
-    "back",
+    #"users",
+    #"back",
     "front"
 ]
