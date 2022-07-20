@@ -1,14 +1,14 @@
 [tasks.users]
 command = "cargo"
-args = ["run", "--bin", "users"]
+args = ["run", "--bin users"]
 
 [tasks.back]
 command = "cargo"
-args = ["run", "--bin", "back"]
+args = ["run", "--bin back"]
 
 [tasks.front]
 command = "cargo"
-args = ["run", "--bin", "front"]
+args = ["run", "--bin front"]
 
 [tasks.run-members]
 dependencies = [
