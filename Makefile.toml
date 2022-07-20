@@ -1,0 +1,18 @@
+[tasks.run_users]
+command = "cargo"
+args = ["run", "--bin", "users"]
+
+[tasks.run_back]
+command = "cargo"
+args = ["run", "--bin", "back"]
+
+[tasks.run_front]
+command = "cargo"
+args = ["run", "--bin", "front"]
+
+[tasks.run_members]
+dependencies = [
+    "format",
+    "build",
+    "test"
+]
