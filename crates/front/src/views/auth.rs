@@ -10,7 +10,6 @@ use serde::{Deserialize, Serialize};
 use crate::utils::{
     is_signed_in,
     verify,
-    get_ajax,
     get_api_server_ip,
 };
 use crate::models::SessionUser;
@@ -27,27 +26,6 @@ pub fn auth_routes(config: &mut web::ServiceConfig) {
     config.route("/logout/", web::get().to(logout));
 }
 
-pub async fn mobile_signup(session: Session, req: HttpRequest) -> actix_web::Result<HttpResponse> {
-    if is_signed_in(&session) {
-        Ok(HttpResponse::Ok().content_type("text/html; charset=utf-8").body(""))
-    }
-    else {
-        #[derive(TemplateOnce)]
-        #[template(path = "mobile/main/auth/signup.stpl")]
-        struct NobileSignupTemplate {
-            is_ajax: bool,
-        }
-
-        let is_ajax = get_ajax(&req);
-        let body = NobileSignupTemplate {
-            is_ajax: is_ajax,
-        }
-        .render_once()
-        .map_err(|e| InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR))?;
-        Ok(HttpResponse::Ok().content_type("text/html; charset=utf-8").body(body))
-    }
-}
-
 pub async fn logout(session: Session) -> HttpResponse {
     session.clear();
     HttpResponse::Ok().body("ok")
@@ -60,10 +38,12 @@ pub async fn find_user(data: LoginUser2) -> Result<SessionUser, AuthError> {
     let new_request = _request.text().await.unwrap();
     let user: SessionUser = serde_json::from_str(&new_request).unwrap();
 
-    if let Some(user) {
+    if user.id != 0 {
         return Ok(user.into());
     }
-    Err(AuthError::NotFound(String::from("User not found")))
+    else {
+        Err(AuthError::NotFound(String::from("User not found")))
+    }
 }
 
 async fn handle_sign_in (
@@ -132,5 +112,26 @@ pub async fn login(mut payload: Multipart, session: Session, req: HttpRequest) -
         println!("{:?}", form.phone.clone());
         println!("{:?}", form.password.clone());
         handle_sign_in(form, &session, &req).await
+    }
+}
+
+pub async fn mobile_signup(session: Session, req: HttpRequest) -> actix_web::Result<HttpResponse> {
+    if is_signed_in(&session) {
+        Ok(HttpResponse::Ok().content_type("text/html; charset=utf-8").body(""))
+    }
+    else {
+        #[derive(TemplateOnce)]
+        #[template(path = "mobile/main/auth/signup.stpl")]
+        struct NobileSignupTemplate {
+            is_ajax: bool,
+        }
+
+        let is_ajax = get_ajax(&req);
+        let body = NobileSignupTemplate {
+            is_ajax: is_ajax,
+        }
+        .render_once()
+        .map_err(|e| InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR))?;
+        Ok(HttpResponse::Ok().content_type("text/html; charset=utf-8").body(body))
     }
 }
