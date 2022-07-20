@@ -11,6 +11,7 @@ use crate::utils::{
     is_signed_in,
     verify,
     get_api_server_ip,
+    get_ajax,
 };
 use crate::models::SessionUser;
 use actix_session::Session;
