@@ -35,7 +35,7 @@ pub async fn logout(session: Session) -> HttpResponse {
     HttpResponse::Ok().body("ok")
 }
 
-async fn find_user(param: web::Path<(String, String)>) -> Json<SessionUser> {
+pub async fn find_user(param: web::Path<(String, String)>) -> Json<SessionUser> {
     let url = format!("/users/find_user/{}/{}/", param.0, param.1);
     let _find_user_url = get_user_server_ip() + &url;
     let _request = reqwest::get(_find_user_url).await.expect("E.");
