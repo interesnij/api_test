@@ -12,7 +12,7 @@ args = ["run", "--bin", "front"]
 
 [tasks.run_members]
 dependencies = [
-    "format",
-    "build",
-    "test"
+    "run_users",
+    "run_back",
+    "run_front"
 ]
