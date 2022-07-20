@@ -66,7 +66,7 @@ pub async fn find_user(data: LoginUser2) -> Result<SessionUser, AuthError> {
     Err(AuthError::NotFound(String::from("User not found")))
 }
 
-fn handle_sign_in (
+async fn handle_sign_in (
     data: LoginUser2,
     session: &Session,
     req: &HttpRequest
